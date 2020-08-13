@@ -42,7 +42,7 @@ class ProjectTrainer(object):
     def __init__(self, config_filename: Union[str, Path]):
 
         # load configuration
-        with open(config_filename, 'r') as file:
+        with open(config_filename, "r") as file:
             try:
                 config = yaml.safe_load(file)
             except yaml.YAMLError as exc:
@@ -58,54 +58,53 @@ class ProjectTrainer(object):
         hparams = argparse.Namespace(**self.config)
 
         # For reproducibility
-        torch.manual_seed(self.config['exp_params']['manual_seed'])
-        np.random.seed(self.config['exp_params']['manual_seed'])
+        torch.manual_seed(self.config["exp_params"]["manual_seed"])
+        np.random.seed(self.config["exp_params"]["manual_seed"])
         # cudnn.deterministic = True # may hurt accuracy and speed
         # cudnn.benchmark = False
 
         # initialize the model
-        if self.config['project'] == 'mitotic_classifier':
+        if self.config["project"] == "mitotic_classifier":
             classifier_model = build_classifier.Mitotic_Classifier(hparams)
-        elif self.configconfig['project'] == 'mnist':
+        elif self.configconfig["project"] == "mnist":
             from models import model_mnist
+
             classifier_model = model_mnist.LightningMNISTModel(hparams)
         else:
             raise ValueError(
-                f"selected project {self.config['project']} is not support yet")
+                f"selected project {self.config['project']} is not support yet"
+            )
 
         # check if need to load from existing weights
-        if self.config['model_params']['load_from'] is not None:
+        if self.config["model_params"]["load_from"] is not None:
             classifier_model = classifier_model.load_from_checkpoint(
-                self.config['model_params']['load_from']
+                self.config["model_params"]["load_from"]
             )
 
         # set up checkpoint callback
         checkpoint_callback = ModelCheckpoint(
-            save_top_k=5,
-            verbose=True,
-            monitor='val_acc',
-            mode='max',
+            save_top_k=5, verbose=True, monitor="val_acc", mode="max",
         )
 
-        if self.config['project'] == 'mnist':
+        if self.config["project"] == "mnist":
             trainer = Trainer(
-                default_root_dir=self.config['logging_params']['save_dir'],
+                default_root_dir=self.config["logging_params"]["save_dir"],
                 checkpoint_callback=checkpoint_callback,
                 gpus=hparams.gpus,
                 distributed_backend=hparams.distributed_backend,
                 precision=16 if hparams.use_16bit else 32,
             )
-        elif self.config['project'] == 'mitotic_classifier':
+        elif self.config["project"] == "mitotic_classifier":
             trainer = Trainer(
-                default_root_dir=self.config['logging_params']['save_dir'],
+                default_root_dir=self.config["logging_params"]["save_dir"],
                 min_epochs=50,
                 checkpoint_callback=checkpoint_callback,
-                resume_from_checkpoint=self.config['model_params']['resume'],
+                resume_from_checkpoint=self.config["model_params"]["resume"],
                 # num_sanity_val_steps=1,
                 # val_check_interval=1.0,
                 # train_percent_check=1.0,
                 # val_percent_check=0.1,
-                **self.config['trainer_params']
+                **self.config["trainer_params"],
             )
 
         log.info(f"======= Training {self.config['project']} =======")

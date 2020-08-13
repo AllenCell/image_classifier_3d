@@ -30,7 +30,7 @@ class ProjectTester(object):
 
     @staticmethod
     def _load_config(yaml_path: Union[str, Path]) -> List:
-        with open(yaml_path, 'r') as file:
+        with open(yaml_path, "r") as file:
             config = yaml.safe_load(file)
 
         hparams = argparse.Namespace(**config)
@@ -42,31 +42,31 @@ class ProjectTester(object):
         from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
         import matplotlib.pyplot as plt
 
-        df_merge['true_label'] = df_merge.apply(lambda row: int(
-                                                os.path.basename(row.fn)[0]),
-                                                axis=1)
+        df_merge["true_label"] = df_merge.apply(
+            lambda row: int(os.path.basename(row.fn)[0]), axis=1
+        )
 
         # TODO: need to make this plot customizable
-        conf = confusion_matrix(df_merge['true_label'], df_merge['pred_label'],
-                                labels=np.array([0, 1, 2, 3, 4, 5]))
+        conf = confusion_matrix(
+            df_merge["true_label"],
+            df_merge["pred_label"],
+            labels=np.array([0, 1, 2, 3, 4, 5]),
+        )
         plt.figure()
-        disp = ConfusionMatrixDisplay(confusion_matrix=conf,
-                                      display_labels=['M0', 'M12', 'M3',
-                                                      'M45', 'M67_e',
-                                                      'M6M7_h'])
-        disp = disp.plot(include_values=True,
-                         xticks_rotation='horizontal',
-                         cmap='viridis',
-                         ax=None)
+        disp = ConfusionMatrixDisplay(
+            confusion_matrix=conf,
+            display_labels=["M0", "M12", "M3", "M45", "M67_e", "M6M7_h"],
+        )
+        disp = disp.plot(
+            include_values=True, xticks_rotation="horizontal", cmap="viridis", ax=None
+        )
         plt.show()
         plt.savefig(Path(out_path) / "cf.png")
 
         df_merge.to_csv(Path(out_path) / "pred.csv")
 
     @staticmethod
-    def _merge_results_for_new(
-        df: pd.DataFrame,
-    ) -> pd.DataFrame:
+    def _merge_results_for_new(df: pd.DataFrame,) -> pd.DataFrame:
         """
         merge the results in csv 
         """
@@ -78,19 +78,19 @@ class ProjectTester(object):
                 else:
                     for row in df_x.itertuples():
                         cid = row.CellId
-                        df_merge.at[df_merge['CellId'] == cid, 'pred'] = \
-                            df_merge.loc[df_merge['CellId'] == cid]['pred'].values + \
-                            df_x.loc[df_x['CellId'] == cid]['pred'].values
+                        df_merge.at[df_merge["CellId"] == cid, "pred"] = (
+                            df_merge.loc[df_merge["CellId"] == cid]["pred"].values
+                            + df_x.loc[df_x["CellId"] == cid]["pred"].values
+                        )
 
         # generate the final prediction
-        df_merge['pred_label'] = df_merge.apply(lambda row: np.argmax(row.pred,
-                                                axis=0), axis=1)
+        df_merge["pred_label"] = df_merge.apply(
+            lambda row: np.argmax(row.pred, axis=0), axis=1
+        )
         return df_merge
 
     @staticmethod
-    def _merge_results_for_validation(
-        df: List[pd.DataFrame],
-    ) -> pd.DataFrame:
+    def _merge_results_for_validation(df: List[pd.DataFrame],) -> pd.DataFrame:
         """
         merge the results in csv 
         """
@@ -102,21 +102,19 @@ class ProjectTester(object):
                 else:
                     for row in df_x.itertuples():
                         fn = row.fn
-                        df_merge.at[df_merge['fn'] == fn, 'pred'] = \
-                            df_merge.loc[df_merge['fn'] == fn]['pred'].values + \
-                            df_x.loc[df_x['fn'] == fn]['pred'].values
+                        df_merge.at[df_merge["fn"] == fn, "pred"] = (
+                            df_merge.loc[df_merge["fn"] == fn]["pred"].values
+                            + df_x.loc[df_x["fn"] == fn]["pred"].values
+                        )
 
         # generate the final prediction
-        df_merge['pred_label'] = df_merge.apply(lambda row: np.argmax(row.pred,
-                                                axis=0), axis=1)
+        df_merge["pred_label"] = df_merge.apply(
+            lambda row: np.argmax(row.pred, axis=0), axis=1
+        )
         return df_merge
 
     @staticmethod
-    def _run_prediction(
-        config,
-        hparams,
-        output_path
-    ) -> List[pd.DataFrame]:
+    def _run_prediction(config, hparams, output_path) -> List[pd.DataFrame]:
         """
         run prediction [TBA]
         """
@@ -125,17 +123,18 @@ class ProjectTester(object):
 
         # run through the list of models (maybe > 1, as ensemble)
         df = []
-        for model_item in config['model_params']['trained_model']:
+        for model_item in config["model_params"]["trained_model"]:
 
             classifier_model = None
-            if config['project'] == 'mitotic_classifier':
+            if config["project"] == "mitotic_classifier":
                 classifier_model = build_classifier.Mitotic_Classifier(hparams)
             else:
                 raise ValueError(
-                    f"selected project {config['project']} is not support yet")
+                    f"selected project {config['project']} is not support yet"
+                )
 
-            state = torch.load(model_item['model'], map_location=device)
-            classifier_model.load_state_dict(state['state_dict'])
+            state = torch.load(model_item["model"], map_location=device)
+            classifier_model.load_state_dict(state["state_dict"])
             classifier_model.hparams = hparams
 
             # move to gpu
@@ -147,27 +146,24 @@ class ProjectTester(object):
             # final_layer.to(device)
 
             trainer = Trainer(
-                resume_from_checkpoint=model_item['model'],
-                **config['trainer_params']
+                resume_from_checkpoint=model_item["model"], **config["trainer_params"]
             )
 
-            test_params = config['test_data']
-            for test_iter in tqdm(range(test_params['runtime_aug'])):
+            test_params = config["test_data"]
+            for test_iter in tqdm(range(test_params["runtime_aug"])):
                 trainer.test(classifier_model)
 
             df_this_model = classifier_model.test_results[0]
             df.append(df_this_model)
 
-            out_fn = Path(output_path) / \
-                f"mitotic_prediction_result_model_{len(df)}.csv"
+            out_fn = (
+                Path(output_path) / f"mitotic_prediction_result_model_{len(df)}.csv"
+            )
             df_this_model.to_csv(out_fn)
 
         return df
 
-    def __init__(
-        self,
-        save_model_output: bool = False
-    ):
+    def __init__(self, save_model_output: bool = False):
 
         self.save_model_output = save_model_output
 
@@ -181,14 +177,15 @@ class ProjectTester(object):
         """
         do testing using data from a csv file 
         """
-        predefined_yaml = Path(__file__).parent / \
-            f"../model_zoo/test_config_{project_name}.yaml"
+        predefined_yaml = (
+            Path(__file__).parent / f"../model_zoo/test_config_{project_name}.yaml"
+        )
         [config, hparams] = self._load_config(predefined_yaml)
 
         # update data path with the csv filename
-        config['test_data']['data_path'] = csv_filename
+        config["test_data"]["data_path"] = csv_filename
 
-        # run prediction 
+        # run prediction
         df = self._run_prediction(config, hparams, output_path)
 
         # collect the results
@@ -206,9 +203,9 @@ class ProjectTester(object):
         """
 
         [config, hparams] = self._load_config(config_filename)
-        out_path = config['test_data']['output_path']
+        out_path = config["test_data"]["output_path"]
 
-        # run prediction 
+        # run prediction
         df = self._run_prediction(config, hparams, out_path)
 
         # collect the results

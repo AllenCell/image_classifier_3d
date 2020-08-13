@@ -8,13 +8,13 @@ import traceback
 
 # import torch.backends.cudnn as cudnn
 
-from image_classifier_3d.proj_trainer import ProjectTrainer 
+from image_classifier_3d.proj_trainer import ProjectTrainer
 from image_classifier_3d.proj_tester import ProjectTester
 
 # Global object
-TRAIN_MODE = 'train'
-VALID_MODE = 'validate'
-INFER_MODE = 'inference'
+TRAIN_MODE = "train"
+VALID_MODE = "validate"
+INFER_MODE = "inference"
 
 ###############################################################################
 
@@ -27,52 +27,45 @@ logging.basicConfig(
 
 
 class Args(argparse.Namespace):
-
     def __init__(self):
         # Arguments that could be passed in through the command line
         self.debug = False
         self.__parse()
 
     def __parse(self):
-        p = argparse.ArgumentParser(
-            description="runner for training a new model",
-        )
+        p = argparse.ArgumentParser(description="runner for training a new model",)
         p.add_argument(
             "--debug", action="store_true", dest="debug", help=argparse.SUPPRESS,
         )
 
-        subparsers = p.add_subparsers(dest='mode')
+        subparsers = p.add_subparsers(dest="mode")
         subparsers.required = True
 
         parser_train = subparsers.add_parser(TRAIN_MODE)
         parser_train.add_argument(
-            '--config', 
-            dest='filename',
-            help='configuration filename for training'
+            "--config", dest="filename", help="configuration filename for training"
         )
 
         parser_validation = subparsers.add_parser(VALID_MODE)
         parser_validation.add_argument(
-            '--config', 
-            dest='filename',
-            help='configuration filename for validation'
+            "--config", dest="filename", help="configuration filename for validation"
         )
 
         parser_inference = subparsers.add_parser(INFER_MODE)
         parser_inference.add_argument(
-            '--csv', 
-            dest='csv_filename',
-            help='path to the csv file of data to be applied on'
+            "--csv",
+            dest="csv_filename",
+            help="path to the csv file of data to be applied on",
         )
         parser_inference.add_argument(
-            '--output_path', 
-            help='path to save prediction results'
+            "--output_path", help="path to save prediction results"
         )
 
         p.parse_args(namespace=self)
 
 
 ###############################################################################
+
 
 def main():
     try:

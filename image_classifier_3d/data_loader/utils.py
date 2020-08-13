@@ -37,14 +37,19 @@ def build_one_cell(crop_raw, crop_seg, down_ratio=0.5):
     y_range = y_range[0]
     x_range = x_range[0]
 
-    roi = [max(z_range[0] - 2, 0), min(z_range[-1] + 4, mem_seg.shape[0]),
-           max(y_range[0] - 5, 0), min(y_range[-1] + 5, mem_seg.shape[1]),
-           max(x_range[0] - 5, 0), min(x_range[-1] + 5, mem_seg.shape[2])]
+    roi = [
+        max(z_range[0] - 2, 0),
+        min(z_range[-1] + 4, mem_seg.shape[0]),
+        max(y_range[0] - 5, 0),
+        min(y_range[-1] + 5, mem_seg.shape[1]),
+        max(x_range[0] - 5, 0),
+        min(x_range[-1] + 5, mem_seg.shape[2]),
+    ]
 
-    mem_seg = mem_seg[roi[0]:roi[1], roi[2]:roi[3], roi[4]:roi[5]]
+    mem_seg = mem_seg[roi[0] : roi[1], roi[2] : roi[3], roi[4] : roi[5]]
 
-    mem_img = img_raw[1, roi[0]:roi[1], roi[2]:roi[3], roi[4]:roi[5]]
-    dna_img = img_raw[0, roi[0]:roi[1], roi[2]:roi[3], roi[4]:roi[5]]
+    mem_img = img_raw[1, roi[0] : roi[1], roi[2] : roi[3], roi[4] : roi[5]]
+    dna_img = img_raw[0, roi[0] : roi[1], roi[2] : roi[3], roi[4] : roi[5]]
 
     mem_seg = zoom(mem_seg, down_ratio, order=0)
     mem_img = zoom(mem_img, down_ratio, order=2)
