@@ -37,7 +37,15 @@ dev_requirements = [
     "wheel>=0.34.2",
 ]
 
-requirements = []
+requirements = [
+    "numpy",
+    "pandas",
+    "scipy",
+    "scikit-image",
+    "pytorch-lightning==0.8.5",
+    "torch==1.6.0",
+    "aicsimageio>=3.2.3",
+]
 
 extra_requirements = {
     "setup": setup_requirements,
@@ -60,10 +68,11 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
     ],
-    description="Python package for building 3d image classifier using deep neural networks",
+    description="Python package for building 3d image classifier \
+                 using deep neural networks",
     entry_points={
         "console_scripts": [
-            "my_example=image_classifier_3d.bin.my_example:main"
+            "run_classifier3d=image_classifier_3d.bin.run_classifier:main"
         ],
     },
     install_requires=requirements,

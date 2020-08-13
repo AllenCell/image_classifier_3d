@@ -11,7 +11,9 @@ Docs: https://docs.pytest.org/en/latest/
       https://docs.pytest.org/en/latest/goodpractices.html#conventions-for-python-test-discovery
 """
 
-import pytest
+# import pytest
+
+'''
 from image_classifier_3d import Example
 
 
@@ -76,3 +78,4 @@ def test_parameterized_value_change_with_exceptions(
     example = Example(start_val)
     example.update_value(next_val)
     assert expected_values == example.values
+'''

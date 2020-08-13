@@ -1,0 +1,54 @@
+project: mitotic_classifier
+
+model_params:
+  name: 'resnet'
+  depth: 50
+  in_channels: 2
+  num_classes: 6
+  class_weight: [0.05, 0.2613, 0.1687, 0.0405, 0.44, 0.066]
+  trained_model: 
+    - model: '/allen/aics/assay-dev/users/Jianxu/core_code/classifier3d/logs/full/lightning_logs/version_3/checkpoints/epoch=75.ckpt'
+    - model: '/allen/aics/assay-dev/users/Jianxu/core_code/classifier3d/logs/full/lightning_logs/version_2/checkpoints/epoch=52.ckpt'
+
+test_data:
+  mode: folder
+  #data_type: 'preprocessed_npy'
+  data_path: '/allen/aics/assay-dev/computational/data/mitotic_classifier/masked_data_7/hold_v3'
+  runtime_aug: 1
+  num_worker: 1
+  batch_size: 8
+  annotated: True
+  output_path: '/allen/aics/assay-dev/computational/data/mitotic_classifier'
+
+exp_params:
+  # seed
+  manual_seed: 1265
+  # data parameters
+  dataloader: 
+    name: 'AdaptivePaddingBatch'
+    num_worker: 4
+    batch_size: 12
+    shape: [100, 200, 200]
+  training_data_path: "/allen/aics/assay-dev/computational/data/mitotic_classifier/masked_data_7/train_v3"
+  validation_data_path: "/allen/aics/assay-dev/computational/data/mitotic_classifier/masked_data_7/val_v3"
+  # hyper parameters
+  LR: 0.001
+  weight_decay: 0.0005
+  scheduler: 
+    name: 'ExponentialLR' 
+    gamma: 0.95
+    # name: CosineAnnealingLR 
+    # T_max: 10
+
+trainer_params:
+  precision: 16
+  gpus: 1
+  #distributed_backend: 'ddp'
+  #num_nodes: 1
+  max_epochs: 500
+  accumulate_grad_batches: 2
+  gradient_clip_val: 0.5
+
+logging_params:
+  save_dir: "logs/full/"
+  
