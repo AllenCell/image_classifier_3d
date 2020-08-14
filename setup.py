@@ -43,7 +43,6 @@ requirements = [
     "scipy",
     "scikit-image",
     "pytorch-lightning==0.8.5",
-    "torch==1.6.0",
     "aicsimageio>=3.2.3",
 ]
 
@@ -51,7 +50,7 @@ extra_requirements = {
     "setup": setup_requirements,
     "test": test_requirements,
     "dev": dev_requirements,
-    "all": [*requirements, *dev_requirements,],
+    "all": [*requirements, *dev_requirements],
 }
 
 setup(
