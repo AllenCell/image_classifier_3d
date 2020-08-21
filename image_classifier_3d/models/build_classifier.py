@@ -237,8 +237,10 @@ class Mitotic_Classifier(pl.LightningModule):
         if self.test_type == "folder":
             pred_dict = {"fn": fn, "pred": pred_prob.numpy(), "label": y}
         else:
-            pred_dict = {"CellId": cid.cpu().data.int().numpy(), 
-                         "pred": pred_prob.numpy()}
+            pred_dict = {
+                "CellId": cid.cpu().data.int().numpy(),
+                "pred": pred_prob.numpy(),
+            }
 
         return {"n_pred": len(x), "pred_record": pred_dict}
 
