@@ -4,11 +4,12 @@ model_params:
   name: 'resnet'
   depth: 50
   in_channels: 2
-  num_classes: 6
-  class_weight: [0.05, 0.2613, 0.1687, 0.0405, 0.44, 0.066]
+  num_classes: 9
+  class_weight: [1, 1, 1, 1, 1, 1, 1, 1, 1]
   trained_model: 
-    - model: '/allen/aics/assay-dev/users/Jianxu/core_code/classifier3d/logs/full/lightning_logs/version_3/checkpoints/epoch=75.ckpt'
-    - model: '/allen/aics/assay-dev/users/Jianxu/core_code/classifier3d/logs/full/lightning_logs/version_2/checkpoints/epoch=52.ckpt'
+    - model: '/allen/aics/assay-dev/users/Jianxu/core_code/classifier3d/logs/full/lightning_logs/version_7/checkpoints/epoch=54.ckpt' #v1
+    - model: '/allen/aics/assay-dev/users/Jianxu/core_code/classifier3d/logs/full/lightning_logs/version_8/checkpoints/epoch=75.ckpt' #v2
+    - model: '/allen/aics/assay-dev/users/Jianxu/core_code/classifier3d/logs/full/lightning_logs/version_9/checkpoints/epoch=74.ckpt' #v1
 
 test_data:
   mode: folder
