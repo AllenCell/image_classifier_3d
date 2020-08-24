@@ -139,7 +139,7 @@ class ProjectTester(object):
 
             # move to gpu
             classifier_model.eval()
-            classifier_model.freeze()
+            # classifier_model.freeze()
             # classifier_model.half() # only need when NOT using trainer.test()
             classifier_model.to(device)
             # final_layer = torch.nn.Softmax(dim=1)

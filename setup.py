@@ -42,7 +42,7 @@ requirements = [
     "pandas",
     "scipy",
     "scikit-image",
-    "pytorch-lightning==0.8.5",
+    "pytorch-lightning>=0.8.5",
     "aicsimageio>=3.2.3",
 ]
 

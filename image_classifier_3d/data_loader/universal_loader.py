@@ -79,10 +79,7 @@ class adaptive_padding_loader(Dataset):
             print("test load is done")
 
         elif test_flag == "C":  # CSV (i.e., testing by csv)
-            if filenames[-3:] == "csv":
-                df = pd.read_csv(filenames)
-            elif filenames[-3:] == "parquet":
-                df = pd.read_parquet(filenames)
+            df = pd.read_csv(filenames)
             self.df = df.reset_index(drop=True)
 
         else:
