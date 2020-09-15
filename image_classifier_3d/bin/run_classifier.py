@@ -33,9 +33,14 @@ class Args(argparse.Namespace):
         self.__parse()
 
     def __parse(self):
-        p = argparse.ArgumentParser(description="runner for training a new model",)
+        p = argparse.ArgumentParser(
+            description="runner for training a new model",
+        )
         p.add_argument(
-            "--debug", action="store_true", dest="debug", help=argparse.SUPPRESS,
+            "--debug",
+            action="store_true",
+            dest="debug",
+            help=argparse.SUPPRESS,
         )
 
         subparsers = p.add_subparsers(dest="mode")

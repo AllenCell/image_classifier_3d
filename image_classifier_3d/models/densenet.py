@@ -76,7 +76,7 @@ class DenseNet(nn.Module):
     Args:
         growth_rate (int) - how many filters to add each layer (k in paper)
         block_config (list of 4 ints) - how many layers in each pooling block
-        num_init_features (int) - the number of filters to learn in the first 
+        num_init_features (int) - the number of filters to learn in the first
         convolution layer
         bn_size (int) - multiplicative factor for number of bottle neck layers
           (i.e. bn_size * k features in the bottleneck layer)

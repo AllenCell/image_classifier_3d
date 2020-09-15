@@ -66,9 +66,11 @@ class ProjectTester(object):
         df_merge.to_csv(Path(out_path) / "pred.csv")
 
     @staticmethod
-    def _merge_results_for_new(df: pd.DataFrame,) -> pd.DataFrame:
+    def _merge_results_for_new(
+        df: pd.DataFrame,
+    ) -> pd.DataFrame:
         """
-        merge the results in csv 
+        merge the results in csv
         """
         df_merge = df[0].copy()
         if len(df) > 1:
@@ -90,9 +92,11 @@ class ProjectTester(object):
         return df_merge
 
     @staticmethod
-    def _merge_results_for_validation(df: List[pd.DataFrame],) -> pd.DataFrame:
+    def _merge_results_for_validation(
+        df: List[pd.DataFrame],
+    ) -> pd.DataFrame:
         """
-        merge the results in csv 
+        merge the results in csv
         """
         df_merge = df[0].copy()
         if len(df) > 1:
@@ -120,6 +124,7 @@ class ProjectTester(object):
         """
 
         device = torch.device("cuda:0")
+        trainer = Trainer(**config["trainer_params"])
 
         # run through the list of models (maybe > 1, as ensemble)
         df = []
@@ -144,10 +149,6 @@ class ProjectTester(object):
             classifier_model.to(device)
             # final_layer = torch.nn.Softmax(dim=1)
             # final_layer.to(device)
-
-            trainer = Trainer(
-                resume_from_checkpoint=model_item["model"], **config["trainer_params"]
-            )
 
             test_params = config["test_data"]
             for test_iter in tqdm(range(test_params["runtime_aug"])):
@@ -175,7 +176,7 @@ class ProjectTester(object):
         project_name: str = "mitotic_classifier",
     ) -> Optional[pd.DataFrame]:
         """
-        do testing using data from a csv file 
+        do testing using data from a csv file
         """
         predefined_yaml = (
             Path(__file__).parent / f"../model_zoo/test_config_{project_name}.yaml"

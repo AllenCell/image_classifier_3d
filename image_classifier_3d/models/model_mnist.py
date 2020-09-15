@@ -69,7 +69,7 @@ class LightningMNISTModel(LightningModule):
 
     def training_step(self, batch, batch_idx):
         """
-        Lightning calls this inside the training loop with the 
+        Lightning calls this inside the training loop with the
         data from the training dataloader
         passed in as `batch`.
         """
@@ -82,7 +82,7 @@ class LightningMNISTModel(LightningModule):
 
     def validation_step(self, batch, batch_idx):
         """
-        Lightning calls this inside the validation loop with the 
+        Lightning calls this inside the validation loop with the
         data from the validation dataloader
         passed in as `batch`.
         """
@@ -173,7 +173,7 @@ class LightningMNISTModel(LightningModule):
     @staticmethod
     def add_model_specific_args(parent_parser, root_dir):
         """
-        Parameters you define here will be available to your 
+        Parameters you define here will be available to your
         model through `self.hparams`.
         """
         parser = ArgumentParser(parents=[parent_parser])

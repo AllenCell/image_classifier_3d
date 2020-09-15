@@ -36,7 +36,7 @@ class ProjectTrainer(object):
     Parameters
     ----------
     config_filename: Union(str,Path)
-        path to the configuration file (.yaml) 
+        path to the configuration file (.yaml)
     """
 
     def __init__(self, config_filename: Union[str, Path]):
@@ -83,7 +83,10 @@ class ProjectTrainer(object):
 
         # set up checkpoint callback
         checkpoint_callback = ModelCheckpoint(
-            save_top_k=5, verbose=True, monitor="val_acc", mode="max",
+            save_top_k=5,
+            verbose=True,
+            monitor="val_acc",
+            mode="max",
         )
 
         if self.config["project"] == "mnist":

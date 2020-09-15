@@ -16,8 +16,8 @@ test_data:
   #data_type: 'preprocessed_npy'
   data_path: '/allen/aics/assay-dev/computational/data/mitotic_classifier/masked_data_7/hold_v3'
   runtime_aug: 1
-  num_worker: 1
-  batch_size: 8
+  num_worker: 8
+  batch_size: 32
   annotated: True
   output_path: '/allen/aics/assay-dev/computational/data/mitotic_classifier'
 
@@ -44,8 +44,8 @@ exp_params:
 trainer_params:
   precision: 16
   gpus: 1
-  #distributed_backend: 'ddp'
-  #num_nodes: 1
+  # distributed_backend: 'ddp'
+  # num_nodes: 1
   max_epochs: 500
   accumulate_grad_batches: 2
   gradient_clip_val: 0.5
