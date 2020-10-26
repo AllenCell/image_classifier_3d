@@ -15,6 +15,7 @@ import torch
 from pytorch_lightning import Trainer
 
 from .models import build_classifier
+from image_classifier_3d.utils.quilt_utils import validate_model
 
 ###############################################################################
 
@@ -182,6 +183,9 @@ class ProjectTester(object):
             Path(__file__).parent / f"../model_zoo/test_config_{project_name}.yaml"
         )
         [config, hparams] = self._load_config(predefined_yaml)
+
+        # validate if the models exist locally, download when needed.
+        validate_model(config, hparams, output_path / Path("_local_model"))
 
         # update data path with the csv filename
         config["test_data"]["data_path"] = csv_filename

@@ -7,19 +7,19 @@ model_params:
   num_classes: 9
   class_weight: [1, 1, 1, 1, 1, 1, 1, 1, 1]
   trained_model: 
-    - model: '/allen/aics/assay-dev/users/Jianxu/core_code/classifier3d/logs/full/lightning_logs/version_7/checkpoints/epoch=54.ckpt' #v1
-    - model: '/allen/aics/assay-dev/users/Jianxu/core_code/classifier3d/logs/full/lightning_logs/version_8/checkpoints/epoch=75.ckpt' #v2
-    - model: '/allen/aics/assay-dev/users/Jianxu/core_code/classifier3d/logs/full/lightning_logs/version_9/checkpoints/epoch=74.ckpt' #v1
+    - model: 'cell_classifier_dev_ensemble1' #v1
+    - model: 'cell_classifier_dev_ensemble2' #v2
+    - model: 'cell_classifier_dev_ensemble3' #v1
 
 test_data:
   mode: folder
   #data_type: 'preprocessed_npy'
-  data_path: '/allen/aics/assay-dev/computational/data/mitotic_classifier/masked_data_7/hold_v3'
+  data_path: ''
   runtime_aug: 1
   num_worker: 8
   batch_size: 32
   annotated: True
-  output_path: '/allen/aics/assay-dev/computational/data/mitotic_classifier'
+  output_path: ''
 
 exp_params:
   # seed
@@ -30,8 +30,8 @@ exp_params:
     num_worker: 4
     batch_size: 12
     shape: [100, 200, 200]
-  training_data_path: "/allen/aics/assay-dev/computational/data/mitotic_classifier/masked_data_7/train_v3"
-  validation_data_path: "/allen/aics/assay-dev/computational/data/mitotic_classifier/masked_data_7/val_v3"
+  training_data_path: ""
+  validation_data_path: "3"
   # hyper parameters
   LR: 0.001
   weight_decay: 0.0005
