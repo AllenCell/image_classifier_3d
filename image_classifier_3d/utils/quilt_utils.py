@@ -56,6 +56,21 @@ class QuiltModelZoo():
 
 
 def validate_model(config, hparams, save_path):
+    """
+    validate the model configuration parameters, for model path, model files
+    will be downloaded from quilt if not exist
+
+    Parameters:
+    ------------
+    config:
+        a dictionary of key parameters
+    hparams:
+        a Namespace object similar to config (currently redudent, will be
+        improved in future versions)
+    save_path:
+        if the required models are not found in the save_path, model files
+        will be downloaded to save_path
+    """
     zoo_client = None
     for idx, model_info in enumerate(hparams.model_params["trained_model"]):
         model_name = model_info["model"]
