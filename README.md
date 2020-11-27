@@ -1,6 +1,7 @@
 # Image Classifier 3D
 
-[![Build Status](https://github.com/aics-int/image_classifier_3d/workflows/Build%20Master/badge.svg)](https://github.com/aics-int/image_classifier_3d/actions)
+[![Build Status](https://github.com/AllenCell/image_classifier_3d/workflows/Build%20Master/badge.svg)](https://github.com/AllenCell/image_classifier_3d/actions)
+[![Documentation](https://github.com/AllenCell/image_classifier_3d/workflows/Documentation/badge.svg)](https://AllenCell.github.io/image_classifier_3d)
 
 Python package for building 3d image classifier using deep neural networks
 
