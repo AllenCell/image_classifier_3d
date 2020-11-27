@@ -1,4 +1,4 @@
-# adopted from 
+# adopted from
 # https://github.com/kenshohara/3D-ResNets-PyTorch
 from functools import partial
 import torch

@@ -5,9 +5,7 @@ from scipy.ndimage import zoom
 
 
 def build_one_cell(
-    crop_raw: np.ndarray,
-    crop_seg: np.ndarray,
-    down_ratio: float = 0.5
+    crop_raw: np.ndarray, crop_seg: np.ndarray, down_ratio: float = 0.5
 ) -> np.ndarray:
     """
     prepare input tensor for single cell mitotic classifier
@@ -19,11 +17,11 @@ def build_one_cell(
         and the second channel as cell membrane image. The image is assume to have
         isotropic dimension (i.e., XYZ have the same resolution)
     crop_seg: np.ndarray
-        4D array (CZYX), multi-channel 3D image of segmentation mask, assuming the first 
-        channel is DNA segmentation, the second channel is cell segmentation. The XYZ 
+        4D array (CZYX), multi-channel 3D image of segmentation mask, assuming the first
+        channel is DNA segmentation, the second channel is cell segmentation. The XYZ
         size should be the same as crop_raw
     down_ratio: float
-        how much downsampling is applied on the image. Default is 0.5, which means the 
+        how much downsampling is applied on the image. Default is 0.5, which means the
         image size is reduced by half.
 
     Returns:

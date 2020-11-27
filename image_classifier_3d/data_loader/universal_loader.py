@@ -17,21 +17,22 @@ class basic_loader(Dataset):
     Basic DataLoader:
 
         Assumption: all training data should be saved in a folder with
-        filenames 0_xxxxx.npy, 0_xxxxx.npy, 1_xxxx.npy, 1_xxxx.npy, 
+        filenames 0_xxxxx.npy, 0_xxxxx.npy, 1_xxxx.npy, 1_xxxx.npy,
         2_xxxxx.npy, 2_xxxx.npy, 3_xxxx.npy, 4_xxxx.npy, etc.. All files
-        are in .npy format instead of images and the first digit of the 
+        are in .npy format instead of images and the first digit of the
         filename is the class label. [Limitation: currently ony support
         at most 10 classes]
 
         Loading: all images will only be loaded when they are being used
-        in a training iteration. Only class labels are pre-loaded, no 
+        in a training iteration. Only class labels are pre-loaded, no
         images will be pre-loaded (ideal for large dataset).
 
-        Inference: Currently basic dataloader only take preprocessed 
+        Inference: Currently basic dataloader only take preprocessed
         images as .npy files during inference.
 
         This will be improved for more flexible data loading
     """
+
     def __init__(self, filenames, buffer_size=-1):
 
         self.img = []
@@ -62,13 +63,13 @@ class adaptive_padding_loader(Dataset):
     """
     Adaptive padding DataLoader:
 
-        In general, adaptive padding data loader will pad all images to the 
+        In general, adaptive padding data loader will pad all images to the
         same size defined by "out_shape" when constructing the data loader.
         For training, random flip and rotaion will be applied. No augmentation
-        for testing or validation.  
+        for testing or validation.
 
-        "test_flag" is a key parameter for determining how data loading 
-        works in different scenarios: 
+        "test_flag" is a key parameter for determining how data loading
+        works in different scenarios:
             * "T": trianing
             * "F": validation on a folder of files
             * "C": test on files listed in a CSV
@@ -76,13 +77,13 @@ class adaptive_padding_loader(Dataset):
         For test_flag == "T" or "F" :
 
             Assumption: all data should be saved in a folder with
-            filenames 0_xxxxx.npy, 0_xxxxx.npy, 1_xxxx.npy, 1_xxxx.npy, 
+            filenames 0_xxxxx.npy, 0_xxxxx.npy, 1_xxxx.npy, 1_xxxx.npy,
             2_xxxxx.npy, 2_xxxx.npy, 3_xxxx.npy, 4_xxxx.npy, etc.. All files
-            are in .npy format instead of images and the first digit of the 
+            are in .npy format instead of images and the first digit of the
             filename is the class label. [Limitation: currently ony support
-            at most 10 classes]. 
+            at most 10 classes].
 
-            For training, a buffer_size can be passed in to only use a 
+            For training, a buffer_size can be passed in to only use a
             certain number of data to warm up your trainingg.
 
         For test_flag == "C":
@@ -91,20 +92,21 @@ class adaptive_padding_loader(Dataset):
             which showing the read path for raw image and segmentation. If
             a file with name "for_mito_prediction.npy" exists under the same
             folder as "crop_raw", then it will be directly loaded and used
-            as input to your model. Otherwise, buildinng_wrapper_path and 
-            building_func_name will be used to load a function defining how 
+            as input to your model. Otherwise, buildinng_wrapper_path and
+            building_func_name will be used to load a function defining how
             to prepare the input data using crop_raw and crop_seg. For example,
             you can have a file "C:/projects/demo/preprocessing.py" with a
-            function called "my_preprocessing" defined in the script. Then, 
+            function called "my_preprocessing" defined in the script. Then,
             buildinng_wrapper_path = "C:/projects/demo/preprocessing.py" and
             building_func_name = "my_preprocessing"
 
-        Loading: all images will only be loaded when they are being used. Only 
-        class labels (only for training and validation) are pre-loaded, no 
+        Loading: all images will only be loaded when they are being used. Only
+        class labels (only for training and validation) are pre-loaded, no
         images will be pre-loaded (ideal for large dataset).
 
         This will be improved for more flexible data loading
     """
+
     def __init__(
         self,
         filenames: Union[List[str], str],
@@ -112,7 +114,7 @@ class adaptive_padding_loader(Dataset):
         buffer_size: int = -1,
         test_flag: str = "T",
         building_wrapper_path: str = "image_classifier_3d.data_loader.utils",
-        building_func_name: str = "build_one_cell"
+        building_func_name: str = "build_one_cell",
     ):
 
         self.img = []
@@ -151,7 +153,7 @@ class adaptive_padding_loader(Dataset):
                 self.process_image = importlib.util.module_from_spec(spec)
             # default module
             else:
-                module_name = building_wrapper_path + '.' + building_func_name
+                module_name = building_wrapper_path + "." + building_func_name
                 self.process_image = importlib.import_module(module_name)
         else:
             print(f"unsupported test type: {test_flag}")
@@ -266,25 +268,26 @@ class adaptive_loader(Dataset):
     Adaptive DataLoader:
 
         In general, adaptive data loader will collect images of different sizes
-        into mini-batches. No padding applied. Random flip and rotaion will be 
-        applied, including testing or validation.   
+        into mini-batches. No padding applied. Random flip and rotaion will be
+        applied, including testing or validation.
 
         Assumption: all training data should be saved in a folder with
-        filenames 0_xxxxx.npy, 0_xxxxx.npy, 1_xxxx.npy, 1_xxxx.npy, 
+        filenames 0_xxxxx.npy, 0_xxxxx.npy, 1_xxxx.npy, 1_xxxx.npy,
         2_xxxxx.npy, 2_xxxx.npy, 3_xxxx.npy, 4_xxxx.npy, etc.. All files
-        are in .npy format instead of images and the first digit of the 
+        are in .npy format instead of images and the first digit of the
         filename is the class label. [Limitation: currently ony support
         at most 10 classes]
 
         Loading: all images will only be loaded when they are being used
-        in a training iteration. Only class labels are pre-loaded, no 
+        in a training iteration. Only class labels are pre-loaded, no
         images will be pre-loaded (ideal for large dataset).
 
-        Inference: Currently basic dataloader only take preprocessed 
+        Inference: Currently basic dataloader only take preprocessed
         images as .npy files during inference.
 
         This will be improved for more flexible data loading
     """
+
     def __init__(self, filenames, test_flag=False):
 
         self.img = []
