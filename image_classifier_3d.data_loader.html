@@ -1,0 +1,378 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>image_classifier_3d.data_loader package &mdash; Image Classifier 3D 0.1.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="image_classifier_3d.models package" href="image_classifier_3d.models.html" />
+    <link rel="prev" title="image_classifier_3d.bin package" href="image_classifier_3d.bin.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> Image Classifier 3D
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package modules</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="image_classifier_3d.html">image_classifier_3d package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="image_classifier_3d.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="image_classifier_3d.bin.html">image_classifier_3d.bin package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">image_classifier_3d.data_loader package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="image_classifier_3d.models.html">image_classifier_3d.models package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="image_classifier_3d.utils.html">image_classifier_3d.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="image_classifier_3d.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="image_classifier_3d.html#module-image_classifier_3d.proj_tester">image_classifier_3d.proj_tester module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="image_classifier_3d.html#module-image_classifier_3d.proj_trainer">image_classifier_3d.proj_trainer module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="image_classifier_3d.html#module-image_classifier_3d">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="math.html">Math notation example</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Image Classifier 3D</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">image_classifier_3d</a> &raquo;</li>
+        
+          <li><a href="image_classifier_3d.html">image_classifier_3d package</a> &raquo;</li>
+        
+      <li>image_classifier_3d.data_loader package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/image_classifier_3d.data_loader.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="image_classifier_3d.models.html" class="btn btn-neutral float-right" title="image_classifier_3d.models package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="image_classifier_3d.bin.html" class="btn btn-neutral float-left" title="image_classifier_3d.bin package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="image-classifier-3d-data-loader-package">
+<h1>image_classifier_3d.data_loader package<a class="headerlink" href="#image-classifier-3d-data-loader-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-image_classifier_3d.data_loader.universal_loader">
+<span id="image-classifier-3d-data-loader-universal-loader-module"></span><h2>image_classifier_3d.data_loader.universal_loader module<a class="headerlink" href="#module-image_classifier_3d.data_loader.universal_loader" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="image_classifier_3d.data_loader.universal_loader.adaptive_loader">
+<em class="property">class </em><code class="sig-prename descclassname">image_classifier_3d.data_loader.universal_loader.</code><code class="sig-name descname">adaptive_loader</code><span class="sig-paren">(</span><em class="sig-param">filenames</em>, <em class="sig-param">test_flag=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/image_classifier_3d/data_loader/universal_loader.html#adaptive_loader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#image_classifier_3d.data_loader.universal_loader.adaptive_loader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.dataset.Dataset</span></code></p>
+<p>Adaptive DataLoader:</p>
+<blockquote>
+<div><p>In general, adaptive data loader will collect images of different sizes
+into mini-batches. No padding applied. Random flip and rotaion will be
+applied, including testing or validation.</p>
+<p>Assumption: all training data should be saved in a folder with
+filenames 0_xxxxx.npy, 0_xxxxx.npy, 1_xxxx.npy, 1_xxxx.npy,
+2_xxxxx.npy, 2_xxxx.npy, 3_xxxx.npy, 4_xxxx.npy, etc.. All files
+are in .npy format instead of images and the first digit of the
+filename is the class label. [Limitation: currently ony support
+at most 10 classes]</p>
+<p>Loading: all images will only be loaded when they are being used
+in a training iteration. Only class labels are pre-loaded, no
+images will be pre-loaded (ideal for large dataset).</p>
+<p>Inference: Currently basic dataloader only take preprocessed
+images as .npy files during inference.</p>
+<p>This will be improved for more flexible data loading</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="class">
+<dt id="image_classifier_3d.data_loader.universal_loader.adaptive_padding_loader">
+<em class="property">class </em><code class="sig-prename descclassname">image_classifier_3d.data_loader.universal_loader.</code><code class="sig-name descname">adaptive_padding_loader</code><span class="sig-paren">(</span><em class="sig-param">filenames: Union[List[str], str], out_shape: List = [64, 128, 128], buffer_size: int = -1, test_flag: str = 'T', building_wrapper_path: str = 'image_classifier_3d.data_loader.utils', building_func_name: str = 'build_one_cell'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/image_classifier_3d/data_loader/universal_loader.html#adaptive_padding_loader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#image_classifier_3d.data_loader.universal_loader.adaptive_padding_loader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.dataset.Dataset</span></code></p>
+<p>Adaptive padding DataLoader:</p>
+<blockquote>
+<div><p>In general, adaptive padding data loader will pad all images to the
+same size defined by “out_shape” when constructing the data loader.
+For training, random flip and rotaion will be applied. No augmentation
+for testing or validation.</p>
+<p>“test_flag” is a key parameter for determining how data loading
+works in different scenarios:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>“T”: trianing</p></li>
+<li><p>“F”: validation on a folder of files</p></li>
+<li><p>“C”: test on files listed in a CSV</p></li>
+</ul>
+</div></blockquote>
+<p>For test_flag == “T” or “F” :</p>
+<blockquote>
+<div><p>Assumption: all data should be saved in a folder with
+filenames 0_xxxxx.npy, 0_xxxxx.npy, 1_xxxx.npy, 1_xxxx.npy,
+2_xxxxx.npy, 2_xxxx.npy, 3_xxxx.npy, 4_xxxx.npy, etc.. All files
+are in .npy format instead of images and the first digit of the
+filename is the class label. [Limitation: currently ony support
+at most 10 classes].</p>
+<p>For training, a buffer_size can be passed in to only use a
+certain number of data to warm up your trainingg.</p>
+</div></blockquote>
+<p>For test_flag == “C”:</p>
+<blockquote>
+<div><p>Assumption: a csv file with two columns “crop_raw” and “crop_seg”
+which showing the read path for raw image and segmentation. If
+a file with name “for_mito_prediction.npy” exists under the same
+folder as “crop_raw”, then it will be directly loaded and used
+as input to your model. Otherwise, buildinng_wrapper_path and
+building_func_name will be used to load a function defining how
+to prepare the input data using crop_raw and crop_seg. For example,
+you can have a file “C:/projects/demo/preprocessing.py” with a
+function called “my_preprocessing” defined in the script. Then,
+buildinng_wrapper_path = “C:/projects/demo/preprocessing.py” and
+building_func_name = “my_preprocessing”</p>
+</div></blockquote>
+<p>Loading: all images will only be loaded when they are being used. Only
+class labels (only for training and validation) are pre-loaded, no
+images will be pre-loaded (ideal for large dataset).</p>
+<p>This will be improved for more flexible data loading</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="class">
+<dt id="image_classifier_3d.data_loader.universal_loader.basic_loader">
+<em class="property">class </em><code class="sig-prename descclassname">image_classifier_3d.data_loader.universal_loader.</code><code class="sig-name descname">basic_loader</code><span class="sig-paren">(</span><em class="sig-param">filenames</em>, <em class="sig-param">buffer_size=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/image_classifier_3d/data_loader/universal_loader.html#basic_loader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#image_classifier_3d.data_loader.universal_loader.basic_loader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.dataset.Dataset</span></code></p>
+<p>Basic DataLoader:</p>
+<blockquote>
+<div><p>Assumption: all training data should be saved in a folder with
+filenames 0_xxxxx.npy, 0_xxxxx.npy, 1_xxxx.npy, 1_xxxx.npy,
+2_xxxxx.npy, 2_xxxx.npy, 3_xxxx.npy, 4_xxxx.npy, etc.. All files
+are in .npy format instead of images and the first digit of the
+filename is the class label. [Limitation: currently ony support
+at most 10 classes]</p>
+<p>Loading: all images will only be loaded when they are being used
+in a training iteration. Only class labels are pre-loaded, no
+images will be pre-loaded (ideal for large dataset).</p>
+<p>Inference: Currently basic dataloader only take preprocessed
+images as .npy files during inference.</p>
+<p>This will be improved for more flexible data loading</p>
+</div></blockquote>
+</dd></dl>
+
+</div>
+<div class="section" id="module-image_classifier_3d.data_loader.utils">
+<span id="image-classifier-3d-data-loader-utils-module"></span><h2>image_classifier_3d.data_loader.utils module<a class="headerlink" href="#module-image_classifier_3d.data_loader.utils" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="image_classifier_3d.data_loader.utils.build_one_cell">
+<code class="sig-prename descclassname">image_classifier_3d.data_loader.utils.</code><code class="sig-name descname">build_one_cell</code><span class="sig-paren">(</span><em class="sig-param">crop_raw: numpy.ndarray</em>, <em class="sig-param">crop_seg: numpy.ndarray</em>, <em class="sig-param">down_ratio: float = 0.5</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="_modules/image_classifier_3d/data_loader/utils.html#build_one_cell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#image_classifier_3d.data_loader.utils.build_one_cell" title="Permalink to this definition">¶</a></dt>
+<dd><p>prepare input tensor for single cell mitotic classifier</p>
+<dl class="simple">
+<dt>crop_raw: np.ndarray</dt><dd><p>4D array (CZYX), multi-channel 3D image, with the first channel as DNA image,
+and the second channel as cell membrane image. The image is assume to have
+isotropic dimension (i.e., XYZ have the same resolution)</p>
+</dd>
+<dt>crop_seg: np.ndarray</dt><dd><p>4D array (CZYX), multi-channel 3D image of segmentation mask, assuming the first
+channel is DNA segmentation, the second channel is cell segmentation. The XYZ
+size should be the same as crop_raw</p>
+</dd>
+<dt>down_ratio: float</dt><dd><p>how much downsampling is applied on the image. Default is 0.5, which means the
+image size is reduced by half.</p>
+</dd>
+</dl>
+<p>a 4D array (CZYX) ready to be fed into the neural network</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-image_classifier_3d.data_loader">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-image_classifier_3d.data_loader" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Jianxu Chen
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

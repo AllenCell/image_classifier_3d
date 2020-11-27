@@ -1,0 +1,46 @@
+image\_classifier\_3d.models package
+====================================
+
+Submodules
+----------
+
+image\_classifier\_3d.models.build\_classifier module
+-----------------------------------------------------
+
+.. automodule:: image_classifier_3d.models.build_classifier
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+image\_classifier\_3d.models.densenet module
+--------------------------------------------
+
+.. automodule:: image_classifier_3d.models.densenet
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+image\_classifier\_3d.models.resnet module
+------------------------------------------
+
+.. automodule:: image_classifier_3d.models.resnet
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+image\_classifier\_3d.models.resnet\_GN module
+----------------------------------------------
+
+.. automodule:: image_classifier_3d.models.resnet_GN
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: image_classifier_3d.models
+   :members:
+   :undoc-members:
+   :show-inheritance:

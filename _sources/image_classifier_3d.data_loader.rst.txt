@@ -1,0 +1,30 @@
+image\_classifier\_3d.data\_loader package
+==========================================
+
+Submodules
+----------
+
+image\_classifier\_3d.data\_loader.universal\_loader module
+-----------------------------------------------------------
+
+.. automodule:: image_classifier_3d.data_loader.universal_loader
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+image\_classifier\_3d.data\_loader.utils module
+-----------------------------------------------
+
+.. automodule:: image_classifier_3d.data_loader.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: image_classifier_3d.data_loader
+   :members:
+   :undoc-members:
+   :show-inheritance:

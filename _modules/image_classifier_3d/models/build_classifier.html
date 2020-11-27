@@ -1,0 +1,724 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>image_classifier_3d.models.build_classifier &mdash; Image Classifier 3D 0.1.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> Image Classifier 3D
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../image_classifier_3d.html">image_classifier_3d package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../image_classifier_3d.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../image_classifier_3d.bin.html">image_classifier_3d.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../image_classifier_3d.data_loader.html">image_classifier_3d.data_loader package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../image_classifier_3d.models.html">image_classifier_3d.models package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../image_classifier_3d.utils.html">image_classifier_3d.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../image_classifier_3d.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../image_classifier_3d.html#module-image_classifier_3d.proj_tester">image_classifier_3d.proj_tester module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../image_classifier_3d.html#module-image_classifier_3d.proj_trainer">image_classifier_3d.proj_trainer module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../image_classifier_3d.html#module-image_classifier_3d">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../math.html">Math notation example</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Image Classifier 3D</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../image_classifier_3d.html">image_classifier_3d</a> &raquo;</li>
+        
+      <li>image_classifier_3d.models.build_classifier</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for image_classifier_3d.models.build_classifier</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">PyTorch Lightning model class for mitotic classifier</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="c1"># import numpy as np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">optim</span>
+<span class="kn">import</span> <span class="nn">pytorch_lightning</span> <span class="k">as</span> <span class="nn">pl</span>
+
+<span class="c1"># from torchvision import transforms</span>
+<span class="c1"># from torch.nn import CrossEntropyLoss</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span>
+
+<span class="c1"># import pdb</span>
+<span class="kn">import</span> <span class="nn">torch.distributed</span> <span class="k">as</span> <span class="nn">dist</span>
+
+
+<div class="viewcode-block" id="Mitotic_Classifier"><a class="viewcode-back" href="../../../image_classifier_3d.models.html#image_classifier_3d.models.build_classifier.Mitotic_Classifier">[docs]</a><span class="k">class</span> <span class="nc">Mitotic_Classifier</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">LightningModule</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hparams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Mitotic_Classifier</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="c1"># load the model architecture based on model_params</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">hparams</span><span class="o">.</span><span class="n">model_params</span>
+        <span class="k">if</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;resnet&quot;</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">.resnet</span> <span class="kn">import</span> <span class="n">generate_model</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">generate_model</span><span class="p">(</span>
+                <span class="n">model_depth</span><span class="o">=</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;depth&quot;</span><span class="p">],</span>
+                <span class="n">n_classes</span><span class="o">=</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;num_classes&quot;</span><span class="p">],</span>
+                <span class="n">n_input_channels</span><span class="o">=</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;in_channels&quot;</span><span class="p">],</span>
+                <span class="n">shortcut_type</span><span class="o">=</span><span class="s2">&quot;B&quot;</span><span class="p">,</span>
+                <span class="n">conv1_t_size</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+                <span class="n">conv1_t_stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">no_max_pool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">widen_factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;resnet-gn&quot;</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">.resnet_GN</span> <span class="kn">import</span> <span class="n">generate_model</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">generate_model</span><span class="p">(</span>
+                <span class="n">model_depth</span><span class="o">=</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;depth&quot;</span><span class="p">],</span>
+                <span class="n">n_classes</span><span class="o">=</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;num_classes&quot;</span><span class="p">],</span>
+                <span class="n">n_input_channels</span><span class="o">=</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;in_channels&quot;</span><span class="p">],</span>
+                <span class="n">shortcut_type</span><span class="o">=</span><span class="s2">&quot;B&quot;</span><span class="p">,</span>
+                <span class="n">conv1_t_size</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+                <span class="n">conv1_t_stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">no_max_pool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">widen_factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;densenet&quot;</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">.densenet</span> <span class="kn">import</span> <span class="n">generate_model</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">generate_model</span><span class="p">(</span>
+                <span class="n">model_depth</span><span class="o">=</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;depth&quot;</span><span class="p">],</span>
+                <span class="n">n_classes</span><span class="o">=</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;num_classes&quot;</span><span class="p">],</span>
+                <span class="n">n_input_channels</span><span class="o">=</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;in_channels&quot;</span><span class="p">],</span>
+                <span class="n">conv1_t_size</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+                <span class="n">conv1_t_stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">no_max_pool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">hparams</span><span class="o">.</span><span class="n">model_params</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;resnet18_pretrain&quot;</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">torchvision.models.video</span> <span class="kn">import</span> <span class="n">r3d_18</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">r3d_18</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># load/initialize parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hparams</span> <span class="o">=</span> <span class="n">hparams</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_params</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exp_params</span> <span class="o">=</span> <span class="n">hparams</span><span class="o">.</span><span class="n">exp_params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataloader_param</span> <span class="o">=</span> <span class="n">hparams</span><span class="o">.</span><span class="n">exp_params</span><span class="p">[</span><span class="s2">&quot;dataloader&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_type</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="s2">&quot;test_data&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="p">:</span>  <span class="c1"># train</span>
+
+            <span class="c1"># TODO: support selecting loss function from config file</span>
+
+            <span class="c1"># load weight for each class</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">class_weight</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;class_weight&quot;</span><span class="p">])</span>
+
+            <span class="c1"># load train/valid files</span>
+            <span class="n">train_filenames</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span>
+                <span class="n">hparams</span><span class="o">.</span><span class="n">exp_params</span><span class="p">[</span><span class="s2">&quot;training_data_path&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s2">&quot;*.npy&quot;</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">train_filenames</span> <span class="o">=</span> <span class="n">train_filenames</span>
+
+            <span class="n">val_filenames</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span>
+                <span class="n">hparams</span><span class="o">.</span><span class="n">exp_params</span><span class="p">[</span><span class="s2">&quot;validation_data_path&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s2">&quot;*.npy&quot;</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val_filenames</span> <span class="o">=</span> <span class="n">val_filenames</span>
+
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val_filenames</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_filenames</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># testing</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">hparams</span><span class="o">.</span><span class="n">test_data</span><span class="p">[</span><span class="s2">&quot;data_path&quot;</span><span class="p">]):</span>
+                <span class="n">_fn</span><span class="p">,</span> <span class="n">file_extension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">hparams</span><span class="o">.</span><span class="n">test_data</span><span class="p">[</span><span class="s2">&quot;data_path&quot;</span><span class="p">])</span>
+                <span class="k">assert</span> <span class="n">file_extension</span> <span class="o">==</span> <span class="s2">&quot;.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;only csv is supported&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">test_type</span> <span class="o">=</span> <span class="s2">&quot;df&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">test_type</span> <span class="o">=</span> <span class="s2">&quot;folder&quot;</span>
+
+        <span class="c1"># define final layer for test and validation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_layer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Softmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_layer</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda:0&quot;</span><span class="p">))</span>
+
+<div class="viewcode-block" id="Mitotic_Classifier.forward"><a class="viewcode-back" href="../../../image_classifier_3d.models.html#image_classifier_3d.models.build_classifier.Mitotic_Classifier.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataloader_param</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;AdaptiveMixBatch&quot;</span><span class="p">:</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x_i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+                <span class="c1"># x_i is an image.</span>
+                <span class="n">y_i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x_i</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">y</span> <span class="o">=</span> <span class="n">y_i</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">y</span><span class="p">,</span> <span class="n">y_i</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">y</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Mitotic_Classifier.training_step"><a class="viewcode-back" href="../../../image_classifier_3d.models.html#image_classifier_3d.models.build_classifier.Mitotic_Classifier.training_step">[docs]</a>    <span class="k">def</span> <span class="nf">training_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">,</span> <span class="n">optimizer_idx</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">batch</span>
+        <span class="n">y_hat</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_weight</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span><span class="n">y_hat</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span><span class="n">y_hat</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_weight</span><span class="o">.</span><span class="n">cuda</span><span class="p">(),</span> <span class="n">reduction</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">)</span>
+        <span class="n">tensorboard_logs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;train_loss&quot;</span><span class="p">:</span> <span class="n">loss</span><span class="p">}</span>
+
+        <span class="n">labels_hat</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">y_hat</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">n_correct_pred</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y</span> <span class="o">==</span> <span class="n">labels_hat</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+
+        <span class="n">pred_prob</span> <span class="o">=</span> <span class="n">y_hat</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+        <span class="n">pred_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;idx&quot;</span><span class="p">:</span> <span class="n">batch_idx</span><span class="p">,</span> <span class="s2">&quot;pred&quot;</span><span class="p">:</span> <span class="n">pred_prob</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">y</span><span class="p">}</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;loss&quot;</span><span class="p">:</span> <span class="n">loss</span><span class="p">,</span>
+            <span class="s2">&quot;log&quot;</span><span class="p">:</span> <span class="n">tensorboard_logs</span><span class="p">,</span>
+            <span class="s2">&quot;train_n_correct_pred&quot;</span><span class="p">:</span> <span class="n">n_correct_pred</span><span class="p">,</span>
+            <span class="s2">&quot;train_n_pred&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+            <span class="s2">&quot;pred_record&quot;</span><span class="p">:</span> <span class="n">pred_dict</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+<div class="viewcode-block" id="Mitotic_Classifier.training_epoch_end"><a class="viewcode-back" href="../../../image_classifier_3d.models.html#image_classifier_3d.models.build_classifier.Mitotic_Classifier.training_epoch_end">[docs]</a>    <span class="k">def</span> <span class="nf">training_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
+        <span class="n">avg_loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;loss&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">])</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">train_acc</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;train_n_correct_pred&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">])</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span>
+            <span class="n">x</span><span class="p">[</span><span class="s2">&quot;train_n_pred&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">outputs</span>
+        <span class="p">)</span>
+
+        <span class="n">train_acc</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">train_acc</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
+
+        <span class="n">dist</span><span class="o">.</span><span class="n">all_reduce</span><span class="p">(</span><span class="n">train_acc</span><span class="p">)</span>
+        <span class="n">train_acc</span> <span class="o">/=</span> <span class="n">dist</span><span class="o">.</span><span class="n">get_world_size</span><span class="p">()</span>
+
+        <span class="n">tensorboard_logs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;train_epoch_loss&quot;</span><span class="p">:</span> <span class="n">avg_loss</span><span class="p">,</span>
+            <span class="s2">&quot;train_epoch_acc&quot;</span><span class="p">:</span> <span class="n">train_acc</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;loss&quot;</span><span class="p">:</span> <span class="n">avg_loss</span><span class="p">,</span> <span class="s2">&quot;log&quot;</span><span class="p">:</span> <span class="n">tensorboard_logs</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="Mitotic_Classifier.validation_step"><a class="viewcode-back" href="../../../image_classifier_3d.models.html#image_classifier_3d.models.build_classifier.Mitotic_Classifier.validation_step">[docs]</a>    <span class="k">def</span> <span class="nf">validation_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">,</span> <span class="n">optimizer_idx</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">_fn_</span> <span class="o">=</span> <span class="n">batch</span>
+        <span class="n">y_hat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="c1"># val_loss = self.criterion(y_hat, y)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_weight</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">val_loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span><span class="n">y_hat</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">val_loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span>
+                <span class="n">y_hat</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_weight</span><span class="o">.</span><span class="n">cuda</span><span class="p">(),</span> <span class="n">reduction</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">labels_hat</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">y_hat</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">n_correct_pred</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y</span> <span class="o">==</span> <span class="n">labels_hat</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+
+        <span class="n">pred_prob</span> <span class="o">=</span> <span class="n">y_hat</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+        <span class="n">pred_dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;idx&quot;</span><span class="p">:</span> <span class="n">batch_idx</span><span class="p">,</span>
+            <span class="s2">&quot;pred&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">pred_prob</span><span class="o">.</span><span class="n">numpy</span><span class="p">()],</span>
+            <span class="s2">&quot;pred_label&quot;</span><span class="p">:</span> <span class="n">labels_hat</span><span class="p">,</span>
+            <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span>
+            <span class="s2">&quot;fn&quot;</span><span class="p">:</span> <span class="n">_fn_</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;val_loss&quot;</span><span class="p">:</span> <span class="n">val_loss</span><span class="p">,</span>
+            <span class="s2">&quot;n_correct_pred&quot;</span><span class="p">:</span> <span class="n">n_correct_pred</span><span class="p">,</span>
+            <span class="s2">&quot;n_pred&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+            <span class="s2">&quot;pred_record&quot;</span><span class="p">:</span> <span class="n">pred_dict</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+<div class="viewcode-block" id="Mitotic_Classifier.validation_epoch_end"><a class="viewcode-back" href="../../../image_classifier_3d.models.html#image_classifier_3d.models.build_classifier.Mitotic_Classifier.validation_epoch_end">[docs]</a>    <span class="k">def</span> <span class="nf">validation_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
+        <span class="n">avg_loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;val_loss&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">])</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">val_acc</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;n_correct_pred&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">])</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span>
+            <span class="n">x</span><span class="p">[</span><span class="s2">&quot;n_pred&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">outputs</span>
+        <span class="p">)</span>
+
+        <span class="n">val_acc</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">val_acc</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
+
+        <span class="n">dist</span><span class="o">.</span><span class="n">all_reduce</span><span class="p">(</span><span class="n">val_acc</span><span class="p">)</span>
+        <span class="n">val_acc</span> <span class="o">/=</span> <span class="n">dist</span><span class="o">.</span><span class="n">get_world_size</span><span class="p">()</span>
+
+        <span class="n">tensorboard_logs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;val_loss&quot;</span><span class="p">:</span> <span class="n">avg_loss</span><span class="p">,</span> <span class="s2">&quot;val_acc&quot;</span><span class="p">:</span> <span class="n">val_acc</span><span class="o">.</span><span class="n">item</span><span class="p">()}</span>
+
+        <span class="c1"># make dubug record</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;pred_record&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">])</span>
+        <span class="n">csv_fn</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">exp_params</span><span class="p">[</span><span class="s2">&quot;debug_path&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="s2">&quot;val/&quot;</span>
+            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9000</span><span class="p">))</span>
+            <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span>
+        <span class="p">)</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">csv_fn</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;val_loss&quot;</span><span class="p">:</span> <span class="n">avg_loss</span><span class="p">,</span>
+            <span class="s2">&quot;val_acc&quot;</span><span class="p">:</span> <span class="n">val_acc</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+            <span class="s2">&quot;log&quot;</span><span class="p">:</span> <span class="n">tensorboard_logs</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+<div class="viewcode-block" id="Mitotic_Classifier.test_step"><a class="viewcode-back" href="../../../image_classifier_3d.models.html#image_classifier_3d.models.build_classifier.Mitotic_Classifier.test_step">[docs]</a>    <span class="k">def</span> <span class="nf">test_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">,</span> <span class="n">optimizer_idx</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_type</span> <span class="o">==</span> <span class="s2">&quot;folder&quot;</span><span class="p">:</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">fn</span> <span class="o">=</span> <span class="n">batch</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">cid</span> <span class="o">=</span> <span class="n">batch</span>
+
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="c1"># labels_hat = torch.argmax(y_hat, dim=1)</span>
+        <span class="c1"># n_correct_pred = torch.sum(y == labels_hat).item()</span>
+        <span class="n">y_hat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_layer</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>  <span class="c1"># y_pred</span>
+        <span class="n">pred_prob</span> <span class="o">=</span> <span class="n">y_hat</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_type</span> <span class="o">==</span> <span class="s2">&quot;folder&quot;</span><span class="p">:</span>
+            <span class="n">pred_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;fn&quot;</span><span class="p">:</span> <span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;pred&quot;</span><span class="p">:</span> <span class="n">pred_prob</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">y</span><span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pred_dict</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;CellId&quot;</span><span class="p">:</span> <span class="n">cid</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">int</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span>
+                <span class="s2">&quot;pred&quot;</span><span class="p">:</span> <span class="n">pred_prob</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span>
+            <span class="p">}</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;n_pred&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s2">&quot;pred_record&quot;</span><span class="p">:</span> <span class="n">pred_dict</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="Mitotic_Classifier.test_epoch_end"><a class="viewcode-back" href="../../../image_classifier_3d.models.html#image_classifier_3d.models.build_classifier.Mitotic_Classifier.test_epoch_end">[docs]</a>    <span class="k">def</span> <span class="nf">test_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">batch_out</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_type</span> <span class="o">==</span> <span class="s2">&quot;folder&quot;</span><span class="p">:</span>
+                <span class="n">batch_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">batch_out</span><span class="p">[</span><span class="s2">&quot;pred_record&quot;</span><span class="p">][</span><span class="s2">&quot;fn&quot;</span><span class="p">])</span>
+                <span class="k">for</span> <span class="n">data_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">batch_size</span><span class="p">):</span>
+                    <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="p">{</span>
+                            <span class="s2">&quot;fn&quot;</span><span class="p">:</span> <span class="n">batch_out</span><span class="p">[</span><span class="s2">&quot;pred_record&quot;</span><span class="p">][</span><span class="s2">&quot;fn&quot;</span><span class="p">][</span><span class="n">data_idx</span><span class="p">],</span>
+                            <span class="s2">&quot;pred&quot;</span><span class="p">:</span> <span class="n">batch_out</span><span class="p">[</span><span class="s2">&quot;pred_record&quot;</span><span class="p">][</span><span class="s2">&quot;pred&quot;</span><span class="p">][</span><span class="n">data_idx</span><span class="p">],</span>
+                        <span class="p">}</span>
+                    <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">batch_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">batch_out</span><span class="p">[</span><span class="s2">&quot;pred_record&quot;</span><span class="p">][</span><span class="s2">&quot;CellId&quot;</span><span class="p">])</span>
+                <span class="k">for</span> <span class="n">data_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">batch_size</span><span class="p">):</span>
+                    <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="p">{</span>
+                            <span class="s2">&quot;CellId&quot;</span><span class="p">:</span> <span class="n">batch_out</span><span class="p">[</span><span class="s2">&quot;pred_record&quot;</span><span class="p">][</span><span class="s2">&quot;CellId&quot;</span><span class="p">][</span><span class="n">data_idx</span><span class="p">],</span>
+                            <span class="s2">&quot;pred&quot;</span><span class="p">:</span> <span class="n">batch_out</span><span class="p">[</span><span class="s2">&quot;pred_record&quot;</span><span class="p">][</span><span class="s2">&quot;pred&quot;</span><span class="p">][</span><span class="n">data_idx</span><span class="p">],</span>
+                        <span class="p">}</span>
+                    <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;test&quot;</span><span class="p">:</span> <span class="s2">&quot;done&quot;</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="Mitotic_Classifier.configure_optimizers"><a class="viewcode-back" href="../../../image_classifier_3d.models.html#image_classifier_3d.models.build_classifier.Mitotic_Classifier.configure_optimizers">[docs]</a>    <span class="k">def</span> <span class="nf">configure_optimizers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">optims</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">scheds</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">exp_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp_params</span>
+
+        <span class="c1"># basic optimizer</span>
+        <span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">exp_m</span><span class="p">[</span><span class="s2">&quot;LR&quot;</span><span class="p">],</span> <span class="n">weight_decay</span><span class="o">=</span><span class="n">exp_m</span><span class="p">[</span><span class="s2">&quot;weight_decay&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">optims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">optimizer</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">exp_m</span><span class="p">[</span><span class="s2">&quot;scheduler&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">exp_m</span><span class="p">[</span><span class="s2">&quot;scheduler&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ExponentialLR&quot;</span><span class="p">:</span>
+                <span class="kn">from</span> <span class="nn">torch.optim.lr_scheduler</span> <span class="kn">import</span> <span class="n">ExponentialLR</span>
+
+                <span class="k">assert</span> <span class="n">exp_m</span><span class="p">[</span><span class="s2">&quot;scheduler&quot;</span><span class="p">][</span><span class="s2">&quot;gamma&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
+                <span class="n">scheduler</span> <span class="o">=</span> <span class="n">ExponentialLR</span><span class="p">(</span><span class="n">optims</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">gamma</span><span class="o">=</span><span class="n">exp_m</span><span class="p">[</span><span class="s2">&quot;scheduler&quot;</span><span class="p">][</span><span class="s2">&quot;gamma&quot;</span><span class="p">])</span>
+
+            <span class="k">elif</span> <span class="n">exp_m</span><span class="p">[</span><span class="s2">&quot;scheduler&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;CosineAnnealingLR&quot;</span><span class="p">:</span>
+                <span class="kn">from</span> <span class="nn">torch.optim.lr_scheduler</span> <span class="kn">import</span> <span class="n">CosineAnnealingLR</span> <span class="k">as</span> <span class="n">CALR</span>
+
+                <span class="k">assert</span> <span class="n">exp_m</span><span class="p">[</span><span class="s2">&quot;scheduler&quot;</span><span class="p">][</span><span class="s2">&quot;T_max&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
+                <span class="n">scheduler</span> <span class="o">=</span> <span class="n">CALR</span><span class="p">(</span><span class="n">optims</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">T_max</span><span class="o">=</span><span class="n">exp_m</span><span class="p">[</span><span class="s2">&quot;scheduler&quot;</span><span class="p">][</span><span class="s2">&quot;T_max&quot;</span><span class="p">])</span>
+
+            <span class="k">elif</span> <span class="n">exp_m</span><span class="p">[</span><span class="s2">&quot;scheduler&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;StepLR&quot;</span><span class="p">:</span>
+                <span class="kn">from</span> <span class="nn">torch.optim.lr_scheduler</span> <span class="kn">import</span> <span class="n">StepLR</span>
+
+                <span class="k">assert</span> <span class="n">exp_m</span><span class="p">[</span><span class="s2">&quot;scheduler&quot;</span><span class="p">][</span><span class="s2">&quot;step_size&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
+                <span class="k">assert</span> <span class="n">exp_m</span><span class="p">[</span><span class="s2">&quot;scheduler&quot;</span><span class="p">][</span><span class="s2">&quot;gamma&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
+                <span class="n">scheduler</span> <span class="o">=</span> <span class="n">StepLR</span><span class="p">(</span>
+                    <span class="n">optims</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="n">step_size</span><span class="o">=</span><span class="n">exp_m</span><span class="p">[</span><span class="s2">&quot;scheduler&quot;</span><span class="p">][</span><span class="s2">&quot;step_size&quot;</span><span class="p">],</span>
+                    <span class="n">gamma</span><span class="o">=</span><span class="n">exp_m</span><span class="p">[</span><span class="s2">&quot;scheduler&quot;</span><span class="p">][</span><span class="s2">&quot;gamma&quot;</span><span class="p">],</span>
+                <span class="p">)</span>
+
+            <span class="n">scheds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scheduler</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">optims</span><span class="p">,</span> <span class="n">scheds</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;no scheduler is used&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">optims</span></div>
+
+<div class="viewcode-block" id="Mitotic_Classifier.train_dataloader"><a class="viewcode-back" href="../../../image_classifier_3d.models.html#image_classifier_3d.models.build_classifier.Mitotic_Classifier.train_dataloader">[docs]</a>    <span class="k">def</span> <span class="nf">train_dataloader</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># ## may load customized data transformation function here</span>
+        <span class="c1"># transform = self.data_transforms()</span>
+
+        <span class="n">data_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataloader_param</span>
+        <span class="c1"># train_set_loader = None</span>
+        <span class="k">if</span> <span class="n">data_m</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;AdaptivePaddingBatch&quot;</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">..data_loader.universal_loader</span> <span class="kn">import</span> <span class="n">adaptive_padding_loader</span>
+
+            <span class="n">train_set_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+                <span class="n">adaptive_padding_loader</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">train_filenames</span><span class="p">,</span> <span class="n">out_shape</span><span class="o">=</span><span class="n">data_m</span><span class="p">[</span><span class="s2">&quot;shape&quot;</span><span class="p">]</span>
+                <span class="p">),</span>
+                <span class="n">batch_size</span><span class="o">=</span><span class="n">data_m</span><span class="p">[</span><span class="s2">&quot;batch_size&quot;</span><span class="p">],</span>
+                <span class="n">num_workers</span><span class="o">=</span><span class="n">data_m</span><span class="p">[</span><span class="s2">&quot;num_worker&quot;</span><span class="p">],</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">data_m</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;AdaptiveMixBatch&quot;</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">..data_loader.universal_loader</span> <span class="kn">import</span> <span class="n">adaptive_loader</span>
+            <span class="kn">from</span> <span class="nn">..utils.misc_utils</span> <span class="kn">import</span> <span class="n">mix_collate</span>
+
+            <span class="n">train_set_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+                <span class="n">adaptive_loader</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_filenames</span><span class="p">),</span>
+                <span class="n">batch_size</span><span class="o">=</span><span class="n">data_m</span><span class="p">[</span><span class="s2">&quot;batch_size&quot;</span><span class="p">],</span>
+                <span class="n">collate_fn</span><span class="o">=</span><span class="n">mix_collate</span><span class="p">,</span>
+                <span class="n">num_workers</span><span class="o">=</span><span class="n">data_m</span><span class="p">[</span><span class="s2">&quot;num_worker&quot;</span><span class="p">],</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># assuming basic</span>
+            <span class="kn">from</span> <span class="nn">..data_loader.universal_loader</span> <span class="kn">import</span> <span class="n">basic_loader</span>
+
+            <span class="n">train_set_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+                <span class="n">basic_loader</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_filenames</span><span class="p">),</span>
+                <span class="n">batch_size</span><span class="o">=</span><span class="n">data_m</span><span class="p">[</span><span class="s2">&quot;batch_size&quot;</span><span class="p">],</span>
+                <span class="n">num_workers</span><span class="o">=</span><span class="n">data_m</span><span class="p">[</span><span class="s2">&quot;num_worker&quot;</span><span class="p">],</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">train_set_loader</span></div>
+
+<div class="viewcode-block" id="Mitotic_Classifier.val_dataloader"><a class="viewcode-back" href="../../../image_classifier_3d.models.html#image_classifier_3d.models.build_classifier.Mitotic_Classifier.val_dataloader">[docs]</a>    <span class="k">def</span> <span class="nf">val_dataloader</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># ## may load customized data transformation function here</span>
+        <span class="c1"># transform = self.data_transforms()</span>
+
+        <span class="n">data_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataloader_param</span>
+        <span class="c1"># val_set_loader = None</span>
+        <span class="k">if</span> <span class="n">data_m</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;AdaptivePaddingBatch&quot;</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">..data_loader.universal_loader</span> <span class="kn">import</span> <span class="n">adaptive_padding_loader</span>
+
+            <span class="n">val_set_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+                <span class="n">adaptive_padding_loader</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">val_filenames</span><span class="p">,</span> <span class="n">out_shape</span><span class="o">=</span><span class="n">data_m</span><span class="p">[</span><span class="s2">&quot;shape&quot;</span><span class="p">],</span> <span class="n">test_flag</span><span class="o">=</span><span class="s2">&quot;F&quot;</span>
+                <span class="p">),</span>
+                <span class="n">batch_size</span><span class="o">=</span><span class="n">data_m</span><span class="p">[</span><span class="s2">&quot;batch_size&quot;</span><span class="p">],</span>
+                <span class="n">num_workers</span><span class="o">=</span><span class="n">data_m</span><span class="p">[</span><span class="s2">&quot;num_worker&quot;</span><span class="p">],</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">data_m</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;AdaptiveMixBatch&quot;</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">..data_loader.universal_loader</span> <span class="kn">import</span> <span class="n">adaptive_loader</span>
+            <span class="kn">from</span> <span class="nn">..utils.misc_utils</span> <span class="kn">import</span> <span class="n">mix_collate</span>
+
+            <span class="n">val_set_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+                <span class="n">adaptive_loader</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val_filenames</span><span class="p">),</span>
+                <span class="n">batch_size</span><span class="o">=</span><span class="n">data_m</span><span class="p">[</span><span class="s2">&quot;batch_size&quot;</span><span class="p">],</span>
+                <span class="n">collate_fn</span><span class="o">=</span><span class="n">mix_collate</span><span class="p">,</span>
+                <span class="n">num_workers</span><span class="o">=</span><span class="n">data_m</span><span class="p">[</span><span class="s2">&quot;num_worker&quot;</span><span class="p">],</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># assume basic</span>
+            <span class="kn">from</span> <span class="nn">..data_loader.universal_loader</span> <span class="kn">import</span> <span class="n">basic_loader</span>
+
+            <span class="n">val_set_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+                <span class="n">basic_loader</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val_filenames</span><span class="p">),</span>
+                <span class="n">batch_size</span><span class="o">=</span><span class="n">data_m</span><span class="p">[</span><span class="s2">&quot;batch_size&quot;</span><span class="p">],</span>
+                <span class="n">num_workers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dataloader_param</span><span class="p">[</span><span class="s2">&quot;num_worker&quot;</span><span class="p">],</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">val_set_loader</span></div>
+
+<div class="viewcode-block" id="Mitotic_Classifier.test_dataloader"><a class="viewcode-back" href="../../../image_classifier_3d.models.html#image_classifier_3d.models.build_classifier.Mitotic_Classifier.test_dataloader">[docs]</a>    <span class="k">def</span> <span class="nf">test_dataloader</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="s2">&quot;test_data&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="n">data_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataloader_param</span>
+        <span class="n">data_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">test_data</span>
+        <span class="n">test_set_loader</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_type</span> <span class="o">==</span> <span class="s2">&quot;df&quot;</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="p">(</span>
+                <span class="n">data_m</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;AdaptivePaddingBatch&quot;</span>
+            <span class="p">),</span> <span class="s2">&quot;only adaptive paddng loader is support when using csv&quot;</span>
+            <span class="kn">from</span> <span class="nn">..data_loader.universal_loader</span> <span class="kn">import</span> <span class="n">adaptive_padding_loader</span>
+
+            <span class="n">test_set_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+                <span class="n">adaptive_padding_loader</span><span class="p">(</span>
+                    <span class="n">data_t</span><span class="p">[</span><span class="s2">&quot;data_path&quot;</span><span class="p">],</span> <span class="n">out_shape</span><span class="o">=</span><span class="n">data_m</span><span class="p">[</span><span class="s2">&quot;shape&quot;</span><span class="p">],</span> <span class="n">test_flag</span><span class="o">=</span><span class="s2">&quot;C&quot;</span>
+                <span class="p">),</span>
+                <span class="n">batch_size</span><span class="o">=</span><span class="n">data_t</span><span class="p">[</span><span class="s2">&quot;batch_size&quot;</span><span class="p">],</span>
+                <span class="n">num_workers</span><span class="o">=</span><span class="n">data_t</span><span class="p">[</span><span class="s2">&quot;num_worker&quot;</span><span class="p">],</span>
+            <span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_type</span> <span class="o">==</span> <span class="s2">&quot;folder&quot;</span><span class="p">:</span>
+            <span class="n">filenames</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">data_t</span><span class="p">[</span><span class="s2">&quot;data_path&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s2">&quot;*.npy&quot;</span><span class="p">)</span>
+            <span class="n">filenames</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">data_m</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;AdaptivePaddingBatch&quot;</span><span class="p">:</span>
+                <span class="kn">from</span> <span class="nn">..data_loader.universal_loader</span> <span class="kn">import</span> <span class="n">adaptive_padding_loader</span>
+
+                <span class="n">test_set_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+                    <span class="n">adaptive_padding_loader</span><span class="p">(</span>
+                        <span class="n">filenames</span><span class="p">,</span> <span class="n">out_shape</span><span class="o">=</span><span class="n">data_m</span><span class="p">[</span><span class="s2">&quot;shape&quot;</span><span class="p">],</span> <span class="n">test_flag</span><span class="o">=</span><span class="s2">&quot;F&quot;</span>
+                    <span class="p">),</span>
+                    <span class="n">batch_size</span><span class="o">=</span><span class="n">data_t</span><span class="p">[</span><span class="s2">&quot;batch_size&quot;</span><span class="p">],</span>
+                    <span class="n">num_workers</span><span class="o">=</span><span class="n">data_t</span><span class="p">[</span><span class="s2">&quot;num_worker&quot;</span><span class="p">],</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">data_m</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;AdaptiveMixBatch&quot;</span><span class="p">:</span>
+                <span class="kn">from</span> <span class="nn">..data_loader.universal_loader</span> <span class="kn">import</span> <span class="n">adaptive_loader</span>
+                <span class="kn">from</span> <span class="nn">..utils.misc_utils</span> <span class="kn">import</span> <span class="n">mix_collate</span>
+
+                <span class="n">test_set_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+                    <span class="n">adaptive_loader</span><span class="p">(</span><span class="n">filenames</span><span class="p">),</span>
+                    <span class="n">batch_size</span><span class="o">=</span><span class="n">data_t</span><span class="p">[</span><span class="s2">&quot;batch_size&quot;</span><span class="p">],</span>
+                    <span class="n">collate_fn</span><span class="o">=</span><span class="n">mix_collate</span><span class="p">,</span>
+                    <span class="n">num_workers</span><span class="o">=</span><span class="n">data_t</span><span class="p">[</span><span class="s2">&quot;num_worker&quot;</span><span class="p">],</span>
+                    <span class="n">test_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># asume basic</span>
+                <span class="kn">from</span> <span class="nn">..data_loader.universal_loader</span> <span class="kn">import</span> <span class="n">basic_loader</span>
+
+                <span class="n">test_set_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+                    <span class="n">basic_loader</span><span class="p">(</span><span class="n">filenames</span><span class="p">),</span>
+                    <span class="n">batch_size</span><span class="o">=</span><span class="n">data_t</span><span class="p">[</span><span class="s2">&quot;batch_size&quot;</span><span class="p">],</span>
+                    <span class="n">num_workers</span><span class="o">=</span><span class="n">data_t</span><span class="p">[</span><span class="s2">&quot;num_worker&quot;</span><span class="p">],</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;unsupported test type&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">test_set_loader</span></div>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    # an example of customized data transformation</span>
+<span class="sd">    def data_transforms(self):</span>
+
+<span class="sd">        SetRange = transforms.Lambda(lambda X: 2 * X - 1.)</span>
+<span class="sd">        SetScale = transforms.Lambda(lambda X: X/X.sum(0).expand_as(X))</span>
+
+<span class="sd">        transform = transforms.Compose([transforms.RandomHorizontalFlip(),</span>
+<span class="sd">                                        transforms.CenterCrop(148),</span>
+<span class="sd">                                        transforms.Resize(self.params[&#39;img_size&#39;]),</span>
+<span class="sd">                                        transforms.ToTensor(),</span>
+<span class="sd">                                        SetRange])</span>
+
+<span class="sd">        return transform</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    def prepare_data(self):</span>
+
+<span class="sd">        exp_m = self.exp_params</span>
+<span class="sd">        # do train/valid split</span>
+<span class="sd">        train_filenames = glob(exp_m[&#39;training_data_path&#39;] + os.sep + &#39;*.npy&#39;)</span>
+<span class="sd">        # random.shuffle(train_filenames)</span>
+<span class="sd">        self.train_filenames = train_filenames</span>
+
+<span class="sd">        val_filenames = glob(exp_m[&#39;validation_data_path&#39;] + os.sep + &#39;*.npy&#39;)</span>
+<span class="sd">        # random.shuffle(val_filenames)</span>
+<span class="sd">        self.val_filenames = val_filenames</span>
+
+<span class="sd">        assert len(self.val_filenames) &gt; 0</span>
+<span class="sd">        assert len(self.train_filenames) &gt; 0</span>
+
+<span class="sd">        # total_num = len(filenames)</span>
+<span class="sd">        # num_val = int(np.floor(exp_m[&#39;val_ratio&#39;] * total_num))</span>
+<span class="sd">        # self.val_filenames = filenames[:num_val]</span>
+<span class="sd">        # self.train_filenames = filenames[num_val:]</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Jianxu Chen
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

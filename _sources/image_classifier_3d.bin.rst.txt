@@ -1,0 +1,22 @@
+image\_classifier\_3d.bin package
+=================================
+
+Submodules
+----------
+
+image\_classifier\_3d.bin.run\_classifier module
+------------------------------------------------
+
+.. automodule:: image_classifier_3d.bin.run_classifier
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: image_classifier_3d.bin
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,40 @@
+image\_classifier\_3d package
+=============================
+
+Subpackages
+-----------
+
+.. toctree::
+
+   image_classifier_3d.bin
+   image_classifier_3d.data_loader
+   image_classifier_3d.models
+   image_classifier_3d.utils
+
+Submodules
+----------
+
+image\_classifier\_3d.proj\_tester module
+-----------------------------------------
+
+.. automodule:: image_classifier_3d.proj_tester
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+image\_classifier\_3d.proj\_trainer module
+------------------------------------------
+
+.. automodule:: image_classifier_3d.proj_trainer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: image_classifier_3d
+   :members:
+   :undoc-members:
+   :show-inheritance:

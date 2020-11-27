@@ -1,0 +1,535 @@
+
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Index &mdash; Image Classifier 3D 0.1.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="#" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> Image Classifier 3D
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="image_classifier_3d.html">image_classifier_3d package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="image_classifier_3d.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="image_classifier_3d.bin.html">image_classifier_3d.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="image_classifier_3d.data_loader.html">image_classifier_3d.data_loader package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="image_classifier_3d.models.html">image_classifier_3d.models package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="image_classifier_3d.utils.html">image_classifier_3d.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="image_classifier_3d.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="image_classifier_3d.html#module-image_classifier_3d.proj_tester">image_classifier_3d.proj_tester module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="image_classifier_3d.html#module-image_classifier_3d.proj_trainer">image_classifier_3d.proj_trainer module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="image_classifier_3d.html#module-image_classifier_3d">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="math.html">Math notation example</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Image Classifier 3D</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Index</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+
+<h1 id="index">Index</h1>
+
+<div class="genindex-jumpbox">
+ <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
+ | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
+ | <a href="#I"><strong>I</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#Q"><strong>Q</strong></a>
+ | <a href="#R"><strong>R</strong></a>
+ | <a href="#T"><strong>T</strong></a>
+ | <a href="#V"><strong>V</strong></a>
+ 
+</div>
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="image_classifier_3d.data_loader.html#image_classifier_3d.data_loader.universal_loader.adaptive_loader">adaptive_loader (class in image_classifier_3d.data_loader.universal_loader)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="image_classifier_3d.data_loader.html#image_classifier_3d.data_loader.universal_loader.adaptive_padding_loader">adaptive_padding_loader (class in image_classifier_3d.data_loader.universal_loader)</a>
+</li>
+      <li><a href="image_classifier_3d.bin.html#image_classifier_3d.bin.run_classifier.Args">Args (class in image_classifier_3d.bin.run_classifier)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="image_classifier_3d.data_loader.html#image_classifier_3d.data_loader.universal_loader.basic_loader">basic_loader (class in image_classifier_3d.data_loader.universal_loader)</a>
+</li>
+      <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet.BasicBlock">BasicBlock (class in image_classifier_3d.models.resnet)</a>
+
+      <ul>
+        <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet_GN.BasicBlock">(class in image_classifier_3d.models.resnet_GN)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet.Bottleneck">Bottleneck (class in image_classifier_3d.models.resnet)</a>
+
+      <ul>
+        <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet_GN.Bottleneck">(class in image_classifier_3d.models.resnet_GN)</a>
+</li>
+      </ul></li>
+      <li><a href="image_classifier_3d.data_loader.html#image_classifier_3d.data_loader.utils.build_one_cell">build_one_cell() (in module image_classifier_3d.data_loader.utils)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.build_classifier.Mitotic_Classifier.configure_optimizers">configure_optimizers() (image_classifier_3d.models.build_classifier.Mitotic_Classifier method)</a>
+</li>
+      <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet.conv1x1x1">conv1x1x1() (in module image_classifier_3d.models.resnet)</a>
+
+      <ul>
+        <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet_GN.conv1x1x1">(in module image_classifier_3d.models.resnet_GN)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet.conv3x3x3">conv3x3x3() (in module image_classifier_3d.models.resnet)</a>
+
+      <ul>
+        <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet_GN.conv3x3x3">(in module image_classifier_3d.models.resnet_GN)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="D">D</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.densenet.DenseNet">DenseNet (class in image_classifier_3d.models.densenet)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="image_classifier_3d.utils.html#image_classifier_3d.utils.quilt_utils.QuiltModelZoo.download_model">download_model() (image_classifier_3d.utils.quilt_utils.QuiltModelZoo method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet.BasicBlock.expansion">expansion (image_classifier_3d.models.resnet.BasicBlock attribute)</a>
+
+      <ul>
+        <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet.Bottleneck.expansion">(image_classifier_3d.models.resnet.Bottleneck attribute)</a>
+</li>
+        <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet_GN.BasicBlock.expansion">(image_classifier_3d.models.resnet_GN.BasicBlock attribute)</a>
+</li>
+        <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet_GN.Bottleneck.expansion">(image_classifier_3d.models.resnet_GN.Bottleneck attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.build_classifier.Mitotic_Classifier.forward">forward() (image_classifier_3d.models.build_classifier.Mitotic_Classifier method)</a>
+
+      <ul>
+        <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.densenet.DenseNet.forward">(image_classifier_3d.models.densenet.DenseNet method)</a>
+</li>
+        <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet.BasicBlock.forward">(image_classifier_3d.models.resnet.BasicBlock method)</a>
+</li>
+        <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet.Bottleneck.forward">(image_classifier_3d.models.resnet.Bottleneck method)</a>
+</li>
+        <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet.ResNet.forward">(image_classifier_3d.models.resnet.ResNet method)</a>
+</li>
+        <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet_GN.BasicBlock.forward">(image_classifier_3d.models.resnet_GN.BasicBlock method)</a>
+</li>
+        <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet_GN.Bottleneck.forward">(image_classifier_3d.models.resnet_GN.Bottleneck method)</a>
+</li>
+        <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet_GN.ResNetGN.forward">(image_classifier_3d.models.resnet_GN.ResNetGN method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.densenet.generate_model">generate_model() (in module image_classifier_3d.models.densenet)</a>
+
+      <ul>
+        <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet.generate_model">(in module image_classifier_3d.models.resnet)</a>
+</li>
+        <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet_GN.generate_model">(in module image_classifier_3d.models.resnet_GN)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet.get_inplanes">get_inplanes() (in module image_classifier_3d.models.resnet)</a>
+
+      <ul>
+        <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet_GN.get_inplanes">(in module image_classifier_3d.models.resnet_GN)</a>
+</li>
+      </ul></li>
+      <li><a href="image_classifier_3d.html#image_classifier_3d.get_module_version">get_module_version() (in module image_classifier_3d)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="image_classifier_3d.html#module-image_classifier_3d">image_classifier_3d (module)</a>
+</li>
+      <li><a href="image_classifier_3d.bin.html#module-image_classifier_3d.bin">image_classifier_3d.bin (module)</a>
+</li>
+      <li><a href="image_classifier_3d.bin.html#module-image_classifier_3d.bin.run_classifier">image_classifier_3d.bin.run_classifier (module)</a>
+</li>
+      <li><a href="image_classifier_3d.data_loader.html#module-image_classifier_3d.data_loader">image_classifier_3d.data_loader (module)</a>
+</li>
+      <li><a href="image_classifier_3d.data_loader.html#module-image_classifier_3d.data_loader.universal_loader">image_classifier_3d.data_loader.universal_loader (module)</a>
+</li>
+      <li><a href="image_classifier_3d.data_loader.html#module-image_classifier_3d.data_loader.utils">image_classifier_3d.data_loader.utils (module)</a>
+</li>
+      <li><a href="image_classifier_3d.models.html#module-image_classifier_3d.models">image_classifier_3d.models (module)</a>
+</li>
+      <li><a href="image_classifier_3d.models.html#module-image_classifier_3d.models.build_classifier">image_classifier_3d.models.build_classifier (module)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="image_classifier_3d.models.html#module-image_classifier_3d.models.densenet">image_classifier_3d.models.densenet (module)</a>
+</li>
+      <li><a href="image_classifier_3d.models.html#module-image_classifier_3d.models.resnet">image_classifier_3d.models.resnet (module)</a>
+</li>
+      <li><a href="image_classifier_3d.models.html#module-image_classifier_3d.models.resnet_GN">image_classifier_3d.models.resnet_GN (module)</a>
+</li>
+      <li><a href="image_classifier_3d.html#module-image_classifier_3d.proj_tester">image_classifier_3d.proj_tester (module)</a>
+</li>
+      <li><a href="image_classifier_3d.html#module-image_classifier_3d.proj_trainer">image_classifier_3d.proj_trainer (module)</a>
+</li>
+      <li><a href="image_classifier_3d.utils.html#module-image_classifier_3d.utils">image_classifier_3d.utils (module)</a>
+</li>
+      <li><a href="image_classifier_3d.utils.html#module-image_classifier_3d.utils.misc_utils">image_classifier_3d.utils.misc_utils (module)</a>
+</li>
+      <li><a href="image_classifier_3d.utils.html#module-image_classifier_3d.utils.quilt_utils">image_classifier_3d.utils.quilt_utils (module)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="image_classifier_3d.bin.html#image_classifier_3d.bin.run_classifier.main">main() (in module image_classifier_3d.bin.run_classifier)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.build_classifier.Mitotic_Classifier">Mitotic_Classifier (class in image_classifier_3d.models.build_classifier)</a>
+</li>
+      <li><a href="image_classifier_3d.utils.html#image_classifier_3d.utils.misc_utils.mix_collate">mix_collate() (in module image_classifier_3d.utils.misc_utils)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="image_classifier_3d.utils.html#image_classifier_3d.utils.quilt_utils.QuiltModelZoo.peak_all_models">peak_all_models() (image_classifier_3d.utils.quilt_utils.QuiltModelZoo method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="image_classifier_3d.html#image_classifier_3d.proj_tester.ProjectTester">ProjectTester (class in image_classifier_3d.proj_tester)</a>
+</li>
+      <li><a href="image_classifier_3d.html#image_classifier_3d.proj_trainer.ProjectTrainer">ProjectTrainer (class in image_classifier_3d.proj_trainer)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="Q">Q</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="image_classifier_3d.utils.html#image_classifier_3d.utils.quilt_utils.QuiltModelZoo">QuiltModelZoo (class in image_classifier_3d.utils.quilt_utils)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet.ResNet">ResNet (class in image_classifier_3d.models.resnet)</a>
+</li>
+      <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet_GN.ResNetGN">ResNetGN (class in image_classifier_3d.models.resnet_GN)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="image_classifier_3d.html#image_classifier_3d.proj_tester.ProjectTester.run_tester_config">run_tester_config() (image_classifier_3d.proj_tester.ProjectTester method)</a>
+</li>
+      <li><a href="image_classifier_3d.html#image_classifier_3d.proj_tester.ProjectTester.run_tester_csv">run_tester_csv() (image_classifier_3d.proj_tester.ProjectTester method)</a>
+</li>
+      <li><a href="image_classifier_3d.html#image_classifier_3d.proj_trainer.ProjectTrainer.run_trainer">run_trainer() (image_classifier_3d.proj_trainer.ProjectTrainer method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.build_classifier.Mitotic_Classifier.test_dataloader">test_dataloader() (image_classifier_3d.models.build_classifier.Mitotic_Classifier method)</a>
+</li>
+      <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.build_classifier.Mitotic_Classifier.test_epoch_end">test_epoch_end() (image_classifier_3d.models.build_classifier.Mitotic_Classifier method)</a>
+</li>
+      <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.build_classifier.Mitotic_Classifier.test_step">test_step() (image_classifier_3d.models.build_classifier.Mitotic_Classifier method)</a>
+</li>
+      <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.build_classifier.Mitotic_Classifier.train_dataloader">train_dataloader() (image_classifier_3d.models.build_classifier.Mitotic_Classifier method)</a>
+</li>
+      <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.build_classifier.Mitotic_Classifier.training">training (image_classifier_3d.models.build_classifier.Mitotic_Classifier attribute)</a>
+
+      <ul>
+        <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.densenet.DenseNet.training">(image_classifier_3d.models.densenet.DenseNet attribute)</a>
+</li>
+        <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet.BasicBlock.training">(image_classifier_3d.models.resnet.BasicBlock attribute)</a>
+</li>
+        <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet.Bottleneck.training">(image_classifier_3d.models.resnet.Bottleneck attribute)</a>
+</li>
+        <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet.ResNet.training">(image_classifier_3d.models.resnet.ResNet attribute)</a>
+</li>
+        <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet_GN.BasicBlock.training">(image_classifier_3d.models.resnet_GN.BasicBlock attribute)</a>
+</li>
+        <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet_GN.Bottleneck.training">(image_classifier_3d.models.resnet_GN.Bottleneck attribute)</a>
+</li>
+        <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.resnet_GN.ResNetGN.training">(image_classifier_3d.models.resnet_GN.ResNetGN attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.build_classifier.Mitotic_Classifier.training_epoch_end">training_epoch_end() (image_classifier_3d.models.build_classifier.Mitotic_Classifier method)</a>
+</li>
+      <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.build_classifier.Mitotic_Classifier.training_step">training_step() (image_classifier_3d.models.build_classifier.Mitotic_Classifier method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="V">V</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.build_classifier.Mitotic_Classifier.val_dataloader">val_dataloader() (image_classifier_3d.models.build_classifier.Mitotic_Classifier method)</a>
+</li>
+      <li><a href="image_classifier_3d.utils.html#image_classifier_3d.utils.quilt_utils.validate_model">validate_model() (in module image_classifier_3d.utils.quilt_utils)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.build_classifier.Mitotic_Classifier.validation_epoch_end">validation_epoch_end() (image_classifier_3d.models.build_classifier.Mitotic_Classifier method)</a>
+</li>
+      <li><a href="image_classifier_3d.models.html#image_classifier_3d.models.build_classifier.Mitotic_Classifier.validation_step">validation_step() (image_classifier_3d.models.build_classifier.Mitotic_Classifier method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Jianxu Chen
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

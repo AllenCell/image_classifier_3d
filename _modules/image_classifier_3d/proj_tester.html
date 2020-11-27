@@ -1,0 +1,453 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>image_classifier_3d.proj_tester &mdash; Image Classifier 3D 0.1.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> Image Classifier 3D
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../image_classifier_3d.html">image_classifier_3d package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../image_classifier_3d.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../image_classifier_3d.bin.html">image_classifier_3d.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../image_classifier_3d.data_loader.html">image_classifier_3d.data_loader package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../image_classifier_3d.models.html">image_classifier_3d.models package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../image_classifier_3d.utils.html">image_classifier_3d.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../image_classifier_3d.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../image_classifier_3d.html#module-image_classifier_3d.proj_tester">image_classifier_3d.proj_tester module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../image_classifier_3d.html#module-image_classifier_3d.proj_trainer">image_classifier_3d.proj_trainer module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../image_classifier_3d.html#module-image_classifier_3d">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../math.html">Math notation example</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Image Classifier 3D</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../image_classifier_3d.html">image_classifier_3d</a> &raquo;</li>
+        
+      <li>image_classifier_3d.proj_tester</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for image_classifier_3d.proj_tester</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">pytorch_lightning</span> <span class="kn">import</span> <span class="n">Trainer</span>
+
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">build_classifier</span>
+<span class="kn">from</span> <span class="nn">image_classifier_3d.utils.quilt_utils</span> <span class="kn">import</span> <span class="n">validate_model</span>
+
+<span class="c1">###############################################################################</span>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1">###############################################################################</span>
+
+
+<div class="viewcode-block" id="ProjectTester"><a class="viewcode-back" href="../../image_classifier_3d.html#image_classifier_3d.proj_tester.ProjectTester">[docs]</a><span class="k">class</span> <span class="nc">ProjectTester</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Main class for applying a new classifier on validation data or new data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_load_config</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+        <span class="n">hparams</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">config</span><span class="p">,</span> <span class="n">hparams</span><span class="p">]</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_report_results</span><span class="p">(</span><span class="n">df_merge</span><span class="p">,</span> <span class="n">out_path</span><span class="p">):</span>
+
+        <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span><span class="p">,</span> <span class="n">ConfusionMatrixDisplay</span>
+        <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+        <span class="n">df_merge</span><span class="p">[</span><span class="s2">&quot;true_label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_merge</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">fn</span><span class="p">)[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+
+        <span class="c1"># TODO: need to make this plot customizable</span>
+        <span class="n">conf</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span>
+            <span class="n">df_merge</span><span class="p">[</span><span class="s2">&quot;true_label&quot;</span><span class="p">],</span>
+            <span class="n">df_merge</span><span class="p">[</span><span class="s2">&quot;pred_label&quot;</span><span class="p">],</span>
+            <span class="n">labels</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]),</span>
+        <span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">disp</span> <span class="o">=</span> <span class="n">ConfusionMatrixDisplay</span><span class="p">(</span>
+            <span class="n">confusion_matrix</span><span class="o">=</span><span class="n">conf</span><span class="p">,</span>
+            <span class="n">display_labels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;M0&quot;</span><span class="p">,</span> <span class="s2">&quot;M12&quot;</span><span class="p">,</span> <span class="s2">&quot;M3&quot;</span><span class="p">,</span> <span class="s2">&quot;M45&quot;</span><span class="p">,</span> <span class="s2">&quot;M67_e&quot;</span><span class="p">,</span> <span class="s2">&quot;M6M7_h&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="n">disp</span> <span class="o">=</span> <span class="n">disp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">include_values</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">xticks_rotation</span><span class="o">=</span><span class="s2">&quot;horizontal&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;viridis&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span>
+        <span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;cf.png&quot;</span><span class="p">)</span>
+
+        <span class="n">df_merge</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;pred.csv&quot;</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_merge_results_for_new</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        merge the results in csv</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">df_merge</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">df_idx</span><span class="p">,</span> <span class="n">df_x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">df_idx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df_x</span><span class="o">.</span><span class="n">itertuples</span><span class="p">():</span>
+                        <span class="n">cid</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">CellId</span>
+                        <span class="n">df_merge</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">df_merge</span><span class="p">[</span><span class="s2">&quot;CellId&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">cid</span><span class="p">,</span> <span class="s2">&quot;pred&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">df_merge</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_merge</span><span class="p">[</span><span class="s2">&quot;CellId&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">cid</span><span class="p">][</span><span class="s2">&quot;pred&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+                            <span class="o">+</span> <span class="n">df_x</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_x</span><span class="p">[</span><span class="s2">&quot;CellId&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">cid</span><span class="p">][</span><span class="s2">&quot;pred&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+                        <span class="p">)</span>
+
+        <span class="c1"># generate the final prediction</span>
+        <span class="n">df_merge</span><span class="p">[</span><span class="s2">&quot;pred_label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_merge</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">pred</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">df_merge</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_merge_results_for_validation</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        merge the results in csv</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">df_merge</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">df_idx</span><span class="p">,</span> <span class="n">df_x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">df_idx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df_x</span><span class="o">.</span><span class="n">itertuples</span><span class="p">():</span>
+                        <span class="n">fn</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">fn</span>
+                        <span class="n">df_merge</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">df_merge</span><span class="p">[</span><span class="s2">&quot;fn&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;pred&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">df_merge</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_merge</span><span class="p">[</span><span class="s2">&quot;fn&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">fn</span><span class="p">][</span><span class="s2">&quot;pred&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+                            <span class="o">+</span> <span class="n">df_x</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_x</span><span class="p">[</span><span class="s2">&quot;fn&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">fn</span><span class="p">][</span><span class="s2">&quot;pred&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+                        <span class="p">)</span>
+
+        <span class="c1"># generate the final prediction</span>
+        <span class="n">df_merge</span><span class="p">[</span><span class="s2">&quot;pred_label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_merge</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">pred</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">df_merge</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_run_prediction</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">hparams</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        run prediction [TBA]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda:0&quot;</span><span class="p">)</span>
+        <span class="n">trainer</span> <span class="o">=</span> <span class="n">Trainer</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;trainer_params&quot;</span><span class="p">])</span>
+
+        <span class="c1"># run through the list of models (maybe &gt; 1, as ensemble)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">model_item</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;model_params&quot;</span><span class="p">][</span><span class="s2">&quot;trained_model&quot;</span><span class="p">]:</span>
+
+            <span class="n">classifier_model</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;project&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;mitotic_classifier&quot;</span><span class="p">:</span>
+                <span class="n">classifier_model</span> <span class="o">=</span> <span class="n">build_classifier</span><span class="o">.</span><span class="n">Mitotic_Classifier</span><span class="p">(</span><span class="n">hparams</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;selected project </span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;project&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> is not support yet&quot;</span>
+                <span class="p">)</span>
+
+            <span class="n">state</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">model_item</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">],</span> <span class="n">map_location</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">classifier_model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;state_dict&quot;</span><span class="p">])</span>
+            <span class="n">classifier_model</span><span class="o">.</span><span class="n">hparams</span> <span class="o">=</span> <span class="n">hparams</span>
+
+            <span class="c1"># move to gpu</span>
+            <span class="n">classifier_model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+            <span class="c1"># classifier_model.freeze()</span>
+            <span class="c1"># classifier_model.half() # only need when NOT using trainer.test()</span>
+            <span class="n">classifier_model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+            <span class="c1"># final_layer = torch.nn.Softmax(dim=1)</span>
+            <span class="c1"># final_layer.to(device)</span>
+
+            <span class="n">test_params</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;test_data&quot;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">test_iter</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">test_params</span><span class="p">[</span><span class="s2">&quot;runtime_aug&quot;</span><span class="p">])):</span>
+                <span class="n">trainer</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">classifier_model</span><span class="p">)</span>
+
+            <span class="n">df_this_model</span> <span class="o">=</span> <span class="n">classifier_model</span><span class="o">.</span><span class="n">test_results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_this_model</span><span class="p">)</span>
+
+            <span class="n">out_fn</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">Path</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;mitotic_prediction_result_model_</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="si">}</span><span class="s2">.csv&quot;</span>
+            <span class="p">)</span>
+            <span class="n">df_this_model</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">out_fn</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">df</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_model_output</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_model_output</span> <span class="o">=</span> <span class="n">save_model_output</span>
+
+<div class="viewcode-block" id="ProjectTester.run_tester_csv"><a class="viewcode-back" href="../../image_classifier_3d.html#image_classifier_3d.proj_tester.ProjectTester.run_tester_csv">[docs]</a>    <span class="k">def</span> <span class="nf">run_tester_csv</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">csv_filename</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span>
+        <span class="n">output_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span>
+        <span class="n">return_df</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">project_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mitotic_classifier&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        do testing using data from a csv file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">predefined_yaml</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;../model_zoo/test_config_</span><span class="si">{</span><span class="n">project_name</span><span class="si">}</span><span class="s2">.yaml&quot;</span>
+        <span class="p">)</span>
+        <span class="p">[</span><span class="n">config</span><span class="p">,</span> <span class="n">hparams</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_config</span><span class="p">(</span><span class="n">predefined_yaml</span><span class="p">)</span>
+
+        <span class="c1"># validate if the models exist locally, download when needed.</span>
+        <span class="n">validate_model</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">hparams</span><span class="p">,</span> <span class="n">output_path</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;_local_model&quot;</span><span class="p">))</span>
+
+        <span class="c1"># update data path with the csv filename</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;test_data&quot;</span><span class="p">][</span><span class="s2">&quot;data_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">csv_filename</span>
+
+        <span class="c1"># run prediction</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_prediction</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">hparams</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span>
+
+        <span class="c1"># collect the results</span>
+        <span class="n">df_merge</span> <span class="o">=</span> <span class="n">ProjectTester</span><span class="o">.</span><span class="n">_merge_results_for_new</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+        <span class="c1"># save the results</span>
+        <span class="k">if</span> <span class="n">return_df</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">df_merge</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">df_merge</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;mitotic_prediction_result.csv&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ProjectTester.run_tester_config"><a class="viewcode-back" href="../../image_classifier_3d.html#image_classifier_3d.proj_tester.ProjectTester.run_tester_config">[docs]</a>    <span class="k">def</span> <span class="nf">run_tester_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_filename</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        do testing using a config file (.yaml)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="p">[</span><span class="n">config</span><span class="p">,</span> <span class="n">hparams</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_config</span><span class="p">(</span><span class="n">config_filename</span><span class="p">)</span>
+        <span class="n">out_path</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;test_data&quot;</span><span class="p">][</span><span class="s2">&quot;output_path&quot;</span><span class="p">]</span>
+
+        <span class="c1"># run prediction</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_prediction</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">hparams</span><span class="p">,</span> <span class="n">out_path</span><span class="p">)</span>
+
+        <span class="c1"># collect the results</span>
+        <span class="n">df_merge</span> <span class="o">=</span> <span class="n">ProjectTester</span><span class="o">.</span><span class="n">_merge_results_for_validation</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+        <span class="c1"># save validation results</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_report_results</span><span class="p">(</span><span class="n">df_merge</span><span class="p">,</span> <span class="n">out_path</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Jianxu Chen
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
