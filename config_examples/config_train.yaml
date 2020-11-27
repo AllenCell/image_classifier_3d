@@ -1,0 +1,69 @@
+project: mitotic_classifier
+
+model_params:
+  name: 'resnet'
+  depth: 50   # options: 10 | 18 | 34 | 50 | 101 | 152 | 200
+  in_channels: 2   # number of channels of the input 3D image 
+  num_classes: 9   # number of classes to predict
+  class_weight: [0.05, 0.2, 0.2, 0.2, 0.25, 0.2, 0.1, 0.1, 0.1]  # weight of each class
+  resume:    # resume: resuming training from a checkpoint
+  load_from:  # load_from: only load the model parameters without loading training records
+
+################################
+# Other model examples:
+################################
+#
+############
+# 3D DenseNet (standard)
+############
+#  name: 'desnet'
+#  depth: # options: 121 | 169 | 201 | 264
+#
+############
+# 3D ResNet (replacing BatchNorm with GroupNorm)
+# for handling batch of images with different sizes
+############
+#  name: "resnet-gn"
+#  depth: # options: 121 | 169 | 201 | 264
+#
+############
+# Pretrained 3D ResNet18
+# As in https://arxiv.org/abs/1711.11248
+############
+#  name: 'resnet18_pretrain'
+#
+################################
+
+
+exp_params:
+  # seed
+  manual_seed: 67 #1265
+  # data parameters
+  dataloader: 
+    name: 'AdaptivePaddingBatch'
+    num_worker: 4
+    batch_size: 16
+    shape: [100, 200, 200]
+  training_data_path: "/path/training/data"
+  validation_data_path: "/path/validation/data"
+  # hyper parameters
+  LR: 0.001
+  weight_decay: 0.0005
+  scheduler: 
+    name: 'ExponentialLR' 
+    gamma: 0.93 # 0.935
+    # name: CosineAnnealingLR 
+    # T_max: 40
+
+trainer_params:
+  precision: 16
+  gpus: 8
+  distributed_backend: 'ddp'
+  num_nodes: 1
+  max_epochs: 500
+  #accumulate_grad_batches: 3
+  gradient_clip_val: 2
+
+logging_params:
+  save_dir: "logs/full/"
+  
