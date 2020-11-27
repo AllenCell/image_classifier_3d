@@ -1,3 +1,7 @@
+"""
+3D ResNet replacing batch normalization with group normalization to train
+on batches of images without padding (thus different sizes)
+"""
 from functools import partial
 import torch
 import torch.nn as nn

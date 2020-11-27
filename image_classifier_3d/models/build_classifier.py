@@ -1,3 +1,6 @@
+"""
+PyTorch Lightning model class for mitotic classifier
+"""
 import os
 import sys
 
