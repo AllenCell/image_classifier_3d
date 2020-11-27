@@ -1,3 +1,5 @@
+# adopted from
+# https://github.com/kenshohara/3D-ResNets-PyTorch
 from functools import partial
 import torch
 import torch.nn as nn

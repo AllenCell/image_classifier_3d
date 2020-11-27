@@ -4,7 +4,30 @@ from skimage.morphology import ball, dilation
 from scipy.ndimage import zoom
 
 
-def build_one_cell(crop_raw, crop_seg, down_ratio=0.5):
+def build_one_cell(
+    crop_raw: np.ndarray, crop_seg: np.ndarray, down_ratio: float = 0.5
+) -> np.ndarray:
+    """
+    prepare input tensor for single cell mitotic classifier
+
+    Parameters:
+    ------------
+    crop_raw: np.ndarray
+        4D array (CZYX), multi-channel 3D image, with the first channel as DNA image,
+        and the second channel as cell membrane image. The image is assume to have
+        isotropic dimension (i.e., XYZ have the same resolution)
+    crop_seg: np.ndarray
+        4D array (CZYX), multi-channel 3D image of segmentation mask, assuming the first
+        channel is DNA segmentation, the second channel is cell segmentation. The XYZ
+        size should be the same as crop_raw
+    down_ratio: float
+        how much downsampling is applied on the image. Default is 0.5, which means the
+        image size is reduced by half.
+
+    Returns:
+    -------------
+    a 4D array (CZYX) ready to be fed into the neural network
+    """
 
     # load raw
     img_raw = imread(crop_raw)

@@ -1,3 +1,5 @@
+# adopted from
+# https://github.com/kenshohara/3D-ResNets-PyTorch
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
