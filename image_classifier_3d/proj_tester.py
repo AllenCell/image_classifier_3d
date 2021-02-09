@@ -7,6 +7,7 @@ import logging
 from typing import Union, List, Optional
 from pathlib import Path
 import argparse
+import importlib
 
 import numpy as np
 from tqdm import tqdm
@@ -31,6 +32,7 @@ class ProjectTester(object):
 
     @staticmethod
     def _load_config(yaml_path: Union[str, Path]) -> List:
+        """ load configuration from yaml file """
         with open(yaml_path, "r") as file:
             config = yaml.safe_load(file)
 
@@ -130,36 +132,37 @@ class ProjectTester(object):
         # run through the list of models (maybe > 1, as ensemble)
         df = []
         for model_item in config["model_params"]["trained_model"]:
+            
+            # define the model as a PLT module
+            build_classifier_module = importlib.import_module("image_classifier_3d.models.build_classifier") 
+            ClassiferModule = getattr(build_classifier_module, config["project"])
+            try:
+                classifier_model = ClassiferModule(hparams)
+            except Exception as e:
+                print(f"failed to load classifier {config['project']}, {e}")
 
-            classifier_model = None
-            if config["project"] == "mitotic_classifier":
-                classifier_model = build_classifier.Mitotic_Classifier(hparams)
-            else:
-                raise ValueError(
-                    f"selected project {config['project']} is not support yet"
-                )
-
+            # load trained model weights
             state = torch.load(model_item["model"], map_location=device)
             classifier_model.load_state_dict(state["state_dict"])
             classifier_model.hparams = hparams
 
             # move to gpu
             classifier_model.eval()
-            # classifier_model.freeze()
-            # classifier_model.half() # only need when NOT using trainer.test()
-            classifier_model.to(device)
-            # final_layer = torch.nn.Softmax(dim=1)
-            # final_layer.to(device)
+            #classifier_model.to(device)
 
-            test_params = config["test_data"]
+            # check if runtime augmentation is requested. Depending on the dataloader, the runtime augmentation
+            # may or may not be helpful. For example, if some random padding is used, then runtime augmentation
+            # will be beneficial.
+            test_params = config["test_data_loader"]
             for test_iter in tqdm(range(test_params["runtime_aug"])):
                 trainer.test(classifier_model)
 
             df_this_model = classifier_model.test_results[0]
             df.append(df_this_model)
 
+            # save the prediction from each individual models for debug
             out_fn = (
-                Path(output_path) / f"mitotic_prediction_result_model_{len(df)}.csv"
+                Path(output_path) / f"prediction_result_model_{len(df)}.csv"
             )
             df_this_model.to_csv(out_fn)
 
@@ -175,20 +178,36 @@ class ProjectTester(object):
         output_path: Union[str, Path],
         return_df: bool = False,
         project_name: str = "mitotic_classifier",
+        config_yaml: Union[str, Path] = "default",
     ) -> Optional[pd.DataFrame]:
-        """
-        do testing using data from a csv file
-        """
-        predefined_yaml = (
-            Path(__file__).parent / f"../model_zoo/test_config_{project_name}.yaml"
-        )
-        [config, hparams] = self._load_config(predefined_yaml)
+        """ do testing using data from a csv file
 
-        # validate if the models exist locally, download when needed.
+        Parameters:
+        -------------
+        csv_filename: Union[str, Path]
+            the filepath to the csv file
+        output_path: Union[str, Path]
+            where to save the prediction outputs (as a CSV file)
+        return_df: bool
+            whether a dataframe will be returned besides saving to CSV, default is False
+        project_name: str
+            which project (i.e., which kind of classifier) to use
+        config_yaml: Union[str, Path]
+            the configuration file to use, if it is "default", the a yaml in ../model_zoo/
+            named test_config_{project_name}.yaml is used by default
+        """
+        if config_yaml == "default":
+            config_yaml = (
+                Path(__file__).parent / f"../model_zoo/test_config_{project_name}.yaml"
+            )
+        [config, hparams] = self._load_config(config_yaml)
+
+        # validate if the models exist locally, download when needed and saved to
+        # a temp location "_local_model".
         validate_model(config, hparams, output_path / Path("_local_model"))
 
         # update data path with the csv filename
-        config["test_data"]["data_path"] = csv_filename
+        config["test_data_loader"]["data_path"] = csv_filename
 
         # run prediction
         df = self._run_prediction(config, hparams, output_path)
@@ -200,15 +219,19 @@ class ProjectTester(object):
         if return_df:
             return df_merge
         else:
-            df_merge.to_csv(Path(output_path) / "mitotic_prediction_result.csv")
+            df_merge.to_csv(Path(output_path) / f"{project_name}_result.csv")
 
     def run_tester_config(self, config_filename: Union[str, Path]):
-        """
-        do testing using a config file (.yaml)
+        """ do testing using a config yaml file
+
+        Parameters:
+        -------------
+        config_filename: Union[str, Path]
+            the configuration file to use
         """
 
         [config, hparams] = self._load_config(config_filename)
-        out_path = config["test_data"]["output_path"]
+        out_path = config["test_data_loader"]["output_path"]
 
         # run prediction
         df = self._run_prediction(config, hparams, out_path)

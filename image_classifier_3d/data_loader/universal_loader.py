@@ -152,9 +152,10 @@ class adaptive_padding_loader(Dataset):
                 )
                 self.process_image = importlib.util.module_from_spec(spec)
             # default module
-            else:
-                module_name = building_wrapper_path + "." + building_func_name
-                self.process_image = importlib.import_module(module_name)
+            else: 
+                module_name = importlib.import_module(building_wrapper_path)
+                self.process_image = getattr(module_name, building_func_name)
+
         else:
             print(f"unsupported test type: {test_flag}")
             sys.exit(0)

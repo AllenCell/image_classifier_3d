@@ -30,7 +30,7 @@ pip install -e .[all]
 Set up a yaml file to specify training configurations. See an example [HERE](config_examples/config_train.yaml) with embedded instructions.
 
 ```console
-run_classifier3d --config /path/to/config_train.yaml --mode train --debug
+run_classifier3d --debug train --config /path/to/config_train.yaml 
 ```
 
 2. Testing (with known labels, reporting performance)
@@ -38,12 +38,12 @@ run_classifier3d --config /path/to/config_train.yaml --mode train --debug
 Set up a yaml file to specify testing configurations. See an example [HERE](model_zoo/test_config_mitotic_classifier.yaml) with embedded instructions.
 
 ```console
-run_classifier3d --config /path/to/config_test.yaml --mode validate --debug
+run_classifier3d --debug validate --config /path/to/config_test.yaml 
 ```
 
 3. Inference (without labels, annotating new cells)
 
-It is possible to run inference as training/testing, just with `--mode inference`. However, it might be more common that you want to call the classifier in other python scripts, for example, as one step of you bigger workflow. 
+It is possible to run inference as training/testing, just with `inference`. However, it might be more common that you want to call the classifier in other python scripts, for example, as one step of you bigger workflow. 
 
 ```python
 my_classifier = ProjectTester(save_model_output=False)

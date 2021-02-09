@@ -10,6 +10,7 @@ import traceback
 
 from image_classifier_3d.proj_trainer import ProjectTrainer
 from image_classifier_3d.proj_tester import ProjectTester
+from pytorch_lightning import seed_everything
 
 # Global object
 TRAIN_MODE = "train"
@@ -63,6 +64,9 @@ class Args(argparse.Namespace):
             help="path to the csv file of data to be applied on",
         )
         parser_inference.add_argument(
+            "--config", dest="filename", help="configuration filename for inference"
+        )
+        parser_inference.add_argument(
             "--output_path", help="path to save prediction results"
         )
 
@@ -73,9 +77,10 @@ class Args(argparse.Namespace):
 
 
 def main():
+    args = Args()
     try:
-        args = Args()
-        dbg = args.debug
+        # always seed everything for reproducibility
+        seed_everything(42)
 
         if args.mode == TRAIN_MODE:
             exe = ProjectTrainer(args.filename)
@@ -85,11 +90,11 @@ def main():
             exe.run_tester_config(args.filename)
         elif args.mode == INFER_MODE:
             exe = ProjectTester(save_model_output=False)
-            exe.run_tester_csv(args.csv_filename, args.output_path)
+            exe.run_tester_csv(args.csv_filename, args.output_path, config_yaml = args.filename)
 
     except Exception as e:
         log.error("=============================================")
-        if dbg:
+        if args.debug:
             log.error("\n\n" + traceback.format_exc())
             log.error("=============================================")
         log.error("\n\n" + str(e) + "\n")

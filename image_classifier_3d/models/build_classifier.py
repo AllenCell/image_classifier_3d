@@ -21,9 +21,10 @@ from torch.utils.data import DataLoader
 import torch.distributed as dist
 
 
-class Mitotic_Classifier(pl.LightningModule):
+class mitotic_classifier(pl.LightningModule):
+    """ define a project class, consistent with project_name in config file """
     def __init__(self, hparams) -> None:
-        super(Mitotic_Classifier, self).__init__()
+        super(mitotic_classifier, self).__init__()
 
         # load the model architecture based on model_params
         m = hparams.model_params
@@ -73,13 +74,15 @@ class Mitotic_Classifier(pl.LightningModule):
         self.hparams = hparams
         self.test_params = None
         self.test_results = []
-        self.exp_params = hparams.exp_params
-        self.dataloader_param = hparams.exp_params["dataloader"]
         self.test_type = None
+        self.using_mix_batch = False
 
-        if "test_data" not in self.hparams:  # train
+        if "test_data_loader" not in self.hparams:  # train
 
             # TODO: support selecting loss function from config file
+
+            self.exp_params = hparams.exp_params
+            self.dataloader_param = hparams.exp_params["dataloader"]
 
             # load weight for each class
             self.class_weight = torch.tensor(m["class_weight"])
@@ -99,8 +102,8 @@ class Mitotic_Classifier(pl.LightningModule):
             assert len(self.train_filenames) > 0
 
         else:  # testing
-            if os.path.isfile(hparams.test_data["data_path"]):
-                _fn, file_extension = os.path.splitext(hparams.test_data["data_path"])
+            if os.path.isfile(hparams.test_data_loader["data_path"]):
+                _fn, file_extension = os.path.splitext(hparams.test_data_loader["data_path"])
                 assert file_extension == ".csv", "only csv is supported"
                 self.test_type = "df"
             else:
@@ -112,7 +115,9 @@ class Mitotic_Classifier(pl.LightningModule):
 
     def forward(self, x, **kwargs):
 
-        if self.dataloader_param["name"] == "AdaptiveMixBatch":
+        if self.using_mix_batch:
+            # each image in a batch may have different shapes
+            # need to run one by one
             y = []
             for i, x_i in enumerate(x):
                 # x_i is an image.
@@ -315,7 +320,17 @@ class Mitotic_Classifier(pl.LightningModule):
             print("no scheduler is used")
             return optims
 
+    ###############################################################
+    # define dataloader for train/test/validation
+    #
+    # this can be defined outside the task class, we do this because
+    # the dataloaders are specific to the task.
+    ################################################################
     def train_dataloader(self):
+        # skip this if doing testing
+        if "test_data_loader" in self.hparams:
+            pass
+
         # ## may load customized data transformation function here
         # transform = self.data_transforms()
 
@@ -332,6 +347,7 @@ class Mitotic_Classifier(pl.LightningModule):
                 num_workers=data_m["num_worker"],
             )
         elif data_m["name"] == "AdaptiveMixBatch":
+            self.using_mix_batch = True
             from ..data_loader.universal_loader import adaptive_loader
             from ..utils.misc_utils import mix_collate
 
@@ -354,6 +370,11 @@ class Mitotic_Classifier(pl.LightningModule):
         return train_set_loader
 
     def val_dataloader(self):
+
+        # skip this if doing testing
+        if "test_data_loader" in self.hparams:
+            pass
+
         # ## may load customized data transformation function here
         # transform = self.data_transforms()
 
@@ -370,6 +391,7 @@ class Mitotic_Classifier(pl.LightningModule):
                 num_workers=data_m["num_worker"],
             )
         elif data_m["name"] == "AdaptiveMixBatch":
+            self.using_mix_batch = True
             from ..data_loader.universal_loader import adaptive_loader
             from ..utils.misc_utils import mix_collate
 
@@ -393,21 +415,20 @@ class Mitotic_Classifier(pl.LightningModule):
 
     def test_dataloader(self):
 
-        if "test_data" not in self.hparams:
+        if "test_data_loader" not in self.hparams:
             pass
 
-        data_m = self.dataloader_param
-        data_t = self.hparams.test_data
+        data_t = self.hparams.test_data_loader
         test_set_loader = None
         if self.test_type == "df":
             assert (
-                data_m["name"] == "AdaptivePaddingBatch"
+                data_t["name"] == "AdaptivePaddingBatch"
             ), "only adaptive paddng loader is support when using csv"
             from ..data_loader.universal_loader import adaptive_padding_loader
 
             test_set_loader = DataLoader(
                 adaptive_padding_loader(
-                    data_t["data_path"], out_shape=data_m["shape"], test_flag="C"
+                    data_t["data_path"], out_shape=data_t["shape"], test_flag="C"
                 ),
                 batch_size=data_t["batch_size"],
                 num_workers=data_t["num_worker"],
@@ -417,17 +438,18 @@ class Mitotic_Classifier(pl.LightningModule):
             filenames = glob(data_t["data_path"] + os.sep + "*.npy")
             filenames.sort()
 
-            if data_m["name"] == "AdaptivePaddingBatch":
+            if data_t["name"] == "AdaptivePaddingBatch":
                 from ..data_loader.universal_loader import adaptive_padding_loader
 
                 test_set_loader = DataLoader(
                     adaptive_padding_loader(
-                        filenames, out_shape=data_m["shape"], test_flag="F"
+                        filenames, out_shape=data_t["shape"], test_flag="F"
                     ),
                     batch_size=data_t["batch_size"],
                     num_workers=data_t["num_worker"],
                 )
-            elif data_m["name"] == "AdaptiveMixBatch":
+            elif data_t["name"] == "AdaptiveMixBatch":
+                self.using_mix_batch = True
                 from ..data_loader.universal_loader import adaptive_loader
                 from ..utils.misc_utils import mix_collate
 
@@ -452,40 +474,3 @@ class Mitotic_Classifier(pl.LightningModule):
             sys.exit(0)
 
         return test_set_loader
-
-    """
-    # an example of customized data transformation
-    def data_transforms(self):
-
-        SetRange = transforms.Lambda(lambda X: 2 * X - 1.)
-        SetScale = transforms.Lambda(lambda X: X/X.sum(0).expand_as(X))
-
-        transform = transforms.Compose([transforms.RandomHorizontalFlip(),
-                                        transforms.CenterCrop(148),
-                                        transforms.Resize(self.params['img_size']),
-                                        transforms.ToTensor(),
-                                        SetRange])
-
-        return transform
-    """
-    """
-    def prepare_data(self):
-
-        exp_m = self.exp_params
-        # do train/valid split
-        train_filenames = glob(exp_m['training_data_path'] + os.sep + '*.npy')
-        # random.shuffle(train_filenames)
-        self.train_filenames = train_filenames
-
-        val_filenames = glob(exp_m['validation_data_path'] + os.sep + '*.npy')
-        # random.shuffle(val_filenames)
-        self.val_filenames = val_filenames
-
-        assert len(self.val_filenames) > 0
-        assert len(self.train_filenames) > 0
-
-        # total_num = len(filenames)
-        # num_val = int(np.floor(exp_m['val_ratio'] * total_num))
-        # self.val_filenames = filenames[:num_val]
-        # self.train_filenames = filenames[num_val:]
-    """
