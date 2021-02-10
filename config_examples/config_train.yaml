@@ -5,8 +5,7 @@ model_params:
   depth: 50   # options: 10 | 18 | 34 | 50 | 101 | 152 | 200
   in_channels: 2   # number of channels of the input 3D image 
   num_classes: 9   # number of classes to predict
-  class_weight: [0.05, 0.2, 0.2, 0.2, 0.25, 0.2, 0.1, 0.1, 0.1]  # weight of each class
-  resume:    # resume: resuming training from a checkpoint
+  class_weight: [0.05, 0.2, 0.2, 0.2, 0.25, 0.2, 0.1, 0.1, 0.1]  # weight of each class, remove if not needed
   load_from:  # load_from: only load the model parameters without loading training records
 
 ################################
@@ -46,24 +45,36 @@ exp_params:
     shape: [100, 200, 200]
   training_data_path: "/path/training/data"
   validation_data_path: "/path/validation/data"
+  # debug_path: "/path/to/save/intermediate/pred/during/training" # remove this if not needed
+
   # hyper parameters
   LR: 0.001
   weight_decay: 0.0005
-  scheduler: 
-    name: 'ExponentialLR' 
-    gamma: 0.93 # 0.935
-    # name: CosineAnnealingLR 
-    # T_max: 40
 
+  # more about scheduler and parameters. https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  scheduler_name: 'ExponentialLR' 
+  scheduler_params: 
+    gamma: 0.95
+
+# https://pytorch-lightning.readthedocs.io/en/latest/generated/pytorch_lightning.callbacks.ModelCheckpoint.html#modelcheckpoint
+checkpoint_params:
+  save_weights_only: True
+  save_top_k: 5
+  verbose: True
+  monitor: "val_acc"
+  mode: "max"
+
+# https://pytorch-lightning.readthedocs.io/en/latest/trainer.html#init
 trainer_params:
+  default_root_dir: "path/to/save/models/and/logs"
   precision: 16
   gpus: 8
   distributed_backend: 'ddp'
   num_nodes: 1
+  deterministic: True
   max_epochs: 500
-  #accumulate_grad_batches: 3
   gradient_clip_val: 2
+  auto_scale_batch_size: True
+  auto_lr_find: True
+  min_epochs: 50
 
-logging_params:
-  save_dir: "logs/full/"
-  

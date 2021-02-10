@@ -1,0 +1,29 @@
+project: mitotic_classifier
+
+model_params:
+  name: 'resnet'
+  depth: 50
+  in_channels: 2
+  num_classes: 9
+  class_weight: [1, 1, 1, 1, 1, 1, 1, 1, 1]
+  class_label: ["M0", "M12", "M3", "M45", "M67_e", "M6M7_h", "blob", "dead", "wrong"]
+  trained_model: 
+    - model: "/allen/aics/assay-dev/users/Jianxu/Projects/mitotic_classifier_training_data_retrospect/logs/lightning_logs/version_5/checkpoints/epoch=7-step=895.ckpt"
+    - model: "/allen/aics/assay-dev/users/Jianxu/Projects/mitotic_classifier_training_data_retrospect/logs/lightning_logs/version_5/checkpoints/epoch=4-step=559.ckpt"
+
+test_data_loader:
+  name: 'AdaptivePaddingBatch'
+  mode: folder
+  data_path: "/allen/aics/assay-dev/computational/data/mitotic_classifier/masked_data_7/val_merge_v2/"
+  runtime_aug: 1
+  num_worker: 8
+  batch_size: 32
+  shape: [100, 200, 200]
+
+
+trainer_params:
+  precision: 16
+  gpus: 2
+  logger: False
+  distributed_backend: 'ddp'
+  num_nodes: 1

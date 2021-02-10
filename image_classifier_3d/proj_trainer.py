@@ -6,9 +6,7 @@ from typing import Union
 from pathlib import Path
 import importlib
 
-import numpy as np
 import yaml
-import torch
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import ModelCheckpoint
 
@@ -46,7 +44,9 @@ class ProjectTrainer(object):
         hparams = argparse.Namespace(**self.config)
 
         # initialize the model, according to project type
-        build_classifier_module = importlib.import_module("image_classifier_3d.models.build_classifier") 
+        build_classifier_module = importlib.import_module(
+            "image_classifier_3d.models.build_classifier"
+        )
         ClassiferModule = getattr(build_classifier_module, self.config["project"])
         try:
             classifier_model = ClassiferModule(hparams)
@@ -65,7 +65,7 @@ class ProjectTrainer(object):
         )
 
         trainer = Trainer(
-            callbacks=checkpoint_callback,
+            callbacks=[checkpoint_callback],
             **self.config["trainer_params"],
         )
 

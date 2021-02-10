@@ -2,7 +2,6 @@ import os
 import numpy as np
 import pandas as pd
 import random
-import sys
 from typing import List, Union
 import importlib
 
@@ -33,14 +32,10 @@ class basic_loader(Dataset):
         This will be improved for more flexible data loading
     """
 
-    def __init__(self, filenames, buffer_size=-1):
+    def __init__(self, filenames):
 
         self.img = []
         self.label = []
-
-        random.shuffle(filenames)
-        if buffer_size > 0 and len(filenames) > buffer_size:
-            filenames = filenames[:buffer_size]
 
         print("initializing data loader ...")
         self.filenames = filenames
@@ -66,15 +61,15 @@ class adaptive_padding_loader(Dataset):
         In general, adaptive padding data loader will pad all images to the
         same size defined by "out_shape" when constructing the data loader.
         For training, random flip and rotaion will be applied. No augmentation
-        for testing or validation.
+        for testing or evaluation.
 
-        "test_flag" is a key parameter for determining how data loading
+        "flag" is a key parameter for determining how data loading
         works in different scenarios:
             * "T": trianing
-            * "F": validation on a folder of files
+            * "F": evaluation on a folder of files
             * "C": test on files listed in a CSV
 
-        For test_flag == "T" or "F" :
+        For flag == "T" or "F" :
 
             Assumption: all data should be saved in a folder with
             filenames 0_xxxxx.npy, 0_xxxxx.npy, 1_xxxx.npy, 1_xxxx.npy,
@@ -83,10 +78,7 @@ class adaptive_padding_loader(Dataset):
             filename is the class label. [Limitation: currently ony support
             at most 10 classes].
 
-            For training, a buffer_size can be passed in to only use a
-            certain number of data to warm up your trainingg.
-
-        For test_flag == "C":
+        For flag == "C":
 
             Assumption: a csv file with two columns "crop_raw" and "crop_seg"
             which showing the read path for raw image and segmentation. If
@@ -101,7 +93,7 @@ class adaptive_padding_loader(Dataset):
             building_func_name = "my_preprocessing"
 
         Loading: all images will only be loaded when they are being used. Only
-        class labels (only for training and validation) are pre-loaded, no
+        class labels (only for training and evaluation) are pre-loaded, no
         images will be pre-loaded (ideal for large dataset).
 
         This will be improved for more flexible data loading
@@ -111,36 +103,29 @@ class adaptive_padding_loader(Dataset):
         self,
         filenames: Union[List[str], str],
         out_shape: List = [64, 128, 128],
-        buffer_size: int = -1,
-        test_flag: str = "T",
+        flag: str = "train",
         building_wrapper_path: str = "image_classifier_3d.data_loader.utils",
         building_func_name: str = "build_one_cell",
     ):
+        """
+        Parameters:
+        -------------
+        flag: str
+            "train" | "val" | "test_csv" | "test_folder"
+        """
 
         self.img = []
         self.label = []
         self.out_shape = out_shape
-        self.test_flag = test_flag
+        self.flag = flag
 
-        if test_flag == "T":  # --> training
-
-            random.shuffle(filenames)
-            if buffer_size > 0 and len(filenames) > buffer_size:
-                filenames = filenames[:buffer_size]
-
+        if flag == "train" or flag == "val" or flag == "test_folder":
             print("initializing data loader ...")
             self.filenames = filenames
             self.label = [int(os.path.basename(fn)[0]) for fn in filenames]
             print("data loader initialization is done")
 
-        elif test_flag == "F":  # folder (i.e., testing on a folder of .npy)
-
-            print("initializing data load for testing a folder of npy ...")
-            self.filenames = filenames
-            self.label = [int(os.path.basename(fn)[0]) for fn in filenames]
-            print("test load is done")
-
-        elif test_flag == "C":  # CSV (i.e., testing by csv)
+        elif flag == "test_csv":  # CSV (i.e., testing by csv)
             df = pd.read_csv(filenames)
             self.df = df.reset_index(drop=True)
 
@@ -152,17 +137,16 @@ class adaptive_padding_loader(Dataset):
                 )
                 self.process_image = importlib.util.module_from_spec(spec)
             # default module
-            else: 
+            else:
                 module_name = importlib.import_module(building_wrapper_path)
                 self.process_image = getattr(module_name, building_func_name)
 
         else:
-            print(f"unsupported test type: {test_flag}")
-            sys.exit(0)
+            raise NotImplementedError(f"unsupported type: {flag}")
 
     def __getitem__(self, index):
 
-        if self.test_flag == "C":
+        if self.flag == "test_csv":
             # build the cell from raw/seg
             crop_raw = self.df["crop_raw"].iloc[index]
             crop_seg = self.df["crop_seg"].iloc[index]
@@ -206,7 +190,7 @@ class adaptive_padding_loader(Dataset):
         to_pad_y = self.out_shape[1] - img.shape[2]
         to_pad_x = self.out_shape[2] - img.shape[3]
 
-        if not self.test_flag == "T":  # not training, then center pad
+        if not self.flag == "train":  # not training, then center pad
             rand_z = int(round(0.5 * to_pad_z))
             rand_y = int(round(0.5 * to_pad_y))
             rand_x = int(round(0.5 * to_pad_x))
@@ -232,7 +216,7 @@ class adaptive_padding_loader(Dataset):
             "constant",
         )
 
-        if self.test_flag == "T":  # training, then do augmentation
+        if self.flag == "train":  # training, then do augmentation
             # decide if flip
             if random.random() < 0.5:
                 img = np.flip(img, axis=-1)
@@ -247,20 +231,19 @@ class adaptive_padding_loader(Dataset):
 
         image_tensor = torch.tensor(img.astype(np.float16))
 
-        if self.test_flag == "C":
+        if self.flag == "test_csv":
             return image_tensor, self.df["CellId"].iloc[index]
-        else:
+        elif self.flag == "test_folder" or self.flag == "val":
             label_tensor = torch.tensor(np.int(self.label[index]))
-
-            if self.test_flag == "F":  # testing on a folder of npy
-                return image_tensor, label_tensor, fn
-            else:  # training
-                return image_tensor, label_tensor
+            return image_tensor, label_tensor, fn
+        elif self.flag == "train":
+            label_tensor = torch.tensor(np.int(self.label[index]))
+            return image_tensor, label_tensor
 
     def __len__(self):
-        if self.test_flag == "T" or self.test_flag == "F":
+        if self.flag == "train" or self.flag == "val" or self.flag == "test_folder":
             return len(self.filenames)
-        elif self.test_flag == "C":
+        elif self.flag == "test_csv":
             return len(self.df)
 
 
@@ -270,7 +253,7 @@ class adaptive_loader(Dataset):
 
         In general, adaptive data loader will collect images of different sizes
         into mini-batches. No padding applied. Random flip and rotaion will be
-        applied, including testing or validation.
+        applied, including testing or evaluation
 
         Assumption: all training data should be saved in a folder with
         filenames 0_xxxxx.npy, 0_xxxxx.npy, 1_xxxx.npy, 1_xxxx.npy,

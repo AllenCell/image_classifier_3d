@@ -2,7 +2,6 @@
 PyTorch Lightning model class for mitotic classifier
 """
 import os
-import sys
 
 # import numpy as np
 import pandas as pd
@@ -11,6 +10,8 @@ from glob import glob
 import torch
 from torch import optim
 import pytorch_lightning as pl
+import importlib
+from typing import List, Dict
 
 # from torchvision import transforms
 # from torch.nn import CrossEntropyLoss
@@ -23,6 +24,7 @@ import torch.distributed as dist
 
 class mitotic_classifier(pl.LightningModule):
     """ define a project class, consistent with project_name in config file """
+
     def __init__(self, hparams) -> None:
         super(mitotic_classifier, self).__init__()
 
@@ -85,7 +87,10 @@ class mitotic_classifier(pl.LightningModule):
             self.dataloader_param = hparams.exp_params["dataloader"]
 
             # load weight for each class
-            self.class_weight = torch.tensor(m["class_weight"])
+            if "class_weight" in m:
+                self.class_weight = torch.tensor(m["class_weight"])
+            else:
+                self.class_weight = None
 
             # load train/valid files
             train_filenames = glob(
@@ -98,22 +103,24 @@ class mitotic_classifier(pl.LightningModule):
             )
             self.val_filenames = val_filenames
 
-            assert len(self.val_filenames) > 0
-            assert len(self.train_filenames) > 0
+            assert len(self.val_filenames) > 0, "no validation file found"
+            assert len(self.train_filenames) > 0, "no training file found"
 
-        else:  # testing
+        else:  # inference/evaluation
             if os.path.isfile(hparams.test_data_loader["data_path"]):
-                _fn, file_extension = os.path.splitext(hparams.test_data_loader["data_path"])
-                assert file_extension == ".csv", "only csv is supported"
                 self.test_type = "df"
+                _fn, file_extension = os.path.splitext(
+                    hparams.test_data_loader["data_path"]
+                )
+                assert file_extension == ".csv", "only csv is supported"
             else:
                 self.test_type = "folder"
 
-        # define final layer for test and validation
+        # define final layer for test and evaluation
         self.final_layer = torch.nn.Softmax(dim=1)
-        self.final_layer.to(torch.device("cuda:0"))
 
     def forward(self, x, **kwargs):
+        """ forward pass """
 
         if self.using_mix_batch:
             # each image in a batch may have different shapes
@@ -131,17 +138,24 @@ class mitotic_classifier(pl.LightningModule):
             return self.model(x, **kwargs)
 
     def training_step(self, batch, batch_idx, optimizer_idx=0):
+        # get data in this batch: [input, ground_truth]
         x, y = batch
+
+        # make forward pass
         y_hat = self(x)
+
+        # computer loss
         if self.class_weight is None:
             loss = F.cross_entropy(y_hat, y)
         else:
             loss = F.cross_entropy(y_hat, y, self.class_weight.cuda(), reduction="mean")
         tensorboard_logs = {"train_loss": loss}
 
+        # get prediction labels and calculate number of correct predictions
         labels_hat = torch.argmax(y_hat, dim=1)
         n_correct_pred = torch.sum(y == labels_hat).item()
 
+        # insert info to training log
         pred_prob = y_hat.cpu().data.float()
         pred_dict = {"idx": batch_idx, "pred": pred_prob.numpy(), "label": y}
 
@@ -154,16 +168,19 @@ class mitotic_classifier(pl.LightningModule):
         }
 
     def training_epoch_end(self, outputs):
+
+        # gather loss in this epoch
         avg_loss = torch.stack([x["loss"] for x in outputs]).mean()
+
+        # gather accuracy in this epoch, average over all GPUs
         train_acc = sum([x["train_n_correct_pred"] for x in outputs]) / sum(
             x["train_n_pred"] for x in outputs
         )
-
         train_acc = torch.tensor(train_acc, dtype=torch.float64).cuda()
-
         dist.all_reduce(train_acc)
         train_acc /= dist.get_world_size()
 
+        # insert info into training log
         tensorboard_logs = {
             "train_epoch_loss": avg_loss,
             "train_epoch_acc": train_acc.item(),
@@ -172,10 +189,13 @@ class mitotic_classifier(pl.LightningModule):
         return {"loss": avg_loss, "log": tensorboard_logs}
 
     def validation_step(self, batch, batch_idx, optimizer_idx=0):
+
+        # get data in this batch [input, ground_truth, file_name]
+        # file_name can be used for debugging
         x, y, _fn_ = batch
         y_hat = self.forward(x)
 
-        # val_loss = self.criterion(y_hat, y)
+        # compute loss
         if self.class_weight is None:
             val_loss = F.cross_entropy(y_hat, y)
         else:
@@ -183,9 +203,11 @@ class mitotic_classifier(pl.LightningModule):
                 y_hat, y, self.class_weight.cuda(), reduction="mean"
             )
 
+        # get prediction labels and calculate number of correct predictions
         labels_hat = torch.argmax(y_hat, dim=1)
         n_correct_pred = torch.sum(y == labels_hat).item()
 
+        # insert info to training log
         pred_prob = y_hat.cpu().data.float()
         pred_dict = {
             "idx": batch_idx,
@@ -194,6 +216,7 @@ class mitotic_classifier(pl.LightningModule):
             "label": y,
             "fn": _fn_,
         }
+
         return {
             "val_loss": val_loss,
             "n_correct_pred": n_correct_pred,
@@ -202,27 +225,31 @@ class mitotic_classifier(pl.LightningModule):
         }
 
     def validation_epoch_end(self, outputs):
+
+        # gather loss in this epoch
         avg_loss = torch.stack([x["val_loss"] for x in outputs]).mean()
+
+        # gather accuracy in this epoch, average over all GPUs
         val_acc = sum([x["n_correct_pred"] for x in outputs]) / sum(
             x["n_pred"] for x in outputs
         )
-
         val_acc = torch.tensor(val_acc, dtype=torch.float64).cuda()
-
         dist.all_reduce(val_acc)
         val_acc /= dist.get_world_size()
 
+        # insert info into training log
         tensorboard_logs = {"val_loss": avg_loss, "val_acc": val_acc.item()}
 
         # make dubug record
-        df = pd.DataFrame([x["pred_record"] for x in outputs])
-        csv_fn = (
-            self.exp_params["debug_path"]
-            + "val/"
-            + str(random.randint(1, 9000))
-            + ".csv"
-        )
-        df.to_csv(csv_fn)
+        if "debug_path" in self.exp_params:
+            df = pd.DataFrame([x["pred_record"] for x in outputs])
+            csv_fn = (
+                self.exp_params["debug_path"]
+                + "/"
+                + str(random.randint(1, 9000))
+                + ".csv"
+            )
+            df.to_csv(csv_fn)
 
         return {
             "val_loss": avg_loss,
@@ -233,8 +260,10 @@ class mitotic_classifier(pl.LightningModule):
     def test_step(self, batch, batch_idx, optimizer_idx=0):
         if self.test_type == "folder":
             x, y, fn = batch
-        else:
+        elif self.test_type == "df":
             x, cid = batch
+        else:
+            raise NotImplementedError("unsupported test type")
 
         y_pred = self.forward(x)
         # labels_hat = torch.argmax(y_hat, dim=1)
@@ -244,11 +273,13 @@ class mitotic_classifier(pl.LightningModule):
 
         if self.test_type == "folder":
             pred_dict = {"fn": fn, "pred": pred_prob.numpy(), "label": y}
-        else:
+        elif self.test_type == "df":
             pred_dict = {
                 "CellId": cid.cpu().data.int().numpy(),
                 "pred": pred_prob.numpy(),
             }
+        else:
+            raise NotImplementedError("unsupported test type")
 
         return {"n_pred": len(x), "pred_record": pred_dict}
 
@@ -281,7 +312,6 @@ class mitotic_classifier(pl.LightningModule):
 
         optims = []
         scheds = []
-
         exp_m = self.exp_params
 
         # basic optimizer
@@ -290,69 +320,41 @@ class mitotic_classifier(pl.LightningModule):
         )
         optims.append(optimizer)
 
-        if exp_m["scheduler"]["name"] is not None:
-            if exp_m["scheduler"]["name"] == "ExponentialLR":
-                from torch.optim.lr_scheduler import ExponentialLR
-
-                assert exp_m["scheduler"]["gamma"] > 0
-                scheduler = ExponentialLR(optims[0], gamma=exp_m["scheduler"]["gamma"])
-
-            elif exp_m["scheduler"]["name"] == "CosineAnnealingLR":
-                from torch.optim.lr_scheduler import CosineAnnealingLR as CALR
-
-                assert exp_m["scheduler"]["T_max"] > 0
-                scheduler = CALR(optims[0], T_max=exp_m["scheduler"]["T_max"])
-
-            elif exp_m["scheduler"]["name"] == "StepLR":
-                from torch.optim.lr_scheduler import StepLR
-
-                assert exp_m["scheduler"]["step_size"] > 0
-                assert exp_m["scheduler"]["gamma"] > 0
-                scheduler = StepLR(
-                    optims[0],
-                    step_size=exp_m["scheduler"]["step_size"],
-                    gamma=exp_m["scheduler"]["gamma"],
-                )
-
+        # check if using a scheduler
+        if "scheduler_name" in exp_m and exp_m["scheduler_name"] is not None:
+            scheduler_module = importlib.import_module("torch.optim.lr_scheduler")
+            scheduler_class = getattr(scheduler_module, exp_m["scheduler_name"])
+            scheduler = scheduler_class(optims[0], **exp_m["scheduler_params"])
             scheds.append(scheduler)
             return optims, scheds
         else:
-            print("no scheduler is used")
+            print("WARNING: no scheduler is used")
             return optims
 
     ###############################################################
     # define dataloader for train/test/validation
     #
     # this can be defined outside the task class, we do this because
-    # the dataloaders are specific to the task.
+    # the dataloaders are specific to this task.
     ################################################################
-    def train_dataloader(self):
-        # skip this if doing testing
-        if "test_data_loader" in self.hparams:
-            pass
-
-        # ## may load customized data transformation function here
-        # transform = self.data_transforms()
-
-        data_m = self.dataloader_param
-        # train_set_loader = None
+    @staticmethod
+    def get_dataloader(data_m: Dict, filenames: List, flag: str):
         if data_m["name"] == "AdaptivePaddingBatch":
             from ..data_loader.universal_loader import adaptive_padding_loader
 
-            train_set_loader = DataLoader(
+            my_loader = DataLoader(
                 adaptive_padding_loader(
-                    self.train_filenames, out_shape=data_m["shape"]
+                    filenames, out_shape=data_m["shape"], flag=flag
                 ),
                 batch_size=data_m["batch_size"],
                 num_workers=data_m["num_worker"],
             )
         elif data_m["name"] == "AdaptiveMixBatch":
-            self.using_mix_batch = True
             from ..data_loader.universal_loader import adaptive_loader
             from ..utils.misc_utils import mix_collate
 
-            train_set_loader = DataLoader(
-                adaptive_loader(self.train_filenames),
+            my_loader = DataLoader(
+                adaptive_loader(filenames),
                 batch_size=data_m["batch_size"],
                 collate_fn=mix_collate,
                 num_workers=data_m["num_worker"],
@@ -361,65 +363,42 @@ class mitotic_classifier(pl.LightningModule):
             # assuming basic
             from ..data_loader.universal_loader import basic_loader
 
-            train_set_loader = DataLoader(
-                basic_loader(self.train_filenames),
+            my_loader = DataLoader(
+                basic_loader(filenames),
                 batch_size=data_m["batch_size"],
                 num_workers=data_m["num_worker"],
             )
 
-        return train_set_loader
+        return my_loader
 
-    def val_dataloader(self):
-
+    def train_dataloader(self):
         # skip this if doing testing
         if "test_data_loader" in self.hparams:
             pass
 
-        # ## may load customized data transformation function here
-        # transform = self.data_transforms()
-
-        data_m = self.dataloader_param
-        # val_set_loader = None
-        if data_m["name"] == "AdaptivePaddingBatch":
-            from ..data_loader.universal_loader import adaptive_padding_loader
-
-            val_set_loader = DataLoader(
-                adaptive_padding_loader(
-                    self.val_filenames, out_shape=data_m["shape"], test_flag="F"
-                ),
-                batch_size=data_m["batch_size"],
-                num_workers=data_m["num_worker"],
-            )
-        elif data_m["name"] == "AdaptiveMixBatch":
+        if self.dataloader_param["name"] == "AdaptiveMixBatch":
+            # each batch contains patches of different sizes
             self.using_mix_batch = True
-            from ..data_loader.universal_loader import adaptive_loader
-            from ..utils.misc_utils import mix_collate
 
-            val_set_loader = DataLoader(
-                adaptive_loader(self.val_filenames),
-                batch_size=data_m["batch_size"],
-                collate_fn=mix_collate,
-                num_workers=data_m["num_worker"],
-            )
-        else:
-            # assume basic
-            from ..data_loader.universal_loader import basic_loader
+        return mitotic_classifier.get_dataloader(
+            self.dataloader_param, self.train_filenames, "train"
+        )
 
-            val_set_loader = DataLoader(
-                basic_loader(self.val_filenames),
-                batch_size=data_m["batch_size"],
-                num_workers=self.dataloader_param["num_worker"],
-            )
+    def val_dataloader(self):
+        # skip this if doing testing
+        if "test_data_loader" in self.hparams:
+            pass
 
-        return val_set_loader
+        return mitotic_classifier.get_dataloader(
+            self.dataloader_param, self.val_filenames, "val"
+        )
 
     def test_dataloader(self):
-
+        # skip this if doing training
         if "test_data_loader" not in self.hparams:
             pass
 
         data_t = self.hparams.test_data_loader
-        test_set_loader = None
         if self.test_type == "df":
             assert (
                 data_t["name"] == "AdaptivePaddingBatch"
@@ -428,7 +407,7 @@ class mitotic_classifier(pl.LightningModule):
 
             test_set_loader = DataLoader(
                 adaptive_padding_loader(
-                    data_t["data_path"], out_shape=data_t["shape"], test_flag="C"
+                    data_t["data_path"], out_shape=data_t["shape"], flag="test_csv"
                 ),
                 batch_size=data_t["batch_size"],
                 num_workers=data_t["num_worker"],
@@ -437,40 +416,14 @@ class mitotic_classifier(pl.LightningModule):
         elif self.test_type == "folder":
             filenames = glob(data_t["data_path"] + os.sep + "*.npy")
             filenames.sort()
-
-            if data_t["name"] == "AdaptivePaddingBatch":
-                from ..data_loader.universal_loader import adaptive_padding_loader
-
-                test_set_loader = DataLoader(
-                    adaptive_padding_loader(
-                        filenames, out_shape=data_t["shape"], test_flag="F"
-                    ),
-                    batch_size=data_t["batch_size"],
-                    num_workers=data_t["num_worker"],
-                )
-            elif data_t["name"] == "AdaptiveMixBatch":
-                self.using_mix_batch = True
-                from ..data_loader.universal_loader import adaptive_loader
-                from ..utils.misc_utils import mix_collate
-
-                test_set_loader = DataLoader(
-                    adaptive_loader(filenames),
-                    batch_size=data_t["batch_size"],
-                    collate_fn=mix_collate,
-                    num_workers=data_t["num_worker"],
-                    test_flag=True,
-                )
-            else:
-                # asume basic
-                from ..data_loader.universal_loader import basic_loader
-
-                test_set_loader = DataLoader(
-                    basic_loader(filenames),
-                    batch_size=data_t["batch_size"],
-                    num_workers=data_t["num_worker"],
-                )
+            test_set_loader = mitotic_classifier.get_dataloader(
+                data_t, filenames, "test_folder"
+            )
         else:
-            print("unsupported test type")
-            sys.exit(0)
+            raise NotImplementedError("unsupported test type")
+
+        if data_t["name"] == "AdaptiveMixBatch":
+            # each batch contains patches of different sizes
+            self.using_mix_batch = True
 
         return test_set_loader

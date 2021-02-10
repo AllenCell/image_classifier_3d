@@ -47,6 +47,7 @@ requirements = [
     "quilt3",
     "torch>=1.4.0",
     "torchvision>=0.7.0",
+    "scikit-learn"
 ]
 
 extra_requirements = {
