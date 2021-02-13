@@ -15,11 +15,11 @@ class basic_loader(Dataset):
     """
     Basic DataLoader:
 
-        Only support problem with no more than 10 classes. All files are 
-        in .npy format instead of images. During training, all images will 
-        only be loaded when they are being used in a training iteration. 
-        Only class labels are pre-loaded, no images will be pre-loaded 
-        (ideal for large dataset). During inference, currently basic 
+        Only support problem with no more than 10 classes. All files are
+        in .npy format instead of images. During training, all images will
+        only be loaded when they are being used in a training iteration.
+        Only class labels are pre-loaded, no images will be pre-loaded
+        (ideal for large dataset). During inference, currently basic
         dataloader only take preprocessed images as .npy files. This will
         be improved for more flexible data loading
     """
@@ -59,12 +59,12 @@ class adaptive_padding_loader(Dataset):
     """
     Adaptive padding DataLoader:
 
-        Adaptive padding data loader will pad all images to the same size 
-        defined by "out_shape" when constructing the data loader. During 
+        Adaptive padding data loader will pad all images to the same size
+        defined by "out_shape" when constructing the data loader. During
         training, random flip and rotaion will be applied. No augmentation
-        for testing or evaluation. In addition, all images will 
-        only be loaded when they are being used in a training iteration. 
-        Only class labels are pre-loaded, no images will be pre-loaded 
+        for testing or evaluation. In addition, all images will
+        only be loaded when they are being used in a training iteration.
+        Only class labels are pre-loaded, no images will be pre-loaded
         (ideal for large dataset).
     """
 
@@ -80,15 +80,15 @@ class adaptive_padding_loader(Dataset):
         Parameters:
         -------------
         filenames: Union[List[str], str]
-            This could be a filename (only csv file supported) or a list of 
-            filenames for all data. For the later case, every filename has 
-            the format X_CELLID.npy, where X can be any integer from 0 to 
-            num_class-1 (assuming num_class <= 10), and CELLID is a unique 
+            This could be a filename (only csv file supported) or a list of
+            filenames for all data. For the later case, every filename has
+            the format X_CELLID.npy, where X can be any integer from 0 to
+            num_class-1 (assuming num_class <= 10), and CELLID is a unique
             name for the cell (e.g., using uuid).
 
         out_shape: List
             the size of which all input images will be padded into. If an image
-            is larger than out_shape, it will be resized down to fit under 
+            is larger than out_shape, it will be resized down to fit under
             out_shape, and then padded to out_shape.
 
         flag: str
@@ -97,25 +97,25 @@ class adaptive_padding_loader(Dataset):
 
             When flag == "train" :
 
-            All data should be saved in a folder with filenames in the format 
-            X_CELLID.npy (see detail above). Random flip and random rotation 
+            All data should be saved in a folder with filenames in the format
+            X_CELLID.npy (see detail above). Random flip and random rotation
             in XY plane are used for data augmentation.
 
             when flag == "val":
 
-            All data should be saved in a folder with filenames in the format 
+            All data should be saved in a folder with filenames in the format
             X_CELLID.npy (see detail above). No data augmentation.
 
             when flag == "test_csv":
 
             Filenames should be the path to a csv file with record of all cells.
             The csv file should contains at least three columns, "CellId",
-            "crop_raw" and "crop_seg". The last two are the read paths for 
+            "crop_raw" and "crop_seg". The last two are the read paths for
             raw image and segmentation. "crop_raw" assumes a 4D image tiff file
             (multi-channel z-stack, channel order: 0 = dna, 1 = mem, other
             channels will not be used). "crop_seg" assumes a 4D image tiff file
-            (multi-channel z-stack, channel order: 0 = dna segmentation, 
-            1 = cell segmentation, other channels will not be used). If a file 
+            (multi-channel z-stack, channel order: 0 = dna segmentation,
+            1 = cell segmentation, other channels will not be used). If a file
             with name "for_mito_prediction.npy" exists under the same
             folder as "crop_raw", then it will be directly loaded and used
             as input to your model. Otherwise, buildinng_wrapper_path and
@@ -128,7 +128,7 @@ class adaptive_padding_loader(Dataset):
 
             when flag == "test_folder":
 
-            All data should be saved in a folder with filenames in the format 
+            All data should be saved in a folder with filenames in the format
             X_CELLID.npy (see detail above). No data augmentation.
 
         buildinng_wrapper_path: str
@@ -281,13 +281,13 @@ class adaptive_loader(Dataset):
         into mini-batches. No padding applied. Random flip and rotaion will be
         applied, for all training, testing or evaluation.
 
-        All training data should be saved in a folder with filenames of 
+        All training data should be saved in a folder with filenames of
         format X_CELLID.npy, where X can be any integer from 0 to num_class-1
         (assuming num_class <= 10), and CELLID is a unique name for the cell
-        (e.g., using uuid). All images will only be loaded when they are being 
+        (e.g., using uuid). All images will only be loaded when they are being
         used in a training iteration. Only class labels are pre-loaded, no
         images will be pre-loaded (ideal for large dataset). During inference,
-        currently only preprocessed images as .npy files are supported. 
+        currently only preprocessed images as .npy files are supported.
         This will be improved for more flexible data loading
     """
 
