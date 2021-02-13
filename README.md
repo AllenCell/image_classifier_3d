@@ -33,6 +33,9 @@ Set up a yaml file to specify training configurations. See an example [HERE](con
 run_classifier3d --debug train --config /path/to/config_train.yaml 
 ```
 
+How to prepare your training data? All data should be saved in a folder with filenames in the format `X_CELLID.npy`, where X can be any integer from `0` to `num_class-1` (assuming `num_class` <= 10), and `CELLID` is a unique name for the cell (e.g., using `uuid`). This .npy file can be generated from a cropped image of this cell with dna channel and cell membrane channel, together with cell segmentation of this cell. See details in
+[this script](https://github.com/AllenCell/image_classifier_3d/blob/master/image_classifier_3d/data_loader/utils.py#L7)
+
 2. Testing (with known labels, reporting performance)
 
 Set up a yaml file to specify testing configurations. See an example [HERE](model_zoo/config_evaluate.yaml).
@@ -56,7 +59,7 @@ my_classifier = ProjectTester(mode="inference", save_model_output=False)
 df_pred = my_classifier.run_tester_csv(dataset, pred_path, return_df=True)
 ```
 
-Here, `dataset` is a filename pointing to a csv file listing all the images to be applied on. See [`CSV` mode in `dataloader`](TODO) for details. `pred_path` is a filepath to save intermediate prediction tables (e.g., predictions from each individual model when using ensemble). The final labels are returned to a dataframe `df_pred`.
+Here, `dataset` is a filename pointing to a csv file listing all the images to be applied on. See [`test_csv` mode in `dataloader`](https://allencell.github.io/image_classifier_3d/image_classifier_3d.data_loader.html#image_classifier_3d.data_loader.universal_loader.adaptive_padding_loader) for details. `pred_path` is a filepath to save intermediate prediction tables (e.g., predictions from each individual model when using ensemble). The final labels are returned to a dataframe `df_pred`.
 
 
 ### Full Documentation:

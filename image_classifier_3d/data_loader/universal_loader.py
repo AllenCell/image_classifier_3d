@@ -15,24 +15,25 @@ class basic_loader(Dataset):
     """
     Basic DataLoader:
 
-        Assumption: all training data should be saved in a folder with
-        filenames 0_xxxxx.npy, 0_xxxxx.npy, 1_xxxx.npy, 1_xxxx.npy,
-        2_xxxxx.npy, 2_xxxx.npy, 3_xxxx.npy, 4_xxxx.npy, etc.. All files
-        are in .npy format instead of images and the first digit of the
-        filename is the class label. [Limitation: currently ony support
-        at most 10 classes]
-
-        Loading: all images will only be loaded when they are being used
-        in a training iteration. Only class labels are pre-loaded, no
-        images will be pre-loaded (ideal for large dataset).
-
-        Inference: Currently basic dataloader only take preprocessed
-        images as .npy files during inference.
-
-        This will be improved for more flexible data loading
+        Only support problem with no more than 10 classes. All files are 
+        in .npy format instead of images. During training, all images will 
+        only be loaded when they are being used in a training iteration. 
+        Only class labels are pre-loaded, no images will be pre-loaded 
+        (ideal for large dataset). During inference, currently basic 
+        dataloader only take preprocessed images as .npy files. This will
+        be improved for more flexible data loading
     """
 
-    def __init__(self, filenames):
+    def __init__(self, filenames: List):
+        """
+        Parameters:
+        -------------
+        filenames: List
+            a list of filenames for all data. Every filename has the format
+            X_CELLID.npy, where X can be any integer from 0 to num_class-1
+            (assuming num_class <= 10), abd CELLID is a unique name for the
+            cell (e.g., using uuid).
+        """
 
         self.img = []
         self.label = []
@@ -58,45 +59,13 @@ class adaptive_padding_loader(Dataset):
     """
     Adaptive padding DataLoader:
 
-        In general, adaptive padding data loader will pad all images to the
-        same size defined by "out_shape" when constructing the data loader.
-        For training, random flip and rotaion will be applied. No augmentation
-        for testing or evaluation.
-
-        "flag" is a key parameter for determining how data loading
-        works in different scenarios:
-            * "T": trianing
-            * "F": evaluation on a folder of files
-            * "C": test on files listed in a CSV
-
-        For flag == "T" or "F" :
-
-            Assumption: all data should be saved in a folder with
-            filenames 0_xxxxx.npy, 0_xxxxx.npy, 1_xxxx.npy, 1_xxxx.npy,
-            2_xxxxx.npy, 2_xxxx.npy, 3_xxxx.npy, 4_xxxx.npy, etc.. All files
-            are in .npy format instead of images and the first digit of the
-            filename is the class label. [Limitation: currently ony support
-            at most 10 classes].
-
-        For flag == "C":
-
-            Assumption: a csv file with two columns "crop_raw" and "crop_seg"
-            which showing the read path for raw image and segmentation. If
-            a file with name "for_mito_prediction.npy" exists under the same
-            folder as "crop_raw", then it will be directly loaded and used
-            as input to your model. Otherwise, buildinng_wrapper_path and
-            building_func_name will be used to load a function defining how
-            to prepare the input data using crop_raw and crop_seg. For example,
-            you can have a file "C:/projects/demo/preprocessing.py" with a
-            function called "my_preprocessing" defined in the script. Then,
-            buildinng_wrapper_path = "C:/projects/demo/preprocessing.py" and
-            building_func_name = "my_preprocessing"
-
-        Loading: all images will only be loaded when they are being used. Only
-        class labels (only for training and evaluation) are pre-loaded, no
-        images will be pre-loaded (ideal for large dataset).
-
-        This will be improved for more flexible data loading
+        Adaptive padding data loader will pad all images to the same size 
+        defined by "out_shape" when constructing the data loader. During 
+        training, random flip and rotaion will be applied. No augmentation
+        for testing or evaluation. In addition, all images will 
+        only be loaded when they are being used in a training iteration. 
+        Only class labels are pre-loaded, no images will be pre-loaded 
+        (ideal for large dataset).
     """
 
     def __init__(
@@ -110,8 +79,65 @@ class adaptive_padding_loader(Dataset):
         """
         Parameters:
         -------------
+        filenames: Union[List[str], str]
+            This could be a filename (only csv file supported) or a list of 
+            filenames for all data. For the later case, every filename has 
+            the format X_CELLID.npy, where X can be any integer from 0 to 
+            num_class-1 (assuming num_class <= 10), and CELLID is a unique 
+            name for the cell (e.g., using uuid).
+
+        out_shape: List
+            the size of which all input images will be padded into. If an image
+            is larger than out_shape, it will be resized down to fit under 
+            out_shape, and then padded to out_shape.
+
         flag: str
-            "train" | "val" | "test_csv" | "test_folder"
+            "flag" is a key parameter for determining how data loadinh works
+            in different scenarios: "train" | "val" | "test_csv" | "test_folder".
+
+            When flag == "train" :
+
+            All data should be saved in a folder with filenames in the format 
+            X_CELLID.npy (see detail above). Random flip and random rotation 
+            in XY plane are used for data augmentation.
+
+            when flag == "val":
+
+            All data should be saved in a folder with filenames in the format 
+            X_CELLID.npy (see detail above). No data augmentation.
+
+            when flag == "test_csv":
+
+            Filenames should be the path to a csv file with record of all cells.
+            The csv file should contains at least three columns, "CellId",
+            "crop_raw" and "crop_seg". The last two are the read paths for 
+            raw image and segmentation. "crop_raw" assumes a 4D image tiff file
+            (multi-channel z-stack, channel order: 0 = dna, 1 = mem, other
+            channels will not be used). "crop_seg" assumes a 4D image tiff file
+            (multi-channel z-stack, channel order: 0 = dna segmentation, 
+            1 = cell segmentation, other channels will not be used). If a file 
+            with name "for_mito_prediction.npy" exists under the same
+            folder as "crop_raw", then it will be directly loaded and used
+            as input to your model. Otherwise, buildinng_wrapper_path and
+            building_func_name will be used to load a function defining how
+            to prepare the input data using crop_raw and crop_seg. For example,
+            you can have a file "C:/projects/demo/preprocessing.py" with a
+            function called "my_preprocessing" defined in the script. Then,
+            buildinng_wrapper_path = "C:/projects/demo/preprocessing.py" and
+            building_func_name = "my_preprocessing".
+
+            when flag == "test_folder":
+
+            All data should be saved in a folder with filenames in the format 
+            X_CELLID.npy (see detail above). No data augmentation.
+
+        buildinng_wrapper_path: str
+            where to load the wrapper for building one cell (see above when
+            flag == "train_csv")
+
+        building_func_name: str
+            the function to load for building one cell (see above when
+            flag == "train_csv")
         """
 
         self.img = []
@@ -251,28 +277,33 @@ class adaptive_loader(Dataset):
     """
     Adaptive DataLoader:
 
-        In general, adaptive data loader will collect images of different sizes
+        Adaptive data loader will collect images of different sizes
         into mini-batches. No padding applied. Random flip and rotaion will be
-        applied, including testing or evaluation
+        applied, for all training, testing or evaluation.
 
-        Assumption: all training data should be saved in a folder with
-        filenames 0_xxxxx.npy, 0_xxxxx.npy, 1_xxxx.npy, 1_xxxx.npy,
-        2_xxxxx.npy, 2_xxxx.npy, 3_xxxx.npy, 4_xxxx.npy, etc.. All files
-        are in .npy format instead of images and the first digit of the
-        filename is the class label. [Limitation: currently ony support
-        at most 10 classes]
-
-        Loading: all images will only be loaded when they are being used
-        in a training iteration. Only class labels are pre-loaded, no
-        images will be pre-loaded (ideal for large dataset).
-
-        Inference: Currently basic dataloader only take preprocessed
-        images as .npy files during inference.
-
+        All training data should be saved in a folder with filenames of 
+        format X_CELLID.npy, where X can be any integer from 0 to num_class-1
+        (assuming num_class <= 10), and CELLID is a unique name for the cell
+        (e.g., using uuid). All images will only be loaded when they are being 
+        used in a training iteration. Only class labels are pre-loaded, no
+        images will be pre-loaded (ideal for large dataset). During inference,
+        currently only preprocessed images as .npy files are supported. 
         This will be improved for more flexible data loading
     """
 
-    def __init__(self, filenames, test_flag=False):
+    def __init__(self, filenames: List, test_flag=False):
+        """
+        Parameters:
+        -------------
+        filenames: List
+            a list of filenames for all data. Every filename has the format
+            X_CELLID.npy, where X can be any integer from 0 to num_class-1
+            (assuming num_class <= 10), abd CELLID is a unique name for the
+            cell (e.g., using uuid).
+        test_flag: bool
+            when for test_dataloader, default is False. When testing, filename
+            will be returned in a batch
+        """
 
         self.img = []
         self.label = []
