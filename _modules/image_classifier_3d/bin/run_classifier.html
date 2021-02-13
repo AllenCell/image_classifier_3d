@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>image_classifier_3d.bin.run_classifier &mdash; Image Classifier 3D 0.1.2 documentation</title>
   
@@ -16,7 +16,10 @@
 
   
   
+
   
+  
+
   
 
   
@@ -50,7 +53,7 @@
           
 
           
-            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> Image Classifier 3D
+            <a href="../../../index.html" class="icon icon-home"> Image Classifier 3D
           
 
           
@@ -156,6 +159,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -194,10 +199,11 @@
 
 <span class="kn">from</span> <span class="nn">image_classifier_3d.proj_trainer</span> <span class="kn">import</span> <span class="n">ProjectTrainer</span>
 <span class="kn">from</span> <span class="nn">image_classifier_3d.proj_tester</span> <span class="kn">import</span> <span class="n">ProjectTester</span>
+<span class="kn">from</span> <span class="nn">pytorch_lightning</span> <span class="kn">import</span> <span class="n">seed_everything</span>
 
 <span class="c1"># Global object</span>
 <span class="n">TRAIN_MODE</span> <span class="o">=</span> <span class="s2">&quot;train&quot;</span>
-<span class="n">VALID_MODE</span> <span class="o">=</span> <span class="s2">&quot;validate&quot;</span>
+<span class="n">EVALU_MODE</span> <span class="o">=</span> <span class="s2">&quot;evaluate&quot;</span>
 <span class="n">INFER_MODE</span> <span class="o">=</span> <span class="s2">&quot;inference&quot;</span>
 
 <span class="c1">###############################################################################</span>
@@ -235,9 +241,12 @@
             <span class="s2">&quot;--config&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;filename&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;configuration filename for training&quot;</span>
         <span class="p">)</span>
 
-        <span class="n">parser_validation</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="n">VALID_MODE</span><span class="p">)</span>
-        <span class="n">parser_validation</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-            <span class="s2">&quot;--config&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;filename&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;configuration filename for validation&quot;</span>
+        <span class="n">parser_evaluation</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="n">EVALU_MODE</span><span class="p">)</span>
+        <span class="n">parser_evaluation</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--config&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;filename&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;configuration filename for evaluation&quot;</span>
+        <span class="p">)</span>
+        <span class="n">parser_evaluation</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--output_path&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;path to save prediction results&quot;</span>
         <span class="p">)</span>
 
         <span class="n">parser_inference</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="n">INFER_MODE</span><span class="p">)</span>
@@ -245,6 +254,9 @@
             <span class="s2">&quot;--csv&quot;</span><span class="p">,</span>
             <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;csv_filename&quot;</span><span class="p">,</span>
             <span class="n">help</span><span class="o">=</span><span class="s2">&quot;path to the csv file of data to be applied on&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">parser_inference</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--config&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;filename&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;configuration filename for inference&quot;</span>
         <span class="p">)</span>
         <span class="n">parser_inference</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
             <span class="s2">&quot;--output_path&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;path to save prediction results&quot;</span>
@@ -257,23 +269,26 @@
 
 
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../image_classifier_3d.bin.html#image_classifier_3d.bin.run_classifier.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">Args</span><span class="p">()</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="n">Args</span><span class="p">()</span>
-        <span class="n">dbg</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">debug</span>
+        <span class="c1"># always seed everything for reproducibility</span>
+        <span class="n">seed_everything</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="n">TRAIN_MODE</span><span class="p">:</span>
             <span class="n">exe</span> <span class="o">=</span> <span class="n">ProjectTrainer</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
             <span class="n">exe</span><span class="o">.</span><span class="n">run_trainer</span><span class="p">()</span>
-        <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="n">VALID_MODE</span><span class="p">:</span>
-            <span class="n">exe</span> <span class="o">=</span> <span class="n">ProjectTester</span><span class="p">(</span><span class="n">save_model_output</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">exe</span><span class="o">.</span><span class="n">run_tester_config</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="n">EVALU_MODE</span><span class="p">:</span>
+            <span class="n">exe</span> <span class="o">=</span> <span class="n">ProjectTester</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;evaluation&quot;</span><span class="p">,</span> <span class="n">save_model_output</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">debug</span><span class="p">)</span>
+            <span class="n">exe</span><span class="o">.</span><span class="n">run_tester_config</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output_path</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="n">INFER_MODE</span><span class="p">:</span>
-            <span class="n">exe</span> <span class="o">=</span> <span class="n">ProjectTester</span><span class="p">(</span><span class="n">save_model_output</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-            <span class="n">exe</span><span class="o">.</span><span class="n">run_tester_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">csv_filename</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output_path</span><span class="p">)</span>
+            <span class="n">exe</span> <span class="o">=</span> <span class="n">ProjectTester</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;inference&quot;</span><span class="p">,</span> <span class="n">save_model_output</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">debug</span><span class="p">)</span>
+            <span class="n">exe</span><span class="o">.</span><span class="n">run_tester_csv</span><span class="p">(</span>
+                <span class="n">args</span><span class="o">.</span><span class="n">csv_filename</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output_path</span><span class="p">,</span> <span class="n">config_yaml</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">filename</span>
+            <span class="p">)</span>
 
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;=============================================&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">dbg</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
             <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
             <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;=============================================&quot;</span><span class="p">)</span>
         <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -292,28 +307,25 @@
            
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2020, Jianxu Chen
+        &#169; Copyright 2020, Jianxu Chen.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>image_classifier_3d.data_loader package &mdash; Image Classifier 3D 0.1.2 documentation</title>
   
@@ -16,7 +16,10 @@
 
   
   
+
   
+  
+
   
 
   
@@ -52,7 +55,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home" alt="Documentation Home"> Image Classifier 3D
+            <a href="index.html" class="icon icon-home"> Image Classifier 3D
           
 
           
@@ -158,6 +161,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -173,7 +178,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="_sources/image_classifier_3d.data_loader.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -184,10 +189,10 @@
   
   <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
       
-        <a href="image_classifier_3d.models.html" class="btn btn-neutral float-right" title="image_classifier_3d.models package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="image_classifier_3d.models.html" class="btn btn-neutral float-right" title="image_classifier_3d.models package" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
       
       
-        <a href="image_classifier_3d.bin.html" class="btn btn-neutral float-left" title="image_classifier_3d.bin package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="image_classifier_3d.bin.html" class="btn btn-neutral float-left" title="image_classifier_3d.bin package" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
       
   </div>
   
@@ -205,63 +210,78 @@
 <span id="image-classifier-3d-data-loader-universal-loader-module"></span><h2>image_classifier_3d.data_loader.universal_loader module<a class="headerlink" href="#module-image_classifier_3d.data_loader.universal_loader" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="image_classifier_3d.data_loader.universal_loader.adaptive_loader">
-<em class="property">class </em><code class="sig-prename descclassname">image_classifier_3d.data_loader.universal_loader.</code><code class="sig-name descname">adaptive_loader</code><span class="sig-paren">(</span><em class="sig-param">filenames</em>, <em class="sig-param">test_flag=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/image_classifier_3d/data_loader/universal_loader.html#adaptive_loader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#image_classifier_3d.data_loader.universal_loader.adaptive_loader" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">image_classifier_3d.data_loader.universal_loader.</code><code class="sig-name descname">adaptive_loader</code><span class="sig-paren">(</span><em class="sig-param">filenames: List</em>, <em class="sig-param">test_flag=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/image_classifier_3d/data_loader/universal_loader.html#adaptive_loader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#image_classifier_3d.data_loader.universal_loader.adaptive_loader" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.dataset.Dataset</span></code></p>
 <p>Adaptive DataLoader:</p>
 <blockquote>
-<div><p>In general, adaptive data loader will collect images of different sizes
+<div><p>Adaptive data loader will collect images of different sizes
 into mini-batches. No padding applied. Random flip and rotaion will be
-applied, including testing or validation.</p>
-<p>Assumption: all training data should be saved in a folder with
-filenames 0_xxxxx.npy, 0_xxxxx.npy, 1_xxxx.npy, 1_xxxx.npy,
-2_xxxxx.npy, 2_xxxx.npy, 3_xxxx.npy, 4_xxxx.npy, etc.. All files
-are in .npy format instead of images and the first digit of the
-filename is the class label. [Limitation: currently ony support
-at most 10 classes]</p>
-<p>Loading: all images will only be loaded when they are being used
-in a training iteration. Only class labels are pre-loaded, no
-images will be pre-loaded (ideal for large dataset).</p>
-<p>Inference: Currently basic dataloader only take preprocessed
-images as .npy files during inference.</p>
-<p>This will be improved for more flexible data loading</p>
+applied, for all training, testing or evaluation.</p>
+<p>All training data should be saved in a folder with filenames of
+format X_CELLID.npy, where X can be any integer from 0 to num_class-1
+(assuming num_class &lt;= 10), and CELLID is a unique name for the cell
+(e.g., using uuid). All images will only be loaded when they are being
+used in a training iteration. Only class labels are pre-loaded, no
+images will be pre-loaded (ideal for large dataset). During inference,
+currently only preprocessed images as .npy files are supported.
+This will be improved for more flexible data loading</p>
 </div></blockquote>
+<dl class="simple">
+<dt>filenames: List</dt><dd><p>a list of filenames for all data. Every filename has the format
+X_CELLID.npy, where X can be any integer from 0 to num_class-1
+(assuming num_class &lt;= 10), abd CELLID is a unique name for the
+cell (e.g., using uuid).</p>
+</dd>
+<dt>test_flag: bool</dt><dd><p>when for test_dataloader, default is False. When testing, filename
+will be returned in a batch</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="class">
 <dt id="image_classifier_3d.data_loader.universal_loader.adaptive_padding_loader">
-<em class="property">class </em><code class="sig-prename descclassname">image_classifier_3d.data_loader.universal_loader.</code><code class="sig-name descname">adaptive_padding_loader</code><span class="sig-paren">(</span><em class="sig-param">filenames: Union[List[str], str], out_shape: List = [64, 128, 128], buffer_size: int = -1, test_flag: str = 'T', building_wrapper_path: str = 'image_classifier_3d.data_loader.utils', building_func_name: str = 'build_one_cell'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/image_classifier_3d/data_loader/universal_loader.html#adaptive_padding_loader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#image_classifier_3d.data_loader.universal_loader.adaptive_padding_loader" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">image_classifier_3d.data_loader.universal_loader.</code><code class="sig-name descname">adaptive_padding_loader</code><span class="sig-paren">(</span><em class="sig-param">filenames: Union[List[str], str], out_shape: List = [64, 128, 128], flag: str = 'train', building_wrapper_path: str = 'image_classifier_3d.data_loader.utils', building_func_name: str = 'build_one_cell'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/image_classifier_3d/data_loader/universal_loader.html#adaptive_padding_loader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#image_classifier_3d.data_loader.universal_loader.adaptive_padding_loader" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.dataset.Dataset</span></code></p>
 <p>Adaptive padding DataLoader:</p>
 <blockquote>
-<div><p>In general, adaptive padding data loader will pad all images to the
-same size defined by “out_shape” when constructing the data loader.
-For training, random flip and rotaion will be applied. No augmentation
-for testing or validation.</p>
-<p>“test_flag” is a key parameter for determining how data loading
-works in different scenarios:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>“T”: trianing</p></li>
-<li><p>“F”: validation on a folder of files</p></li>
-<li><p>“C”: test on files listed in a CSV</p></li>
-</ul>
+<div><p>Adaptive padding data loader will pad all images to the same size
+defined by “out_shape” when constructing the data loader. During
+training, random flip and rotaion will be applied. No augmentation
+for testing or evaluation. In addition, all images will
+only be loaded when they are being used in a training iteration.
+Only class labels are pre-loaded, no images will be pre-loaded
+(ideal for large dataset).</p>
 </div></blockquote>
-<p>For test_flag == “T” or “F” :</p>
-<blockquote>
-<div><p>Assumption: all data should be saved in a folder with
-filenames 0_xxxxx.npy, 0_xxxxx.npy, 1_xxxx.npy, 1_xxxx.npy,
-2_xxxxx.npy, 2_xxxx.npy, 3_xxxx.npy, 4_xxxx.npy, etc.. All files
-are in .npy format instead of images and the first digit of the
-filename is the class label. [Limitation: currently ony support
-at most 10 classes].</p>
-<p>For training, a buffer_size can be passed in to only use a
-certain number of data to warm up your trainingg.</p>
-</div></blockquote>
-<p>For test_flag == “C”:</p>
-<blockquote>
-<div><p>Assumption: a csv file with two columns “crop_raw” and “crop_seg”
-which showing the read path for raw image and segmentation. If
-a file with name “for_mito_prediction.npy” exists under the same
+<dl>
+<dt>filenames: Union[List[str], str]</dt><dd><p>This could be a filename (only csv file supported) or a list of
+filenames for all data. For the later case, every filename has
+the format X_CELLID.npy, where X can be any integer from 0 to
+num_class-1 (assuming num_class &lt;= 10), and CELLID is a unique
+name for the cell (e.g., using uuid).</p>
+</dd>
+<dt>out_shape: List</dt><dd><p>the size of which all input images will be padded into. If an image
+is larger than out_shape, it will be resized down to fit under
+out_shape, and then padded to out_shape.</p>
+</dd>
+<dt>flag: str</dt><dd><p>“flag” is a key parameter for determining how data loadinh works
+in different scenarios: “train” | “val” | “test_csv” | “test_folder”.</p>
+<p>When flag == “train” :</p>
+<p>All data should be saved in a folder with filenames in the format
+X_CELLID.npy (see detail above). Random flip and random rotation
+in XY plane are used for data augmentation.</p>
+<p>when flag == “val”:</p>
+<p>All data should be saved in a folder with filenames in the format
+X_CELLID.npy (see detail above). No data augmentation.</p>
+<p>when flag == “test_csv”:</p>
+<p>Filenames should be the path to a csv file with record of all cells.
+The csv file should contains at least three columns, “CellId”,
+“crop_raw” and “crop_seg”. The last two are the read paths for
+raw image and segmentation. “crop_raw” assumes a 4D image tiff file
+(multi-channel z-stack, channel order: 0 = dna, 1 = mem, other
+channels will not be used). “crop_seg” assumes a 4D image tiff file
+(multi-channel z-stack, channel order: 0 = dna segmentation,
+1 = cell segmentation, other channels will not be used). If a file
+with name “for_mito_prediction.npy” exists under the same
 folder as “crop_raw”, then it will be directly loaded and used
 as input to your model. Otherwise, buildinng_wrapper_path and
 building_func_name will be used to load a function defining how
@@ -269,34 +289,41 @@ to prepare the input data using crop_raw and crop_seg. For example,
 you can have a file “C:/projects/demo/preprocessing.py” with a
 function called “my_preprocessing” defined in the script. Then,
 buildinng_wrapper_path = “C:/projects/demo/preprocessing.py” and
-building_func_name = “my_preprocessing”</p>
-</div></blockquote>
-<p>Loading: all images will only be loaded when they are being used. Only
-class labels (only for training and validation) are pre-loaded, no
-images will be pre-loaded (ideal for large dataset).</p>
-<p>This will be improved for more flexible data loading</p>
-</div></blockquote>
+building_func_name = “my_preprocessing”.</p>
+<p>when flag == “test_folder”:</p>
+<p>All data should be saved in a folder with filenames in the format
+X_CELLID.npy (see detail above). No data augmentation.</p>
+</dd>
+<dt>buildinng_wrapper_path: str</dt><dd><p>where to load the wrapper for building one cell (see above when
+flag == “train_csv”)</p>
+</dd>
+<dt>building_func_name: str</dt><dd><p>the function to load for building one cell (see above when
+flag == “train_csv”)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="class">
 <dt id="image_classifier_3d.data_loader.universal_loader.basic_loader">
-<em class="property">class </em><code class="sig-prename descclassname">image_classifier_3d.data_loader.universal_loader.</code><code class="sig-name descname">basic_loader</code><span class="sig-paren">(</span><em class="sig-param">filenames</em>, <em class="sig-param">buffer_size=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/image_classifier_3d/data_loader/universal_loader.html#basic_loader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#image_classifier_3d.data_loader.universal_loader.basic_loader" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">image_classifier_3d.data_loader.universal_loader.</code><code class="sig-name descname">basic_loader</code><span class="sig-paren">(</span><em class="sig-param">filenames: List</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/image_classifier_3d/data_loader/universal_loader.html#basic_loader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#image_classifier_3d.data_loader.universal_loader.basic_loader" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.dataset.Dataset</span></code></p>
 <p>Basic DataLoader:</p>
 <blockquote>
-<div><p>Assumption: all training data should be saved in a folder with
-filenames 0_xxxxx.npy, 0_xxxxx.npy, 1_xxxx.npy, 1_xxxx.npy,
-2_xxxxx.npy, 2_xxxx.npy, 3_xxxx.npy, 4_xxxx.npy, etc.. All files
-are in .npy format instead of images and the first digit of the
-filename is the class label. [Limitation: currently ony support
-at most 10 classes]</p>
-<p>Loading: all images will only be loaded when they are being used
-in a training iteration. Only class labels are pre-loaded, no
-images will be pre-loaded (ideal for large dataset).</p>
-<p>Inference: Currently basic dataloader only take preprocessed
-images as .npy files during inference.</p>
-<p>This will be improved for more flexible data loading</p>
+<div><p>Only support problem with no more than 10 classes. All files are
+in .npy format instead of images. During training, all images will
+only be loaded when they are being used in a training iteration.
+Only class labels are pre-loaded, no images will be pre-loaded
+(ideal for large dataset). During inference, currently basic
+dataloader only take preprocessed images as .npy files. This will
+be improved for more flexible data loading</p>
 </div></blockquote>
+<dl class="simple">
+<dt>filenames: List</dt><dd><p>a list of filenames for all data. Every filename has the format
+X_CELLID.npy, where X can be any integer from 0 to num_class-1
+(assuming num_class &lt;= 10), abd CELLID is a unique name for the
+cell (e.g., using uuid).</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -333,28 +360,25 @@ image size is reduced by half.</p>
            
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2020, Jianxu Chen
+        &#169; Copyright 2020, Jianxu Chen.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

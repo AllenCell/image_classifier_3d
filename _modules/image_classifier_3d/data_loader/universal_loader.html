@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>image_classifier_3d.data_loader.universal_loader &mdash; Image Classifier 3D 0.1.2 documentation</title>
   
@@ -16,7 +16,10 @@
 
   
   
+
   
+  
+
   
 
   
@@ -50,7 +53,7 @@
           
 
           
-            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> Image Classifier 3D
+            <a href="../../../index.html" class="icon icon-home"> Image Classifier 3D
           
 
           
@@ -156,6 +159,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -186,7 +191,6 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">import</span> <span class="nn">importlib</span>
 
@@ -200,31 +204,28 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Basic DataLoader:</span>
 
-<span class="sd">        Assumption: all training data should be saved in a folder with</span>
-<span class="sd">        filenames 0_xxxxx.npy, 0_xxxxx.npy, 1_xxxx.npy, 1_xxxx.npy,</span>
-<span class="sd">        2_xxxxx.npy, 2_xxxx.npy, 3_xxxx.npy, 4_xxxx.npy, etc.. All files</span>
-<span class="sd">        are in .npy format instead of images and the first digit of the</span>
-<span class="sd">        filename is the class label. [Limitation: currently ony support</span>
-<span class="sd">        at most 10 classes]</span>
-
-<span class="sd">        Loading: all images will only be loaded when they are being used</span>
-<span class="sd">        in a training iteration. Only class labels are pre-loaded, no</span>
-<span class="sd">        images will be pre-loaded (ideal for large dataset).</span>
-
-<span class="sd">        Inference: Currently basic dataloader only take preprocessed</span>
-<span class="sd">        images as .npy files during inference.</span>
-
-<span class="sd">        This will be improved for more flexible data loading</span>
+<span class="sd">        Only support problem with no more than 10 classes. All files are</span>
+<span class="sd">        in .npy format instead of images. During training, all images will</span>
+<span class="sd">        only be loaded when they are being used in a training iteration.</span>
+<span class="sd">        Only class labels are pre-loaded, no images will be pre-loaded</span>
+<span class="sd">        (ideal for large dataset). During inference, currently basic</span>
+<span class="sd">        dataloader only take preprocessed images as .npy files. This will</span>
+<span class="sd">        be improved for more flexible data loading</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filenames</span><span class="p">,</span> <span class="n">buffer_size</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filenames</span><span class="p">:</span> <span class="n">List</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">        -------------</span>
+<span class="sd">        filenames: List</span>
+<span class="sd">            a list of filenames for all data. Every filename has the format</span>
+<span class="sd">            X_CELLID.npy, where X can be any integer from 0 to num_class-1</span>
+<span class="sd">            (assuming num_class &lt;= 10), abd CELLID is a unique name for the</span>
+<span class="sd">            cell (e.g., using uuid).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">img</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">filenames</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">buffer_size</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">filenames</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">buffer_size</span><span class="p">:</span>
-            <span class="n">filenames</span> <span class="o">=</span> <span class="n">filenames</span><span class="p">[:</span><span class="n">buffer_size</span><span class="p">]</span>
 
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;initializing data loader ...&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">filenames</span> <span class="o">=</span> <span class="n">filenames</span>
@@ -247,34 +248,64 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Adaptive padding DataLoader:</span>
 
-<span class="sd">        In general, adaptive padding data loader will pad all images to the</span>
-<span class="sd">        same size defined by &quot;out_shape&quot; when constructing the data loader.</span>
-<span class="sd">        For training, random flip and rotaion will be applied. No augmentation</span>
-<span class="sd">        for testing or validation.</span>
+<span class="sd">        Adaptive padding data loader will pad all images to the same size</span>
+<span class="sd">        defined by &quot;out_shape&quot; when constructing the data loader. During</span>
+<span class="sd">        training, random flip and rotaion will be applied. No augmentation</span>
+<span class="sd">        for testing or evaluation. In addition, all images will</span>
+<span class="sd">        only be loaded when they are being used in a training iteration.</span>
+<span class="sd">        Only class labels are pre-loaded, no images will be pre-loaded</span>
+<span class="sd">        (ideal for large dataset).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-<span class="sd">        &quot;test_flag&quot; is a key parameter for determining how data loading</span>
-<span class="sd">        works in different scenarios:</span>
-<span class="sd">            * &quot;T&quot;: trianing</span>
-<span class="sd">            * &quot;F&quot;: validation on a folder of files</span>
-<span class="sd">            * &quot;C&quot;: test on files listed in a CSV</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">filenames</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span>
+        <span class="n">out_shape</span><span class="p">:</span> <span class="n">List</span> <span class="o">=</span> <span class="p">[</span><span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span>
+        <span class="n">flag</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;train&quot;</span><span class="p">,</span>
+        <span class="n">building_wrapper_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;image_classifier_3d.data_loader.utils&quot;</span><span class="p">,</span>
+        <span class="n">building_func_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;build_one_cell&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">        -------------</span>
+<span class="sd">        filenames: Union[List[str], str]</span>
+<span class="sd">            This could be a filename (only csv file supported) or a list of</span>
+<span class="sd">            filenames for all data. For the later case, every filename has</span>
+<span class="sd">            the format X_CELLID.npy, where X can be any integer from 0 to</span>
+<span class="sd">            num_class-1 (assuming num_class &lt;= 10), and CELLID is a unique</span>
+<span class="sd">            name for the cell (e.g., using uuid).</span>
 
-<span class="sd">        For test_flag == &quot;T&quot; or &quot;F&quot; :</span>
+<span class="sd">        out_shape: List</span>
+<span class="sd">            the size of which all input images will be padded into. If an image</span>
+<span class="sd">            is larger than out_shape, it will be resized down to fit under</span>
+<span class="sd">            out_shape, and then padded to out_shape.</span>
 
-<span class="sd">            Assumption: all data should be saved in a folder with</span>
-<span class="sd">            filenames 0_xxxxx.npy, 0_xxxxx.npy, 1_xxxx.npy, 1_xxxx.npy,</span>
-<span class="sd">            2_xxxxx.npy, 2_xxxx.npy, 3_xxxx.npy, 4_xxxx.npy, etc.. All files</span>
-<span class="sd">            are in .npy format instead of images and the first digit of the</span>
-<span class="sd">            filename is the class label. [Limitation: currently ony support</span>
-<span class="sd">            at most 10 classes].</span>
+<span class="sd">        flag: str</span>
+<span class="sd">            &quot;flag&quot; is a key parameter for determining how data loadinh works</span>
+<span class="sd">            in different scenarios: &quot;train&quot; | &quot;val&quot; | &quot;test_csv&quot; | &quot;test_folder&quot;.</span>
 
-<span class="sd">            For training, a buffer_size can be passed in to only use a</span>
-<span class="sd">            certain number of data to warm up your trainingg.</span>
+<span class="sd">            When flag == &quot;train&quot; :</span>
 
-<span class="sd">        For test_flag == &quot;C&quot;:</span>
+<span class="sd">            All data should be saved in a folder with filenames in the format</span>
+<span class="sd">            X_CELLID.npy (see detail above). Random flip and random rotation</span>
+<span class="sd">            in XY plane are used for data augmentation.</span>
 
-<span class="sd">            Assumption: a csv file with two columns &quot;crop_raw&quot; and &quot;crop_seg&quot;</span>
-<span class="sd">            which showing the read path for raw image and segmentation. If</span>
-<span class="sd">            a file with name &quot;for_mito_prediction.npy&quot; exists under the same</span>
+<span class="sd">            when flag == &quot;val&quot;:</span>
+
+<span class="sd">            All data should be saved in a folder with filenames in the format</span>
+<span class="sd">            X_CELLID.npy (see detail above). No data augmentation.</span>
+
+<span class="sd">            when flag == &quot;test_csv&quot;:</span>
+
+<span class="sd">            Filenames should be the path to a csv file with record of all cells.</span>
+<span class="sd">            The csv file should contains at least three columns, &quot;CellId&quot;,</span>
+<span class="sd">            &quot;crop_raw&quot; and &quot;crop_seg&quot;. The last two are the read paths for</span>
+<span class="sd">            raw image and segmentation. &quot;crop_raw&quot; assumes a 4D image tiff file</span>
+<span class="sd">            (multi-channel z-stack, channel order: 0 = dna, 1 = mem, other</span>
+<span class="sd">            channels will not be used). &quot;crop_seg&quot; assumes a 4D image tiff file</span>
+<span class="sd">            (multi-channel z-stack, channel order: 0 = dna segmentation,</span>
+<span class="sd">            1 = cell segmentation, other channels will not be used). If a file</span>
+<span class="sd">            with name &quot;for_mito_prediction.npy&quot; exists under the same</span>
 <span class="sd">            folder as &quot;crop_raw&quot;, then it will be directly loaded and used</span>
 <span class="sd">            as input to your model. Otherwise, buildinng_wrapper_path and</span>
 <span class="sd">            building_func_name will be used to load a function defining how</span>
@@ -282,49 +313,34 @@
 <span class="sd">            you can have a file &quot;C:/projects/demo/preprocessing.py&quot; with a</span>
 <span class="sd">            function called &quot;my_preprocessing&quot; defined in the script. Then,</span>
 <span class="sd">            buildinng_wrapper_path = &quot;C:/projects/demo/preprocessing.py&quot; and</span>
-<span class="sd">            building_func_name = &quot;my_preprocessing&quot;</span>
+<span class="sd">            building_func_name = &quot;my_preprocessing&quot;.</span>
 
-<span class="sd">        Loading: all images will only be loaded when they are being used. Only</span>
-<span class="sd">        class labels (only for training and validation) are pre-loaded, no</span>
-<span class="sd">        images will be pre-loaded (ideal for large dataset).</span>
+<span class="sd">            when flag == &quot;test_folder&quot;:</span>
 
-<span class="sd">        This will be improved for more flexible data loading</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">            All data should be saved in a folder with filenames in the format</span>
+<span class="sd">            X_CELLID.npy (see detail above). No data augmentation.</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">filenames</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span>
-        <span class="n">out_shape</span><span class="p">:</span> <span class="n">List</span> <span class="o">=</span> <span class="p">[</span><span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span>
-        <span class="n">buffer_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-        <span class="n">test_flag</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span>
-        <span class="n">building_wrapper_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;image_classifier_3d.data_loader.utils&quot;</span><span class="p">,</span>
-        <span class="n">building_func_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;build_one_cell&quot;</span><span class="p">,</span>
-    <span class="p">):</span>
+<span class="sd">        buildinng_wrapper_path: str</span>
+<span class="sd">            where to load the wrapper for building one cell (see above when</span>
+<span class="sd">            flag == &quot;train_csv&quot;)</span>
+
+<span class="sd">        building_func_name: str</span>
+<span class="sd">            the function to load for building one cell (see above when</span>
+<span class="sd">            flag == &quot;train_csv&quot;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">img</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out_shape</span> <span class="o">=</span> <span class="n">out_shape</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">test_flag</span> <span class="o">=</span> <span class="n">test_flag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flag</span> <span class="o">=</span> <span class="n">flag</span>
 
-        <span class="k">if</span> <span class="n">test_flag</span> <span class="o">==</span> <span class="s2">&quot;T&quot;</span><span class="p">:</span>  <span class="c1"># --&gt; training</span>
-
-            <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">filenames</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">buffer_size</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">filenames</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">buffer_size</span><span class="p">:</span>
-                <span class="n">filenames</span> <span class="o">=</span> <span class="n">filenames</span><span class="p">[:</span><span class="n">buffer_size</span><span class="p">]</span>
-
+        <span class="k">if</span> <span class="n">flag</span> <span class="o">==</span> <span class="s2">&quot;train&quot;</span> <span class="ow">or</span> <span class="n">flag</span> <span class="o">==</span> <span class="s2">&quot;val&quot;</span> <span class="ow">or</span> <span class="n">flag</span> <span class="o">==</span> <span class="s2">&quot;test_folder&quot;</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;initializing data loader ...&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">filenames</span> <span class="o">=</span> <span class="n">filenames</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">fn</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">]</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;data loader initialization is done&quot;</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="n">test_flag</span> <span class="o">==</span> <span class="s2">&quot;F&quot;</span><span class="p">:</span>  <span class="c1"># folder (i.e., testing on a folder of .npy)</span>
-
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;initializing data load for testing a folder of npy ...&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">filenames</span> <span class="o">=</span> <span class="n">filenames</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">fn</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">]</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;test load is done&quot;</span><span class="p">)</span>
-
-        <span class="k">elif</span> <span class="n">test_flag</span> <span class="o">==</span> <span class="s2">&quot;C&quot;</span><span class="p">:</span>  <span class="c1"># CSV (i.e., testing by csv)</span>
+        <span class="k">elif</span> <span class="n">flag</span> <span class="o">==</span> <span class="s2">&quot;test_csv&quot;</span><span class="p">:</span>  <span class="c1"># CSV (i.e., testing by csv)</span>
             <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filenames</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -337,15 +353,15 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">process_image</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">module_from_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
             <span class="c1"># default module</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">module_name</span> <span class="o">=</span> <span class="n">building_wrapper_path</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">building_func_name</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">process_image</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span>
+                <span class="n">module_name</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">building_wrapper_path</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">process_image</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">building_func_name</span><span class="p">)</span>
+
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unsupported test type: </span><span class="si">{</span><span class="n">test_flag</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unsupported type: </span><span class="si">{</span><span class="n">flag</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_flag</span> <span class="o">==</span> <span class="s2">&quot;C&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="s2">&quot;test_csv&quot;</span><span class="p">:</span>
             <span class="c1"># build the cell from raw/seg</span>
             <span class="n">crop_raw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;crop_raw&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
             <span class="n">crop_seg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;crop_seg&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
@@ -389,7 +405,7 @@
         <span class="n">to_pad_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
         <span class="n">to_pad_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_flag</span> <span class="o">==</span> <span class="s2">&quot;T&quot;</span><span class="p">:</span>  <span class="c1"># not training, then center pad</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="s2">&quot;train&quot;</span><span class="p">:</span>  <span class="c1"># not training, then center pad</span>
             <span class="n">rand_z</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">to_pad_z</span><span class="p">))</span>
             <span class="n">rand_y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">to_pad_y</span><span class="p">))</span>
             <span class="n">rand_x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">to_pad_x</span><span class="p">))</span>
@@ -415,7 +431,7 @@
             <span class="s2">&quot;constant&quot;</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_flag</span> <span class="o">==</span> <span class="s2">&quot;T&quot;</span><span class="p">:</span>  <span class="c1"># training, then do augmentation</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="s2">&quot;train&quot;</span><span class="p">:</span>  <span class="c1"># training, then do augmentation</span>
             <span class="c1"># decide if flip</span>
             <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">:</span>
                 <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
@@ -430,20 +446,19 @@
 
         <span class="n">image_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_flag</span> <span class="o">==</span> <span class="s2">&quot;C&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="s2">&quot;test_csv&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">image_tensor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;CellId&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="s2">&quot;test_folder&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="s2">&quot;val&quot;</span><span class="p">:</span>
             <span class="n">label_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">[</span><span class="n">index</span><span class="p">]))</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_flag</span> <span class="o">==</span> <span class="s2">&quot;F&quot;</span><span class="p">:</span>  <span class="c1"># testing on a folder of npy</span>
-                <span class="k">return</span> <span class="n">image_tensor</span><span class="p">,</span> <span class="n">label_tensor</span><span class="p">,</span> <span class="n">fn</span>
-            <span class="k">else</span><span class="p">:</span>  <span class="c1"># training</span>
-                <span class="k">return</span> <span class="n">image_tensor</span><span class="p">,</span> <span class="n">label_tensor</span>
+            <span class="k">return</span> <span class="n">image_tensor</span><span class="p">,</span> <span class="n">label_tensor</span><span class="p">,</span> <span class="n">fn</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="s2">&quot;train&quot;</span><span class="p">:</span>
+            <span class="n">label_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">[</span><span class="n">index</span><span class="p">]))</span>
+            <span class="k">return</span> <span class="n">image_tensor</span><span class="p">,</span> <span class="n">label_tensor</span>
 
     <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_flag</span> <span class="o">==</span> <span class="s2">&quot;T&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_flag</span> <span class="o">==</span> <span class="s2">&quot;F&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="s2">&quot;train&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="s2">&quot;val&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="s2">&quot;test_folder&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filenames</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_flag</span> <span class="o">==</span> <span class="s2">&quot;C&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="s2">&quot;test_csv&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">)</span></div>
 
 
@@ -451,28 +466,33 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Adaptive DataLoader:</span>
 
-<span class="sd">        In general, adaptive data loader will collect images of different sizes</span>
+<span class="sd">        Adaptive data loader will collect images of different sizes</span>
 <span class="sd">        into mini-batches. No padding applied. Random flip and rotaion will be</span>
-<span class="sd">        applied, including testing or validation.</span>
+<span class="sd">        applied, for all training, testing or evaluation.</span>
 
-<span class="sd">        Assumption: all training data should be saved in a folder with</span>
-<span class="sd">        filenames 0_xxxxx.npy, 0_xxxxx.npy, 1_xxxx.npy, 1_xxxx.npy,</span>
-<span class="sd">        2_xxxxx.npy, 2_xxxx.npy, 3_xxxx.npy, 4_xxxx.npy, etc.. All files</span>
-<span class="sd">        are in .npy format instead of images and the first digit of the</span>
-<span class="sd">        filename is the class label. [Limitation: currently ony support</span>
-<span class="sd">        at most 10 classes]</span>
-
-<span class="sd">        Loading: all images will only be loaded when they are being used</span>
-<span class="sd">        in a training iteration. Only class labels are pre-loaded, no</span>
-<span class="sd">        images will be pre-loaded (ideal for large dataset).</span>
-
-<span class="sd">        Inference: Currently basic dataloader only take preprocessed</span>
-<span class="sd">        images as .npy files during inference.</span>
-
+<span class="sd">        All training data should be saved in a folder with filenames of</span>
+<span class="sd">        format X_CELLID.npy, where X can be any integer from 0 to num_class-1</span>
+<span class="sd">        (assuming num_class &lt;= 10), and CELLID is a unique name for the cell</span>
+<span class="sd">        (e.g., using uuid). All images will only be loaded when they are being</span>
+<span class="sd">        used in a training iteration. Only class labels are pre-loaded, no</span>
+<span class="sd">        images will be pre-loaded (ideal for large dataset). During inference,</span>
+<span class="sd">        currently only preprocessed images as .npy files are supported.</span>
 <span class="sd">        This will be improved for more flexible data loading</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filenames</span><span class="p">,</span> <span class="n">test_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filenames</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">test_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">        -------------</span>
+<span class="sd">        filenames: List</span>
+<span class="sd">            a list of filenames for all data. Every filename has the format</span>
+<span class="sd">            X_CELLID.npy, where X can be any integer from 0 to num_class-1</span>
+<span class="sd">            (assuming num_class &lt;= 10), abd CELLID is a unique name for the</span>
+<span class="sd">            cell (e.g., using uuid).</span>
+<span class="sd">        test_flag: bool</span>
+<span class="sd">            when for test_dataloader, default is False. When testing, filename</span>
+<span class="sd">            will be returned in a batch</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">img</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="p">[]</span>
@@ -525,28 +545,25 @@
            
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2020, Jianxu Chen
+        &#169; Copyright 2020, Jianxu Chen.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

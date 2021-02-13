@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Welcome to Image Classifier 3D’s documentation! &mdash; Image Classifier 3D 0.1.2 documentation</title>
   
@@ -16,7 +16,10 @@
 
   
   
+
   
+  
+
   
 
   
@@ -51,7 +54,7 @@
           
 
           
-            <a href="#" class="icon icon-home" alt="Documentation Home"> Image Classifier 3D
+            <a href="#" class="icon icon-home"> Image Classifier 3D
           
 
           
@@ -157,6 +160,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -168,7 +173,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -179,7 +184,7 @@
   
   <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
       
-        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
       
       
   </div>
@@ -219,25 +224,31 @@ pip install -e .<span class="o">[</span>all<span class="o">]</span>
 <li><p>Training</p></li>
 </ol>
 <p>Set up a yaml file to specify training configurations. See an example <a class="reference external" href="config_examples/config_train.yaml">HERE</a> with embedded instructions.</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">run_classifier3d --config /path/to/config_train.yaml --mode train --debug</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">run_classifier3d --debug train --config /path/to/config_train.yaml</span>
 </pre></div>
 </div>
+<p>How to prepare your training data? All data should be saved in a folder with filenames in the format <code class="docutils literal notranslate"><span class="pre">X_CELLID.npy</span></code>, where X can be any integer from <code class="docutils literal notranslate"><span class="pre">0</span></code> to <code class="docutils literal notranslate"><span class="pre">num_class-1</span></code> (assuming <code class="docutils literal notranslate"><span class="pre">num_class</span></code> &lt;= 10), and <code class="docutils literal notranslate"><span class="pre">CELLID</span></code> is a unique name for the cell (e.g., using <code class="docutils literal notranslate"><span class="pre">uuid</span></code>). This .npy file can be generated from a cropped image of this cell with dna channel and cell membrane channel, together with cell segmentation of this cell. See details in
+<a class="reference external" href="https://github.com/AllenCell/image_classifier_3d/blob/master/image_classifier_3d/data_loader/utils.py#L7">this script</a></p>
 <ol class="arabic simple">
 <li><p>Testing (with known labels, reporting performance)</p></li>
 </ol>
-<p>Set up a yaml file to specify testing configurations. See an example <a class="reference external" href="model_zoo/test_config_mitotic_classifier.yaml">HERE</a> with embedded instructions.</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">run_classifier3d --config /path/to/config_test.yaml --mode validate --debug</span>
+<p>Set up a yaml file to specify testing configurations. See an example <a class="reference external" href="model_zoo/config_evaluate.yaml">HERE</a>.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">run_classifier3d --debug evaluate --config /path/to/config_evaluate.yaml --outout_path /path/to/output</span>
 </pre></div>
 </div>
 <ol class="arabic simple">
 <li><p>Inference (without labels, annotating new cells)</p></li>
 </ol>
-<p>It is possible to run inference as training/testing, just with <code class="docutils literal notranslate"><span class="pre">--mode</span> <span class="pre">inference</span></code>. However, it might be more common that you want to call the classifier in other python scripts, for example, as one step of you bigger workflow.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_classifier</span> <span class="o">=</span> <span class="n">ProjectTester</span><span class="p">(</span><span class="n">save_model_output</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<p>It is possible to run inference as training/testing, just with <code class="docutils literal notranslate"><span class="pre">inference</span></code>. You may pass in a config file, like <a class="reference external" href="model_zoo/config_test.yaml">HERE</a>. If no config file is passed in, a default one will be loaded.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">run_classifier3d --debug inference --csv /path/to/csv --config /path/to/config_infernece.yaml --outout_path /path/to/output</span>
+</pre></div>
+</div>
+<p>However, it might be more common that you want to call the classifier in other python scripts, for example, as one step of you bigger workflow.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_classifier</span> <span class="o">=</span> <span class="n">ProjectTester</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;inference&quot;</span><span class="p">,</span> <span class="n">save_model_output</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">df_pred</span> <span class="o">=</span> <span class="n">my_classifier</span><span class="o">.</span><span class="n">run_tester_csv</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">pred_path</span><span class="p">,</span> <span class="n">return_df</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Here, <code class="docutils literal notranslate"><span class="pre">dataset</span></code> is a filename pointing to a csv file listing all the images to be applied on. See <cite>``CSV`</cite> mode in <code class="docutils literal notranslate"><span class="pre">dataloader</span></code> &lt;TODO&gt;`_ for details. <code class="docutils literal notranslate"><span class="pre">pred_path</span></code> is a filepath to save intermediate prediction tables (e.g., predictions from each individual model when using ensemble). The final labels are returned to a dataframe <code class="docutils literal notranslate"><span class="pre">df_pred</span></code>.</p>
+<p>Here, <code class="docutils literal notranslate"><span class="pre">dataset</span></code> is a filename pointing to a csv file listing all the images to be applied on. See <cite>``test_csv`</cite> mode in <code class="docutils literal notranslate"><span class="pre">dataloader</span></code> &lt;<a class="reference external" href="https://allencell.github.io/image_classifier_3d/image_classifier_3d.data_loader.html#image_classifier_3d.data_loader.universal_loader.adaptive_padding_loader">https://allencell.github.io/image_classifier_3d/image_classifier_3d.data_loader.html#image_classifier_3d.data_loader.universal_loader.adaptive_padding_loader</a>&gt;`_ for details. <code class="docutils literal notranslate"><span class="pre">pred_path</span></code> is a filepath to save intermediate prediction tables (e.g., predictions from each individual model when using ensemble). The final labels are returned to a dataframe <code class="docutils literal notranslate"><span class="pre">df_pred</span></code>.</p>
 </div>
 <div class="section" id="full-documentation">
 <h3>Full Documentation:<a class="headerlink" href="#full-documentation" title="Permalink to this headline">¶</a></h3>
@@ -251,7 +262,7 @@ pip install -e .<span class="o">[</span>all<span class="o">]</span>
 <div class="section" id="questions">
 <h2>Questions?<a class="headerlink" href="#questions" title="Permalink to this headline">¶</a></h2>
 <p>If you have any questions, feel free to leave a comment in our Allen Cell forum: <a class="reference external" href="https://forum.allencell.org/">https://forum.allencell.org/</a>.</p>
-<p><a href="#id2"><span class="problematic" id="id3">**</span></a><em>Free software: Allen Institute Software License</em>**</p>
+<p><a href="#id3"><span class="problematic" id="id4">**</span></a><em>Free software: Allen Institute Software License</em>**</p>
 </div>
 </div>
 <div class="section" id="indices-and-tables">
@@ -268,28 +279,25 @@ pip install -e .<span class="o">[</span>all<span class="o">]</span>
            
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2020, Jianxu Chen
+        &#169; Copyright 2020, Jianxu Chen.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
