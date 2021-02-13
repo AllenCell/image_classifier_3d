@@ -10,10 +10,11 @@ import traceback
 
 from image_classifier_3d.proj_trainer import ProjectTrainer
 from image_classifier_3d.proj_tester import ProjectTester
+from pytorch_lightning import seed_everything
 
 # Global object
 TRAIN_MODE = "train"
-VALID_MODE = "validate"
+EVALU_MODE = "evaluate"
 INFER_MODE = "inference"
 
 ###############################################################################
@@ -51,9 +52,12 @@ class Args(argparse.Namespace):
             "--config", dest="filename", help="configuration filename for training"
         )
 
-        parser_validation = subparsers.add_parser(VALID_MODE)
-        parser_validation.add_argument(
-            "--config", dest="filename", help="configuration filename for validation"
+        parser_evaluation = subparsers.add_parser(EVALU_MODE)
+        parser_evaluation.add_argument(
+            "--config", dest="filename", help="configuration filename for evaluation"
+        )
+        parser_evaluation.add_argument(
+            "--output_path", help="path to save prediction results"
         )
 
         parser_inference = subparsers.add_parser(INFER_MODE)
@@ -61,6 +65,9 @@ class Args(argparse.Namespace):
             "--csv",
             dest="csv_filename",
             help="path to the csv file of data to be applied on",
+        )
+        parser_inference.add_argument(
+            "--config", dest="filename", help="configuration filename for inference"
         )
         parser_inference.add_argument(
             "--output_path", help="path to save prediction results"
@@ -73,23 +80,26 @@ class Args(argparse.Namespace):
 
 
 def main():
+    args = Args()
     try:
-        args = Args()
-        dbg = args.debug
+        # always seed everything for reproducibility
+        seed_everything(42)
 
         if args.mode == TRAIN_MODE:
             exe = ProjectTrainer(args.filename)
             exe.run_trainer()
-        elif args.mode == VALID_MODE:
-            exe = ProjectTester(save_model_output=True)
-            exe.run_tester_config(args.filename)
+        elif args.mode == EVALU_MODE:
+            exe = ProjectTester(mode="evaluation", save_model_output=args.debug)
+            exe.run_tester_config(args.filename, args.output_path)
         elif args.mode == INFER_MODE:
-            exe = ProjectTester(save_model_output=False)
-            exe.run_tester_csv(args.csv_filename, args.output_path)
+            exe = ProjectTester(mode="inference", save_model_output=args.debug)
+            exe.run_tester_csv(
+                args.csv_filename, args.output_path, config_yaml=args.filename
+            )
 
     except Exception as e:
         log.error("=============================================")
-        if dbg:
+        if args.debug:
             log.error("\n\n" + traceback.format_exc())
             log.error("=============================================")
         log.error("\n\n" + str(e) + "\n")

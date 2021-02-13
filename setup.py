@@ -42,11 +42,12 @@ requirements = [
     "pandas",
     "scipy",
     "scikit-image",
-    "pytorch-lightning>=0.8.5",
+    "pytorch-lightning>=1.1.6",
     "aicsimageio>=3.2.3",
     "quilt3",
     "torch>=1.4.0",
-    "torchvision>=0.7.0"
+    "torchvision>=0.7.0",
+    "scikit-learn"
 ]
 
 extra_requirements = {

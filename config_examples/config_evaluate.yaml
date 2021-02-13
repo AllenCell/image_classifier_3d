@@ -1,0 +1,29 @@
+project: mitotic_classifier
+
+model_params:
+  name: 'resnet'
+  depth: 50
+  in_channels: 2
+  num_classes: 9
+  class_weight: [1, 1, 1, 1, 1, 1, 1, 1, 1]
+  class_label: ["M0", "M12", "M3", "M45", "M67_e", "M6M7_h", "blob", "dead", "wrong"]
+  trained_model: 
+    - model: "/path/to/first/model/epoch=1000.ckpt"
+    - model: "/path/to/first/model/epoch=1000.ckpt"
+
+test_data_loader:
+  name: 'AdaptivePaddingBatch'
+  mode: folder
+  data_path: "/path/to/evaluation/data/"
+  runtime_aug: 1
+  num_worker: 8
+  batch_size: 32
+  shape: [100, 200, 200]
+
+
+trainer_params:
+  precision: 16
+  gpus: 2
+  logger: False
+  distributed_backend: 'ddp'
+  num_nodes: 1
