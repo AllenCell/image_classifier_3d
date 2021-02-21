@@ -9,6 +9,17 @@ This was used to build the cell classifier to automatically annotate the cells (
 
 ---
 
+## Update:
+
+Vision transformer (ViT) is added. We extend the basic ViT to 3D and employ a small CNN to initial embedding from 3D patches to vectors.
+
+Important reference:
+* https://github.com/lucidrains/vit-pytorch
+* https://github.com/rwightman/pytorch-image-models
+
+
+----
+
 ## Installation
 
 **Stable Release:** `pip install image_classifier_3d`<br>

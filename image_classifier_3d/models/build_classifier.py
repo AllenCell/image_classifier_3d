@@ -67,10 +67,15 @@ class mitotic_classifier(pl.LightningModule):
                 conv1_t_stride=1,
                 no_max_pool=False,
             )
-        elif hparams.model_params["name"] == "resnet18_pretrain":
+        elif m["name"] == "resnet18_pretrain":
             from torchvision.models.video import r3d_18
 
             self.model = r3d_18(pretrained=True, progress=True)
+
+        elif m["name"] == "vit":
+            from .vit_3D import ViT
+
+            self.model = ViT()
 
         # load/initialize parameters
         self.hparams = hparams
