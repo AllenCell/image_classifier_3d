@@ -73,9 +73,22 @@ class mitotic_classifier(pl.LightningModule):
             self.model = r3d_18(pretrained=True, progress=True)
 
         elif m["name"] == "vit":
-            from .vit_3D import ViT
+            from .vit_3D import ViT_3D
 
-            self.model = ViT()
+            self.model = ViT_3D(
+                image_size=m["image_size"],
+                patch_size=m["patch_size"],
+                num_classes=m["num_classes"],
+                dim=m["dim"],
+                depth=m["depth"],
+                heads=m["head"],
+                mlp_dim=m["mlp"],
+                pool=m["pool"],
+                channels=m["in_channels"],
+                dim_head=64,
+                dropout=0.0,
+                emb_dropout=0.0
+            )
 
         # load/initialize parameters
         self.hparams = hparams

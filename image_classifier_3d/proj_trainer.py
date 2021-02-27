@@ -48,6 +48,7 @@ class ProjectTrainer(object):
             "image_classifier_3d.models.build_classifier"
         )
         ClassiferModule = getattr(build_classifier_module, self.config["project"])
+        classifier_model = ClassiferModule(hparams)
         try:
             classifier_model = ClassiferModule(hparams)
         except Exception as e:

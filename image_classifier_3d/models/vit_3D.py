@@ -111,8 +111,8 @@ class ViT_3D(nn.Module):
     def __init__(
         self,
         *,
-        image_size: List[int, int, int],
-        patch_size: List[int, int, int],
+        image_size: List,
+        patch_size: List,
         num_classes: int,
         dim: int,
         depth: int,
