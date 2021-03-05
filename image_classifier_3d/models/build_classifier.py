@@ -88,7 +88,7 @@ class mitotic_classifier(pl.LightningModule):
                 channels=m["in_channels"],
                 dim_head=64,
                 dropout=0.0,
-                emb_dropout=0.0
+                emb_dropout=0.0,
             )
 
         # load/initialize parameters
@@ -471,17 +471,18 @@ class mnist_classifier(pl.LightningModule):
                 channels=m["in_channels"],
                 dim_head=64,
                 dropout=0.0,
-                emb_dropout=0.0
+                emb_dropout=0.0,
             )
         elif m["name"] == "mlp":
             self.model = nn.Sequential(
-                nn.Linear(in_features=m["image_size"] * m["image_size"],
-                          out_features=m["hidden_dim"]),
+                nn.Linear(
+                    in_features=m["image_size"] * m["image_size"],
+                    out_features=m["hidden_dim"],
+                ),
                 nn.Tanh(),
                 nn.BatchNorm1d(m["hidden_dim"]),
                 nn.Dropout(m["drop_prob"]),
-                nn.Linear(in_features=m["hidden_dim"],
-                          out_features=m["num_classes"])
+                nn.Linear(in_features=m["hidden_dim"], out_features=m["num_classes"]),
             )
         else:
             raise NotImplementedError(f"Not supporting {m['name']} for now")
@@ -497,19 +498,21 @@ class mnist_classifier(pl.LightningModule):
         # prepare MNIST data
         from torchvision.datasets import MNIST
         import torchvision.transforms as transforms
-        transform = transforms.Compose([transforms.ToTensor(),
-                                        transforms.Normalize((0.5,), (1.0,))])
+
+        transform = transforms.Compose(
+            [transforms.ToTensor(), transforms.Normalize((0.5,), (1.0,))]
+        )
         self.mnist_train = MNIST(
             self.dataloader_param["data_root"],
             train=True,
             download=True,
-            transform=transform
+            transform=transform,
         )
         self.mnist_test = MNIST(
             self.dataloader_param["data_root"],
             train=False,
             download=True,
-            transform=transform
+            transform=transform,
         )
 
         # load weight for each class
@@ -538,12 +541,12 @@ class mnist_classifier(pl.LightningModule):
 
         # computer loss
         if self.class_weight is None:
-            loss = F.cross_entropy(y_hat, y, reduction='mean')
+            loss = F.cross_entropy(y_hat, y, reduction="mean")
         else:
-            loss = F.cross_entropy(y_hat, y, self.class_weight.cuda(), reduction='mean')
+            loss = F.cross_entropy(y_hat, y, self.class_weight.cuda(), reduction="mean")
 
         # log the loss
-        self.log('train_loss', loss)
+        self.log("train_loss", loss)
 
         # get prediction labels and calculate number of correct predictions
         labels_hat = torch.argmax(y_hat, dim=1)
@@ -603,11 +606,11 @@ class mnist_classifier(pl.LightningModule):
             "idx": batch_idx,
             "pred": [pred_prob.numpy()],
             "pred_label": labels_hat,
-            "label": y
+            "label": y,
         }
 
         self.log(
-            'validation_loss', val_loss, on_step=True, on_epoch=True, sync_dist=True
+            "validation_loss", val_loss, on_step=True, on_epoch=True, sync_dist=True
         )
 
         return {
@@ -642,19 +645,22 @@ class mnist_classifier(pl.LightningModule):
         n_correct_pred = torch.sum(y == labels_hat).item()
 
         self.log(
-            'validation_loss', test_loss, on_step=True, on_epoch=True, sync_dist=True
+            "validation_loss", test_loss, on_step=True, on_epoch=True, sync_dist=True
         )
 
         return {
-            'test_loss': test_loss, "n_correct_pred": n_correct_pred, "n_pred": len(x)
+            "test_loss": test_loss,
+            "n_correct_pred": n_correct_pred,
+            "n_pred": len(x),
         }
 
     def test_epoch_end(self, outputs):
-        avg_loss = torch.stack([x['test_loss'] for x in outputs]).mean()
-        test_acc = sum([x['n_correct_pred'] for x in outputs]) \
-            / sum(x['n_pred'] for x in outputs)
-        tensorboard_logs = {'test_loss': avg_loss, 'test_acc': test_acc}
-        return {'test_loss': avg_loss, 'log': tensorboard_logs}
+        avg_loss = torch.stack([x["test_loss"] for x in outputs]).mean()
+        test_acc = sum([x["n_correct_pred"] for x in outputs]) / sum(
+            x["n_pred"] for x in outputs
+        )
+        tensorboard_logs = {"test_loss": avg_loss, "test_acc": test_acc}
+        return {"test_loss": avg_loss, "log": tensorboard_logs}
 
     def configure_optimizers(self):
 

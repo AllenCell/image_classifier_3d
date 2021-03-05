@@ -125,7 +125,7 @@ class ViT(nn.Module):
         # https://stackoverflow.com/questions/2965271/forced-naming-of-parameters-in-python/14298976#14298976
         # "asterisk" is used to force people to use keywork argument
         super().__init__()
-        assert image_size % patch_size == 0, 'Image dims not divided by patch_size.'
+        assert image_size % patch_size == 0, "Image dims not divided by patch_size."
         num_patches = (image_size // patch_size) ** 2
         patch_dim = channels * patch_size ** 2
         assert pool in {

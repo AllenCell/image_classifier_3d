@@ -44,8 +44,8 @@ class ProjectTrainer(object):
 
         hparams = argparse.Namespace(**self.config)
 
-        # define logging 
-        tb_logger = pl_loggers.TensorBoardLogger('logs/')
+        # define logging
+        tb_logger = pl_loggers.TensorBoardLogger("logs/")
 
         # initialize the model, according to project type
         build_classifier_module = importlib.import_module(
