@@ -15,6 +15,7 @@ from typing import List, Dict
 
 # from torchvision import transforms
 # from torch.nn import CrossEntropyLoss
+import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
@@ -472,50 +473,50 @@ class mnist_classifier(pl.LightningModule):
                 dropout=0.0,
                 emb_dropout=0.0
             )
+        elif m["name"] == "mlp":
+            self.model = nn.Sequential(
+                nn.Linear(in_features=m["image_size"] * m["image_size"],
+                          out_features=m["hidden_dim"]),
+                nn.Tanh(),
+                nn.BatchNorm1d(m["hidden_dim"]),
+                nn.Dropout(m["drop_prob"]),
+                nn.Linear(in_features=m["hidden_dim"],
+                          out_features=m["num_classes"])
+            )
         else:
-            raise NotImplementedError("Not ViT is supported for now")
+            raise NotImplementedError(f"Not supporting {m['name']} for now")
 
         # load/initialize parameters
         self.hparams = hparams
+        self.exp_params = hparams.exp_params
+        self.dataloader_param = hparams.exp_params["dataloader"]
         self.test_params = None
         self.test_results = []
         self.test_type = None
-        self.using_mix_batch = False
 
-        if "test_data_loader" not in self.hparams:  # train
+        # prepare MNIST data
+        from torchvision.datasets import MNIST
+        import torchvision.transforms as transforms
+        transform = transforms.Compose([transforms.ToTensor(),
+                                        transforms.Normalize((0.5,), (1.0,))])
+        self.mnist_train = MNIST(
+            self.dataloader_param["data_root"],
+            train=True,
+            download=True,
+            transform=transform
+        )
+        self.mnist_test = MNIST(
+            self.dataloader_param["data_root"],
+            train=False,
+            download=True,
+            transform=transform
+        )
 
-            self.exp_params = hparams.exp_params
-            self.dataloader_param = hparams.exp_params["dataloader"]
-
-            # load weight for each class
-            if "class_weight" in m:
-                self.class_weight = torch.tensor(m["class_weight"])
-            else:
-                self.class_weight = None
-
-            # load train/valid files
-            train_filenames = glob(
-                hparams.exp_params["training_data_path"] + os.sep + "*.npy"
-            )
-            self.train_filenames = train_filenames
-
-            val_filenames = glob(
-                hparams.exp_params["validation_data_path"] + os.sep + "*.npy"
-            )
-            self.val_filenames = val_filenames
-
-            assert len(self.val_filenames) > 0, "no validation file found"
-            assert len(self.train_filenames) > 0, "no training file found"
-
-        else:  # inference/evaluation
-            if os.path.isfile(hparams.test_data_loader["data_path"]):
-                self.test_type = "df"
-                _fn, file_extension = os.path.splitext(
-                    hparams.test_data_loader["data_path"]
-                )
-                assert file_extension == ".csv", "only csv is supported"
-            else:
-                self.test_type = "folder"
+        # load weight for each class
+        if "class_weight" in m:
+            self.class_weight = torch.tensor(m["class_weight"])
+        else:
+            self.class_weight = None
 
         # define final layer for test and evaluation
         self.final_layer = torch.nn.Softmax(dim=1)
@@ -523,18 +524,8 @@ class mnist_classifier(pl.LightningModule):
     def forward(self, x, **kwargs):
         """ forward pass """
 
-        if self.using_mix_batch:
-            # each image in a batch may have different shapes
-            # need to run one by one
-            y = []
-            for i, x_i in enumerate(x):
-                # x_i is an image.
-                y_i = self.model(x_i, **kwargs)
-                if i == 0:
-                    y = y_i
-                else:
-                    y = torch.cat((y, y_i), dim=0)
-            return y
+        if self.hparams.model_params["name"] == "mlp":
+            return self.model(x.view(x.size(0), -1), **kwargs)
         else:
             return self.model(x, **kwargs)
 
@@ -547,10 +538,12 @@ class mnist_classifier(pl.LightningModule):
 
         # computer loss
         if self.class_weight is None:
-            loss = F.cross_entropy(y_hat, y)
+            loss = F.cross_entropy(y_hat, y, reduction='mean')
         else:
-            loss = F.cross_entropy(y_hat, y, self.class_weight.cuda(), reduction="mean")
-        tensorboard_logs = {"train_loss": loss}
+            loss = F.cross_entropy(y_hat, y, self.class_weight.cuda(), reduction='mean')
+
+        # log the loss
+        self.log('train_loss', loss)
 
         # get prediction labels and calculate number of correct predictions
         labels_hat = torch.argmax(y_hat, dim=1)
@@ -562,7 +555,6 @@ class mnist_classifier(pl.LightningModule):
 
         return {
             "loss": loss,
-            "log": tensorboard_logs,
             "train_n_correct_pred": n_correct_pred,
             "train_n_pred": len(x),
             "pred_record": pred_dict,
@@ -573,6 +565,7 @@ class mnist_classifier(pl.LightningModule):
         # gather loss in this epoch
         avg_loss = torch.stack([x["loss"] for x in outputs]).mean()
 
+        # TODO: may not need this after using sync_dist = True
         # gather accuracy in this epoch, average over all GPUs
         train_acc = sum([x["train_n_correct_pred"] for x in outputs]) / sum(
             x["train_n_pred"] for x in outputs
@@ -581,20 +574,16 @@ class mnist_classifier(pl.LightningModule):
         dist.all_reduce(train_acc)
         train_acc /= dist.get_world_size()
 
-        # insert info into training log
-        tensorboard_logs = {
-            "train_epoch_loss": avg_loss,
-            "train_epoch_acc": train_acc.item(),
-        }
-
-        return {"loss": avg_loss, "log": tensorboard_logs}
+        # log the loss and accuracy
+        self.log("train_epoch_loss", avg_loss)
+        self.log("train_epoch_acc", train_acc.item())
 
     def validation_step(self, batch, batch_idx, optimizer_idx=0):
 
-        # get data in this batch [input, ground_truth, file_name]
+        # get data in this batch [input, ground_truth]
         # file_name can be used for debugging
-        x, y, _fn_ = batch
-        y_hat = self.forward(x)
+        x, y = batch
+        y_hat = self(x)
 
         # compute loss
         if self.class_weight is None:
@@ -614,9 +603,12 @@ class mnist_classifier(pl.LightningModule):
             "idx": batch_idx,
             "pred": [pred_prob.numpy()],
             "pred_label": labels_hat,
-            "label": y,
-            "fn": _fn_,
+            "label": y
         }
+
+        self.log(
+            'validation_loss', val_loss, on_step=True, on_epoch=True, sync_dist=True
+        )
 
         return {
             "val_loss": val_loss,
@@ -638,76 +630,31 @@ class mnist_classifier(pl.LightningModule):
         dist.all_reduce(val_acc)
         val_acc /= dist.get_world_size()
 
-        # insert info into training log
-        tensorboard_logs = {"val_loss": avg_loss, "val_acc": val_acc.item()}
-
-        # make dubug record
-        if "debug_path" in self.exp_params:
-            df = pd.DataFrame([x["pred_record"] for x in outputs])
-            csv_fn = (
-                self.exp_params["debug_path"]
-                + "/"
-                + str(random.randint(1, 9000))
-                + ".csv"
-            )
-            df.to_csv(csv_fn)
-
-        return {
-            "val_loss": avg_loss,
-            "val_acc": val_acc.item(),
-            "log": tensorboard_logs,
-        }
+        # log the loss and accuracy
+        self.log("val_loss", avg_loss)
+        self.log("val_acc", val_acc.item())
 
     def test_step(self, batch, batch_idx, optimizer_idx=0):
-        if self.test_type == "folder":
-            x, y, fn = batch
-        elif self.test_type == "df":
-            x, cid = batch
-        else:
-            raise NotImplementedError("unsupported test type")
+        x, y = batch
+        y_hat = self(x)
+        test_loss = F.cross_entropy(y_hat, y)
+        labels_hat = torch.argmax(y_hat, dim=1)
+        n_correct_pred = torch.sum(y == labels_hat).item()
 
-        y_pred = self.forward(x)
-        # labels_hat = torch.argmax(y_hat, dim=1)
-        # n_correct_pred = torch.sum(y == labels_hat).item()
-        y_hat = self.final_layer(y_pred)  # y_pred
-        pred_prob = y_hat.cpu().data.float()
+        self.log(
+            'validation_loss', test_loss, on_step=True, on_epoch=True, sync_dist=True
+        )
 
-        if self.test_type == "folder":
-            pred_dict = {"fn": fn, "pred": pred_prob.numpy(), "label": y}
-        elif self.test_type == "df":
-            pred_dict = {
-                "CellId": cid.cpu().data.int().numpy(),
-                "pred": pred_prob.numpy(),
-            }
-        else:
-            raise NotImplementedError("unsupported test type")
-
-        return {"n_pred": len(x), "pred_record": pred_dict}
+        return {
+            'test_loss': test_loss, "n_correct_pred": n_correct_pred, "n_pred": len(x)
+        }
 
     def test_epoch_end(self, outputs):
-        df = []
-        for batch_out in outputs:
-            if self.test_type == "folder":
-                batch_size = len(batch_out["pred_record"]["fn"])
-                for data_idx in range(batch_size):
-                    df.append(
-                        {
-                            "fn": batch_out["pred_record"]["fn"][data_idx],
-                            "pred": batch_out["pred_record"]["pred"][data_idx],
-                        }
-                    )
-            else:
-                batch_size = len(batch_out["pred_record"]["CellId"])
-                for data_idx in range(batch_size):
-                    df.append(
-                        {
-                            "CellId": batch_out["pred_record"]["CellId"][data_idx],
-                            "pred": batch_out["pred_record"]["pred"][data_idx],
-                        }
-                    )
-
-        self.test_results.append(pd.DataFrame(df))
-        return {"test": "done"}
+        avg_loss = torch.stack([x['test_loss'] for x in outputs]).mean()
+        test_acc = sum([x['n_correct_pred'] for x in outputs]) \
+            / sum(x['n_pred'] for x in outputs)
+        tensorboard_logs = {'test_loss': avg_loss, 'test_acc': test_acc}
+        return {'test_loss': avg_loss, 'log': tensorboard_logs}
 
     def configure_optimizers(self):
 
@@ -738,93 +685,20 @@ class mnist_classifier(pl.LightningModule):
     # this can be defined outside the task class, we do this because
     # the dataloaders are specific to this task.
     ################################################################
-    @staticmethod
-    def get_dataloader(data_m: Dict, filenames: List, flag: str):
-        if data_m["name"] == "AdaptivePaddingBatch":
-            from ..data_loader.universal_loader import adaptive_padding_loader
-
-            my_loader = DataLoader(
-                adaptive_padding_loader(
-                    filenames, out_shape=data_m["shape"], flag=flag
-                ),
-                batch_size=data_m["batch_size"],
-                num_workers=data_m["num_worker"],
-            )
-        elif data_m["name"] == "AdaptiveMixBatch":
-            from ..data_loader.universal_loader import adaptive_loader
-            from ..utils.misc_utils import mix_collate
-
-            my_loader = DataLoader(
-                adaptive_loader(filenames),
-                batch_size=data_m["batch_size"],
-                collate_fn=mix_collate,
-                num_workers=data_m["num_worker"],
-            )
-        else:
-            # assuming basic
-            from ..data_loader.universal_loader import basic_loader
-
-            my_loader = DataLoader(
-                basic_loader(filenames),
-                batch_size=data_m["batch_size"],
-                num_workers=data_m["num_worker"],
-            )
-
-        return my_loader
-
     def train_dataloader(self):
-        # skip this if doing testing
-        if "test_data_loader" in self.hparams:
-            pass
-
-        if self.dataloader_param["name"] == "AdaptiveMixBatch":
-            # each batch contains patches of different sizes
-            self.using_mix_batch = True
-
-        return mitotic_classifier.get_dataloader(
-            self.dataloader_param, self.train_filenames, "train"
+        dm = self.dataloader_param
+        return DataLoader(
+            self.mnist_train, batch_size=dm["batch_size"], num_workers=dm["num_worker"]
         )
 
     def val_dataloader(self):
-        # skip this if doing testing
-        if "test_data_loader" in self.hparams:
-            pass
-
-        return mitotic_classifier.get_dataloader(
-            self.dataloader_param, self.val_filenames, "val"
+        dm = self.dataloader_param
+        return DataLoader(
+            self.mnist_test, batch_size=dm["batch_size"], num_workers=dm["num_worker"]
         )
 
     def test_dataloader(self):
-        # skip this if doing training
-        if "test_data_loader" not in self.hparams:
-            pass
-
-        data_t = self.hparams.test_data_loader
-        if self.test_type == "df":
-            assert (
-                data_t["name"] == "AdaptivePaddingBatch"
-            ), "only adaptive paddng loader is support when using csv"
-            from ..data_loader.universal_loader import adaptive_padding_loader
-
-            test_set_loader = DataLoader(
-                adaptive_padding_loader(
-                    data_t["data_path"], out_shape=data_t["shape"], flag="test_csv"
-                ),
-                batch_size=data_t["batch_size"],
-                num_workers=data_t["num_worker"],
-            )
-
-        elif self.test_type == "folder":
-            filenames = glob(data_t["data_path"] + os.sep + "*.npy")
-            filenames.sort()
-            test_set_loader = mitotic_classifier.get_dataloader(
-                data_t, filenames, "test_folder"
-            )
-        else:
-            raise NotImplementedError("unsupported test type")
-
-        if data_t["name"] == "AdaptiveMixBatch":
-            # each batch contains patches of different sizes
-            self.using_mix_batch = True
-
-        return test_set_loader
+        dm = self.dataloader_param
+        return DataLoader(
+            self.mnist_test, batch_size=dm["batch_size"], num_workers=dm["num_worker"]
+        )

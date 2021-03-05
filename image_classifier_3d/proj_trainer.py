@@ -7,6 +7,7 @@ from pathlib import Path
 import importlib
 
 import yaml
+from pytorch_lightning import loggers as pl_loggers
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import ModelCheckpoint
 
@@ -43,6 +44,9 @@ class ProjectTrainer(object):
 
         hparams = argparse.Namespace(**self.config)
 
+        # define logging 
+        tb_logger = pl_loggers.TensorBoardLogger('logs/')
+
         # initialize the model, according to project type
         build_classifier_module = importlib.import_module(
             "image_classifier_3d.models.build_classifier"
@@ -67,6 +71,7 @@ class ProjectTrainer(object):
 
         trainer = Trainer(
             callbacks=[checkpoint_callback],
+            logger=tb_logger,
             **self.config["trainer_params"],
         )
 
