@@ -1,0 +1,58 @@
+project: mnist_classifier
+
+model_params:
+  name: "vit"
+  hidden_dim: 128
+  drop_prob: 0.5
+  image_size: 28
+  patch_size: 7
+  dim: 64
+  depth: 6
+  head: 8
+  mlp: 128
+  in_channels: 1   # number of channels of the input 3D image 
+  num_classes: 10   # number of classes to predict
+  load_from:  # load_from: only load the model parameters without loading training records
+  pool: "cls"
+
+
+exp_params:
+  # seed
+  manual_seed: 67 #1265
+  # data parameters
+  dataloader:
+    data_root: "/path/to/save/mnist/dataset/"
+    num_worker: 4
+    batch_size: 16
+
+  # hyper parameters
+  LR: 0.01
+  weight_decay: 0.0001
+
+  # more about scheduler and parameters. https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  scheduler_name: 'ExponentialLR' 
+  scheduler_params: 
+    gamma: 0.96
+
+# https://pytorch-lightning.readthedocs.io/en/latest/generated/pytorch_lightning.callbacks.ModelCheckpoint.html#modelcheckpoint
+checkpoint_params:
+  save_weights_only: True
+  save_top_k: 5
+  verbose: True
+  monitor: "val_acc"
+  mode: "max"
+
+# https://pytorch-lightning.readthedocs.io/en/latest/trainer.html#init
+trainer_params:
+  default_root_dir: "/path/to/save/your/models/"
+  precision: 16
+  gpus: 3
+  distributed_backend: 'ddp'
+  num_nodes: 1
+  deterministic: True
+  max_epochs: 100
+  #gradient_clip_val: 2
+  #auto_scale_batch_size: True
+  #auto_lr_find: True
+  #min_epochs: 50
+

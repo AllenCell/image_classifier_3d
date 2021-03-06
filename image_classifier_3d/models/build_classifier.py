@@ -15,6 +15,7 @@ from typing import List, Dict
 
 # from torchvision import transforms
 # from torch.nn import CrossEntropyLoss
+import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
@@ -87,7 +88,7 @@ class mitotic_classifier(pl.LightningModule):
                 channels=m["in_channels"],
                 dim_head=64,
                 dropout=0.0,
-                emb_dropout=0.0
+                emb_dropout=0.0,
             )
 
         # load/initialize parameters
@@ -445,3 +446,265 @@ class mitotic_classifier(pl.LightningModule):
             self.using_mix_batch = True
 
         return test_set_loader
+
+
+class mnist_classifier(pl.LightningModule):
+    """ define a project class, consistent with project_name in config file """
+
+    def __init__(self, hparams) -> None:
+        super(mnist_classifier, self).__init__()
+
+        # load the model architecture based on model_params
+        m = hparams.model_params
+        if m["name"] == "vit":
+            from .vit_original import ViT
+
+            self.model = ViT(
+                image_size=m["image_size"],
+                patch_size=m["patch_size"],
+                num_classes=m["num_classes"],
+                dim=m["dim"],
+                depth=m["depth"],
+                heads=m["head"],
+                mlp_dim=m["mlp"],
+                pool=m["pool"],
+                channels=m["in_channels"],
+                dim_head=64,
+                dropout=0.0,
+                emb_dropout=0.0,
+            )
+        elif m["name"] == "mlp":
+            self.model = nn.Sequential(
+                nn.Linear(
+                    in_features=m["image_size"] * m["image_size"],
+                    out_features=m["hidden_dim"],
+                ),
+                nn.Tanh(),
+                nn.BatchNorm1d(m["hidden_dim"]),
+                nn.Dropout(m["drop_prob"]),
+                nn.Linear(in_features=m["hidden_dim"], out_features=m["num_classes"]),
+            )
+        else:
+            raise NotImplementedError(f"Not supporting {m['name']} for now")
+
+        # load/initialize parameters
+        self.hparams = hparams
+        self.exp_params = hparams.exp_params
+        self.dataloader_param = hparams.exp_params["dataloader"]
+        self.test_params = None
+        self.test_results = []
+        self.test_type = None
+
+        # prepare MNIST data
+        from torchvision.datasets import MNIST
+        import torchvision.transforms as transforms
+
+        transform = transforms.Compose(
+            [transforms.ToTensor(), transforms.Normalize((0.5,), (1.0,))]
+        )
+        self.mnist_train = MNIST(
+            self.dataloader_param["data_root"],
+            train=True,
+            download=True,
+            transform=transform,
+        )
+        self.mnist_test = MNIST(
+            self.dataloader_param["data_root"],
+            train=False,
+            download=True,
+            transform=transform,
+        )
+
+        # load weight for each class
+        if "class_weight" in m:
+            self.class_weight = torch.tensor(m["class_weight"])
+        else:
+            self.class_weight = None
+
+        # define final layer for test and evaluation
+        self.final_layer = torch.nn.Softmax(dim=1)
+
+    def forward(self, x, **kwargs):
+        """ forward pass """
+
+        if self.hparams.model_params["name"] == "mlp":
+            return self.model(x.view(x.size(0), -1), **kwargs)
+        else:
+            return self.model(x, **kwargs)
+
+    def training_step(self, batch, batch_idx, optimizer_idx=0):
+        # get data in this batch: [input, ground_truth]
+        x, y = batch
+
+        # make forward pass
+        y_hat = self(x)
+
+        # computer loss
+        if self.class_weight is None:
+            loss = F.cross_entropy(y_hat, y, reduction="mean")
+        else:
+            loss = F.cross_entropy(y_hat, y, self.class_weight.cuda(), reduction="mean")
+
+        # log the loss
+        self.log("train_loss", loss)
+
+        # get prediction labels and calculate number of correct predictions
+        labels_hat = torch.argmax(y_hat, dim=1)
+        n_correct_pred = torch.sum(y == labels_hat).item()
+
+        # insert info to training log
+        pred_prob = y_hat.cpu().data.float()
+        pred_dict = {"idx": batch_idx, "pred": pred_prob.numpy(), "label": y}
+
+        return {
+            "loss": loss,
+            "train_n_correct_pred": n_correct_pred,
+            "train_n_pred": len(x),
+            "pred_record": pred_dict,
+        }
+
+    def training_epoch_end(self, outputs):
+
+        # gather loss in this epoch
+        avg_loss = torch.stack([x["loss"] for x in outputs]).mean()
+
+        # TODO: may not need this after using sync_dist = True
+        # gather accuracy in this epoch, average over all GPUs
+        train_acc = sum([x["train_n_correct_pred"] for x in outputs]) / sum(
+            x["train_n_pred"] for x in outputs
+        )
+        train_acc = torch.tensor(train_acc, dtype=torch.float64).cuda()
+        dist.all_reduce(train_acc)
+        train_acc /= dist.get_world_size()
+
+        # log the loss and accuracy
+        self.log("train_epoch_loss", avg_loss)
+        self.log("train_epoch_acc", train_acc.item())
+
+    def validation_step(self, batch, batch_idx, optimizer_idx=0):
+
+        # get data in this batch [input, ground_truth]
+        # file_name can be used for debugging
+        x, y = batch
+        y_hat = self(x)
+
+        # compute loss
+        if self.class_weight is None:
+            val_loss = F.cross_entropy(y_hat, y)
+        else:
+            val_loss = F.cross_entropy(
+                y_hat, y, self.class_weight.cuda(), reduction="mean"
+            )
+
+        # get prediction labels and calculate number of correct predictions
+        labels_hat = torch.argmax(y_hat, dim=1)
+        n_correct_pred = torch.sum(y == labels_hat).item()
+
+        # insert info to training log
+        pred_prob = y_hat.cpu().data.float()
+        pred_dict = {
+            "idx": batch_idx,
+            "pred": [pred_prob.numpy()],
+            "pred_label": labels_hat,
+            "label": y,
+        }
+
+        self.log(
+            "validation_loss", val_loss, on_step=True, on_epoch=True, sync_dist=True
+        )
+
+        return {
+            "val_loss": val_loss,
+            "n_correct_pred": n_correct_pred,
+            "n_pred": len(x),
+            "pred_record": pred_dict,
+        }
+
+    def validation_epoch_end(self, outputs):
+
+        # gather loss in this epoch
+        avg_loss = torch.stack([x["val_loss"] for x in outputs]).mean()
+
+        # gather accuracy in this epoch, average over all GPUs
+        val_acc = sum([x["n_correct_pred"] for x in outputs]) / sum(
+            x["n_pred"] for x in outputs
+        )
+        val_acc = torch.tensor(val_acc, dtype=torch.float64).cuda()
+        dist.all_reduce(val_acc)
+        val_acc /= dist.get_world_size()
+
+        # log the loss and accuracy
+        self.log("val_loss", avg_loss)
+        self.log("val_acc", val_acc.item())
+
+    def test_step(self, batch, batch_idx, optimizer_idx=0):
+        x, y = batch
+        y_hat = self(x)
+        test_loss = F.cross_entropy(y_hat, y)
+        labels_hat = torch.argmax(y_hat, dim=1)
+        n_correct_pred = torch.sum(y == labels_hat).item()
+
+        self.log(
+            "validation_loss", test_loss, on_step=True, on_epoch=True, sync_dist=True
+        )
+
+        return {
+            "test_loss": test_loss,
+            "n_correct_pred": n_correct_pred,
+            "n_pred": len(x),
+        }
+
+    def test_epoch_end(self, outputs):
+        avg_loss = torch.stack([x["test_loss"] for x in outputs]).mean()
+        test_acc = sum([x["n_correct_pred"] for x in outputs]) / sum(
+            x["n_pred"] for x in outputs
+        )
+        tensorboard_logs = {"test_loss": avg_loss, "test_acc": test_acc}
+        return {"test_loss": avg_loss, "log": tensorboard_logs}
+
+    def configure_optimizers(self):
+
+        optims = []
+        scheds = []
+        exp_m = self.exp_params
+
+        # basic optimizer
+        optimizer = optim.Adam(
+            self.model.parameters(), lr=exp_m["LR"], weight_decay=exp_m["weight_decay"]
+        )
+        optims.append(optimizer)
+
+        # check if using a scheduler
+        if "scheduler_name" in exp_m and exp_m["scheduler_name"] is not None:
+            scheduler_module = importlib.import_module("torch.optim.lr_scheduler")
+            scheduler_class = getattr(scheduler_module, exp_m["scheduler_name"])
+            scheduler = scheduler_class(optims[0], **exp_m["scheduler_params"])
+            scheds.append(scheduler)
+            return optims, scheds
+        else:
+            print("WARNING: no scheduler is used")
+            return optims
+
+    ###############################################################
+    # define dataloader for train/test/validation
+    #
+    # this can be defined outside the task class, we do this because
+    # the dataloaders are specific to this task.
+    ################################################################
+    def train_dataloader(self):
+        dm = self.dataloader_param
+        return DataLoader(
+            self.mnist_train, batch_size=dm["batch_size"], num_workers=dm["num_worker"]
+        )
+
+    def val_dataloader(self):
+        dm = self.dataloader_param
+        return DataLoader(
+            self.mnist_test, batch_size=dm["batch_size"], num_workers=dm["num_worker"]
+        )
+
+    def test_dataloader(self):
+        dm = self.dataloader_param
+        return DataLoader(
+            self.mnist_test, batch_size=dm["batch_size"], num_workers=dm["num_worker"]
+        )
