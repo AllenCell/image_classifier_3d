@@ -165,10 +165,12 @@ class mitotic_classifier(pl.LightningModule):
 
         # computer loss
         if self.class_weight is None:
-            loss = F.cross_entropy(y_hat, y)
+            loss = F.cross_entropy(y_hat, y, reduction="sum")
         else:
-            loss = F.cross_entropy(y_hat, y, self.class_weight.cuda(), reduction="mean")
-        tensorboard_logs = {"train_loss": loss}
+            loss = F.cross_entropy(y_hat, y, self.class_weight.cuda(), reduction="sum")
+
+        # log the loss
+        self.log("train_loss", loss)
 
         # get prediction labels and calculate number of correct predictions
         labels_hat = torch.argmax(y_hat, dim=1)
@@ -180,7 +182,6 @@ class mitotic_classifier(pl.LightningModule):
 
         return {
             "loss": loss,
-            "log": tensorboard_logs,
             "train_n_correct_pred": n_correct_pred,
             "train_n_pred": len(x),
             "pred_record": pred_dict,
@@ -199,13 +200,9 @@ class mitotic_classifier(pl.LightningModule):
         dist.all_reduce(train_acc)
         train_acc /= dist.get_world_size()
 
-        # insert info into training log
-        tensorboard_logs = {
-            "train_epoch_loss": avg_loss,
-            "train_epoch_acc": train_acc.item(),
-        }
-
-        return {"loss": avg_loss, "log": tensorboard_logs}
+        # log the loss and accuracy
+        self.log("train_epoch_loss", avg_loss)
+        self.log("train_epoch_acc", train_acc.item())
 
     def validation_step(self, batch, batch_idx, optimizer_idx=0):
 
@@ -216,10 +213,10 @@ class mitotic_classifier(pl.LightningModule):
 
         # compute loss
         if self.class_weight is None:
-            val_loss = F.cross_entropy(y_hat, y)
+            val_loss = F.cross_entropy(y_hat, y, reduction="sum")
         else:
             val_loss = F.cross_entropy(
-                y_hat, y, self.class_weight.cuda(), reduction="mean"
+                y_hat, y, self.class_weight.cuda(), reduction="sum"
             )
 
         # get prediction labels and calculate number of correct predictions
@@ -235,6 +232,10 @@ class mitotic_classifier(pl.LightningModule):
             "label": y,
             "fn": _fn_,
         }
+
+        self.log(
+            "validation_loss", val_loss, on_step=True, on_epoch=True, sync_dist=True
+        )
 
         return {
             "val_loss": val_loss,
@@ -256,8 +257,9 @@ class mitotic_classifier(pl.LightningModule):
         dist.all_reduce(val_acc)
         val_acc /= dist.get_world_size()
 
-        # insert info into training log
-        tensorboard_logs = {"val_loss": avg_loss, "val_acc": val_acc.item()}
+        # log the loss and accuracy
+        self.log("val_loss", avg_loss)
+        self.log("val_acc", val_acc.item())
 
         # make dubug record
         if "debug_path" in self.exp_params:
@@ -269,12 +271,6 @@ class mitotic_classifier(pl.LightningModule):
                 + ".csv"
             )
             df.to_csv(csv_fn)
-
-        return {
-            "val_loss": avg_loss,
-            "val_acc": val_acc.item(),
-            "log": tensorboard_logs,
-        }
 
     def test_step(self, batch, batch_idx, optimizer_idx=0):
         if self.test_type == "folder":
