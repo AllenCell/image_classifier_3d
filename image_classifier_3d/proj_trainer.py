@@ -19,7 +19,7 @@ log = logging.getLogger(__name__)
 
 
 class ProjectTrainer(object):
-    """ Main class for training a new classifier project """
+    """Main class for training a new classifier project"""
 
     def __init__(self, config_filename: Union[str, Path]):
         """
@@ -39,7 +39,7 @@ class ProjectTrainer(object):
         self.config = config
 
     def run_trainer(self):
-        """ do the training """
+        """do the training"""
 
         hparams = argparse.Namespace(**self.config)
 

@@ -23,7 +23,7 @@ import torch.distributed as dist
 
 
 class mitotic_classifier(pl.LightningModule):
-    """ define a project class, consistent with project_name in config file """
+    """define a project class, consistent with project_name in config file"""
 
     def __init__(self, hparams) -> None:
         super(mitotic_classifier, self).__init__()
@@ -120,7 +120,7 @@ class mitotic_classifier(pl.LightningModule):
         self.final_layer = torch.nn.Softmax(dim=1)
 
     def forward(self, x, **kwargs):
-        """ forward pass """
+        """forward pass"""
 
         if self.using_mix_batch:
             # each image in a batch may have different shapes

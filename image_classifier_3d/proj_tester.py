@@ -45,7 +45,7 @@ class ProjectTester(object):
 
     @staticmethod
     def _load_config(yaml_path: Union[str, Path]) -> List:
-        """ load configuration from yaml file """
+        """load configuration from yaml file"""
         with open(yaml_path, "r") as file:
             config = yaml.safe_load(file)
 
@@ -54,7 +54,7 @@ class ProjectTester(object):
 
     @staticmethod
     def _report_results(df_merge, out_path, class_label):
-        """ report evaluation results, confusion matrix """
+        """report evaluation results, confusion matrix"""
 
         from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
         import matplotlib.pyplot as plt
