@@ -3,7 +3,7 @@ PyTorch Lightning model class for mitotic classifier
 """
 import os
 
-# import numpy as np
+import numpy as np
 import pandas as pd
 import random
 from glob import glob
@@ -23,7 +23,7 @@ import torch.distributed as dist
 
 
 class mitotic_classifier(pl.LightningModule):
-    """ define a project class, consistent with project_name in config file """
+    """define a project class, consistent with project_name in config file"""
 
     def __init__(self, hparams) -> None:
         super(mitotic_classifier, self).__init__()
@@ -120,7 +120,7 @@ class mitotic_classifier(pl.LightningModule):
         self.final_layer = torch.nn.Softmax(dim=1)
 
     def forward(self, x, **kwargs):
-        """ forward pass """
+        """forward pass"""
 
         if self.using_mix_batch:
             # each image in a batch may have different shapes
@@ -275,7 +275,7 @@ class mitotic_classifier(pl.LightningModule):
             pred_dict = {"fn": fn, "pred": pred_prob.numpy(), "label": y}
         elif self.test_type == "df":
             pred_dict = {
-                "CellId": cid.cpu().data.int().numpy(),
+                "CellId": np.asarray(cid),  # cid.cpu().data.int().numpy()
                 "pred": pred_prob.numpy(),
             }
         else:
