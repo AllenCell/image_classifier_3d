@@ -192,7 +192,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
-<span class="c1"># import numpy as np</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
@@ -212,7 +212,7 @@
 
 
 <div class="viewcode-block" id="mitotic_classifier"><a class="viewcode-back" href="../../../image_classifier_3d.models.html#image_classifier_3d.models.build_classifier.mitotic_classifier">[docs]</a><span class="k">class</span> <span class="nc">mitotic_classifier</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">LightningModule</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; define a project class, consistent with project_name in config file &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;define a project class, consistent with project_name in config file&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hparams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">mitotic_classifier</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -309,7 +309,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">final_layer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Softmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <div class="viewcode-block" id="mitotic_classifier.forward"><a class="viewcode-back" href="../../../image_classifier_3d.models.html#image_classifier_3d.models.build_classifier.mitotic_classifier.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; forward pass &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;forward pass&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">using_mix_batch</span><span class="p">:</span>
             <span class="c1"># each image in a batch may have different shapes</span>
@@ -464,7 +464,7 @@
             <span class="n">pred_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;fn&quot;</span><span class="p">:</span> <span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;pred&quot;</span><span class="p">:</span> <span class="n">pred_prob</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">y</span><span class="p">}</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_type</span> <span class="o">==</span> <span class="s2">&quot;df&quot;</span><span class="p">:</span>
             <span class="n">pred_dict</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;CellId&quot;</span><span class="p">:</span> <span class="n">cid</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">int</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span>
+                <span class="s2">&quot;CellId&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">cid</span><span class="p">),</span>  <span class="c1"># cid.cpu().data.int().numpy()</span>
                 <span class="s2">&quot;pred&quot;</span><span class="p">:</span> <span class="n">pred_prob</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span>
             <span class="p">}</span>
         <span class="k">else</span><span class="p">:</span>
