@@ -3,7 +3,7 @@ PyTorch Lightning model class for mitotic classifier
 """
 import os
 
-# import numpy as np
+import numpy as np
 import pandas as pd
 import random
 from glob import glob
@@ -275,7 +275,7 @@ class mitotic_classifier(pl.LightningModule):
             pred_dict = {"fn": fn, "pred": pred_prob.numpy(), "label": y}
         elif self.test_type == "df":
             pred_dict = {
-                "CellId": cid.cpu().data.int().numpy(),
+                "CellId": np.asarray(cid),  # cid.cpu().data.int().numpy()
                 "pred": pred_prob.numpy(),
             }
         else:
